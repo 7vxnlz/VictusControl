@@ -40,7 +40,7 @@ Expected references:
 - `MasonDye/OmenXHub`
 - `affaan-m/ECC`
 
-References are research material only. They should not be copied wholesale or included in default AI context.
+References are research material only. They should not be copied wholesale or included in default AI context. Track local reference paths, branches, and commit SHAs in `REFERENCE_SOURCES.md`.
 
 ## Out Of Scope For This Layer
 
@@ -54,3 +54,4 @@ References are research material only. They should not be copied wholesale or in
 ## Current Status
 
 Bootstrap phase. The repository is receiving permanent AI workflow, token strategy, and assistant guidance files before application development begins.
+
