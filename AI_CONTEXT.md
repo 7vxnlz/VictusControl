@@ -55,4 +55,4 @@ References are research material only. They should not be copied wholesale or in
 
 ## Current Status
 
-`v0.3.0-windows-device-identity-provider` is complete. The solution skeleton exists, read-only device identity and capability contracts are defined, and Infrastructure includes a narrow Windows identity provider using standard read-only WMI queries. No HP WMI control methods, fan control, telemetry loops, EC access, BIOS writes, or write-capable hardware logic exists yet.
+`v0.4.0-settings-and-logging-foundation` is complete. The solution skeleton exists, read-only device identity and capability contracts are defined, Infrastructure includes a narrow Windows identity provider using standard read-only WMI queries, and the Application/Infrastructure layers now include minimal settings and privacy-aware local logging foundations. No HP WMI control methods, fan control, telemetry loops, EC access, BIOS writes, or write-capable hardware logic exists yet.

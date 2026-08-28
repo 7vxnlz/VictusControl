@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\VictusControl.Application\VictusControl.Application.csproj" />
     <ProjectReference Include="..\..\src\VictusControl.Domain\VictusControl.Domain.csproj" />
     <ProjectReference Include="..\..\src\VictusControl.Infrastructure\VictusControl.Infrastructure.csproj" />
   </ItemGroup>
