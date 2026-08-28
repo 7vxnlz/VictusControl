@@ -55,4 +55,4 @@ References are research material only. They should not be copied wholesale or in
 
 ## Current Status
 
-`v0.2.0-device-identity-and-capability-contracts` is complete. The solution skeleton exists, read-only device identity and capability contracts are defined, and the application layer has a small capability discovery orchestration boundary. No concrete hardware probing or write-capable hardware logic exists yet.
+`v0.3.0-windows-device-identity-provider` is complete. The solution skeleton exists, read-only device identity and capability contracts are defined, and Infrastructure includes a narrow Windows identity provider using standard read-only WMI queries. No HP WMI control methods, fan control, telemetry loops, EC access, BIOS writes, or write-capable hardware logic exists yet.
