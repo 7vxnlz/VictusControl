@@ -1,0 +1,57 @@
+{
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "output": {
+    "filePath": "repomix-output.md",
+    "style": "markdown",
+    "headerText": "VictusControl selected repository context. Do not include whole-repo packs unless explicitly approved."
+  },
+  "include": [
+    "src/**",
+    "tests/**",
+    "docs/**",
+    "*.md",
+    "*.json",
+    ".github/prompts/**",
+    ".github/copilot-instructions.md"
+  ],
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": [
+      ".git/**",
+      ".github/workflows/**",
+      ".vs/**",
+      ".vscode/**",
+      ".idea/**",
+      "bin/**",
+      "obj/**",
+      "artifacts/**",
+      "dist/**",
+      "build/**",
+      "TestResults/**",
+      "coverage/**",
+      "packages/**",
+      "logs/**",
+      "reference/**",
+      "references/**",
+      "**/*.dll",
+      "**/*.exe",
+      "**/*.pdb",
+      "**/*.png",
+      "**/*.jpg",
+      "**/*.jpeg",
+      "**/*.webp",
+      "**/*.ico",
+      "**/*.resx",
+      "**/*.Designer.cs",
+      "**/*.g.cs",
+      "**/*.generated.cs"
+    ]
+  },
+  "security": {
+    "enableSecurityCheck": true
+  },
+  "tokenCount": {
+    "encoding": "o200k_base"
+  }
+}
