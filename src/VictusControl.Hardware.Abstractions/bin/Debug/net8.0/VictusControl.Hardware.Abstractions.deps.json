@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "VictusControl.Hardware.Abstractions/1.0.0": {
+        "runtime": {
+          "VictusControl.Hardware.Abstractions.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "VictusControl.Hardware.Abstractions/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

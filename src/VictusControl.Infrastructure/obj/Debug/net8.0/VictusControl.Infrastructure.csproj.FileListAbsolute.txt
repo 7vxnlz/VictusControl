@@ -1,0 +1,16 @@
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\bin\Debug\net8.0\VictusControl.Infrastructure.deps.json
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\bin\Debug\net8.0\VictusControl.Infrastructure.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\bin\Debug\net8.0\VictusControl.Infrastructure.pdb
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\bin\Debug\net8.0\VictusControl.Domain.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\bin\Debug\net8.0\VictusControl.Domain.pdb
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.csproj.AssemblyReference.cache
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.AssemblyInfoInputs.cache
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.AssemblyInfo.cs
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.csproj.CoreCompileInputs.cache
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.sourcelink.json
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusCo.39D5701F.Up2Date
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\refint\VictusControl.Infrastructure.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\VictusControl.Infrastructure.pdb
+D:\Projects\Workspace\VictusControl\src\VictusControl.Infrastructure\obj\Debug\net8.0\ref\VictusControl.Infrastructure.dll

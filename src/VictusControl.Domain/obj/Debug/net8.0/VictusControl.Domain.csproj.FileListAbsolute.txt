@@ -1,0 +1,12 @@
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\bin\Debug\net8.0\VictusControl.Domain.deps.json
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\bin\Debug\net8.0\VictusControl.Domain.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\bin\Debug\net8.0\VictusControl.Domain.pdb
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.AssemblyInfoInputs.cache
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.AssemblyInfo.cs
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.csproj.CoreCompileInputs.cache
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.sourcelink.json
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\refint\VictusControl.Domain.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\VictusControl.Domain.pdb
+D:\Projects\Workspace\VictusControl\src\VictusControl.Domain\obj\Debug\net8.0\ref\VictusControl.Domain.dll
