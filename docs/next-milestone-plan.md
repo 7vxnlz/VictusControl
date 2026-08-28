@@ -1,66 +1,68 @@
 # Next Milestone Plan
 
-This plan defines the next safe milestone after `v0.3.0-windows-device-identity-provider`. It is a planning document only and does not add implementation code, HP WMI calls, fan control, telemetry loops, EC access, BIOS writes, UI features, or hardware write logic.
+This plan defines the next safe milestone after `v0.4.0-settings-and-logging-foundation`. It is a planning document only and does not add implementation code, HP WMI calls, fan control, telemetry loops, EC access, BIOS writes, UI features, or hardware write logic.
 
 ## Recommended Milestone
 
-Milestone: `v0.4.0-settings-and-logging-foundation`
+Milestone: `v0.5.0-static-capability-profile-loader`
 
-Create the minimal settings and logging foundations needed before VictusControl expands read-only hardware discovery beyond identity. The milestone should define safe configuration boundaries, privacy-aware logging contracts, and simple infrastructure implementations without introducing hardware control.
+Create a conservative local capability profile loader that maps known identity information to static, read-only capability decisions from bundled JSON/config resources. The loader should merge with the existing `DeviceIdentity` and `DeviceCapabilityProfile` contracts, but it must not perform HP WMI probing or assume that hardware control is supported.
 
 ## Why This Comes Next
 
-`v0.3.0` added a read-only Windows identity provider. The next temptation is to keep adding discovery sources, but broader discovery becomes much easier to debug, test, and share safely if the project first has clear logging and settings boundaries.
+`v0.4.0` added settings and privacy-aware logging. That gives the project enough foundation to introduce explainable capability decisions without hiding failures or leaking noisy machine data.
 
-This milestone comes before the other candidate milestones because:
+This milestone comes before the other candidates because:
 
-- `v0.4.0-static-capability-profile-loader` would encode capability decisions before the app has enough runtime evidence and diagnostics.
-- `v0.4.0-read-only-system-snapshot` is useful soon, but it should produce structured logs and obey settings for diagnostics detail before it collects more machine facts.
-- HP WMI capability probing should wait until the app can record what was probed, what failed, and what was intentionally skipped without leaking private or noisy machine data.
+- `v0.5.0-static-capability-profile-loader` improves safety and decision-making using local conservative data only.
+- `v0.5.0-read-only-system-snapshot` will be useful soon, but it increases the amount of collected machine data before the app has a capability decision pipeline.
+- `v0.5.0-app-startup-composition` should wait until there is something useful to compose beyond identity, settings, logging, and static capabilities.
+- `v0.5.0-reference-command-inventory` should wait until the product has a clear internal capability vocabulary to compare against references.
 
-Settings and logging are still safe because they do not touch hardware, services, BIOS, EC, fans, telemetry loops, or HP-specific control paths.
+The static loader is the best next step because it lets VictusControl represent known, unknown, unsupported, unavailable, and intentionally deferred capabilities before any live hardware probing exists.
 
 ## Files And Projects To Create Or Modify
 
 Expected implementation scope:
 
-- `src/VictusControl.Application/Settings/` for settings-facing application contracts if needed
-- `src/VictusControl.Application/Diagnostics/` for logging or diagnostic event contracts if needed
-- `src/VictusControl.Infrastructure/Settings/` for a minimal local settings store
-- `src/VictusControl.Infrastructure/Diagnostics/` for a simple file or in-memory logger
-- `src/VictusControl.Infrastructure/VictusControl.Infrastructure.csproj` only for necessary project references or framework-supported APIs
-- `tests/VictusControl.Application.Tests/` for settings/logging contract behavior
-- `tests/VictusControl.Infrastructure.Tests/` for persistence and logging implementation tests
+- `src/VictusControl.Application/Capabilities/` for profile-loading contracts or orchestration if needed
+- `src/VictusControl.Infrastructure/Capabilities/` for a JSON-backed static capability profile loader
+- `src/VictusControl.Infrastructure/Capabilities/Profiles/` or an equivalent embedded/local resource location for conservative JSON profile data
+- `src/VictusControl.Infrastructure/VictusControl.Infrastructure.csproj` only for embedded resources or necessary built-in configuration
+- `tests/VictusControl.Application.Tests/` for merge/orchestration behavior if added
+- `tests/VictusControl.Infrastructure.Tests/` for JSON parsing, matching, fallback, and conservative defaults
 - `SESSION_STATE.md` after implementation verification
 - `AI_CONTEXT.md` only if the architecture description changes meaningfully
 
-Keep any persisted settings schema small. A first version may include only diagnostics/logging preferences and app-level safety defaults. Avoid feature settings for fans, thermal modes, keyboard lighting, HP WMI, or telemetry until those features are designed.
+The first profile may target the known HP Victus 16 identity only as an identity match, not as proof that fan control, thermal mode control, keyboard backlight control, telemetry, EC access, or BIOS writes are supported.
 
 ## Out Of Scope
 
 The milestone must not include:
 
-- HP WMI classes, namespace probing, method calls, or control logic
-- fan control, fan curves, thermal modes, keyboard lighting, EC access, BIOS writes, or telemetry loops
-- read-only system inventory expansion beyond what tests require for settings/logging
+- HP WMI namespace enumeration, class probing, method calls, or command IDs
+- fan control, fan curves, thermal profiles, keyboard lighting, EC access, BIOS writes, or telemetry loops
+- runtime hardware probing beyond using the existing identity contract as input
+- service/process conflict detection unless represented as static `Unknown` or `Unavailable` guidance
 - UI settings screens, tray behavior, startup registration, update checks, packaging, or installers
 - vendor DLLs, HP binaries, drivers, native interop, or copied reference source
-- automatic log upload, crash reporting services, analytics, or external telemetry
+- automatic log upload, analytics, crash reporting, or network activity
 - reference repository modifications
 
 ## Tests To Add
 
-Add focused tests with fake clocks, fake file systems, temporary directories, or in-memory sinks as appropriate:
+Add focused tests with local JSON fixtures or in-memory streams:
 
-- default settings are safe, minimal, and deterministic
-- settings load returns defaults when no file exists
-- invalid or unreadable settings fail safely without throwing into application startup
-- settings save/load round-trips only the approved schema
-- logging captures level, timestamp/source if designed, message, and optional safe properties
-- logging avoids raw dumps and supports sanitized diagnostic events
-- infrastructure tests do not require HP hardware, admin rights, vendor services, or machine-specific paths
+- exact HP Victus identity can load a matching static profile
+- unknown identity returns a safe unknown profile
+- missing profile file or empty profile list returns safe unknown capabilities
+- invalid/corrupt profile JSON fails safely and logs a sanitized warning if logging is wired
+- profile matching uses manufacturer, family, model, SKU, and product name conservatively
+- duplicate capability entries resolve deterministically
+- no static profile marks fan control, thermal mode, telemetry, EC access, or BIOS writes as supported by default
+- bundled profile data contains only approved capability kinds and statuses
 
-Do not add tests that require real hardware, HP software, WMI writes, fan state, BIOS state, EC access, network access, or application execution.
+Do not add tests that require HP hardware, administrator rights, WMI probing, fan state, BIOS state, EC access, network access, or application execution.
 
 ## Verification Commands
 
@@ -72,41 +74,42 @@ dotnet build VictusControl.sln
 dotnet test VictusControl.sln --no-build
 ```
 
-If package additions are proposed, justify them first. Prefer built-in .NET APIs for JSON and file I/O unless a small dependency is clearly worth it.
+Use built-in .NET JSON APIs. Do not add third-party configuration packages unless a specific limitation is documented first.
 
 ## Reference Repositories
 
 Relevant references:
 
-- `seerge/g-helper`: optional targeted reference for lightweight settings and update-free app ergonomics.
-- `ib-3/ghelper-omen`: optional targeted reference for how HP/Omen-facing behavior logs or stores capability-related state.
-- `theantipopau/omencore`: optional targeted reference for safety-oriented diagnostics and tests.
+- `ib-3/ghelper-omen`: optional targeted reference for capability vocabulary only, if VictusControl terms are insufficient.
+- `theantipopau/omencore`: optional targeted reference for conservative capability-status concepts and safety tests.
 
 References not needed:
 
-- `breadeding/OmenSuperHub`: not needed for a minimal settings/logging foundation.
-- `MasonDye/OmenXHub`: not needed unless a later WPF settings UX task is scoped.
+- `seerge/g-helper`: not needed unless generic app configuration questions arise.
+- `breadeding/OmenSuperHub`: not needed for static profile loading.
+- `MasonDye/OmenXHub`: not needed for static profile loading.
 - `affaan-m/ECC`: not needed for product implementation.
 
-Use VictusControl files first. Inspect reference repositories only for a specific settings/logging question, record commit SHAs if used, and do not copy source.
+Use VictusControl contracts first. Inspect reference repositories only for a specific capability-vocabulary question, record commit SHAs if used, and do not copy source or data.
 
 ## Risks
 
-- Overbuilding a logging framework before real diagnostics needs are proven.
-- Persisting machine-specific or privacy-sensitive data by default.
-- Letting settings become a dumping ground for future hardware behavior.
-- Adding dependencies that create avoidable maintenance or licensing obligations.
-- Making infrastructure tests depend on user profile paths, locale-specific messages, or the real machine state.
+- Treating static profile presence as proof of hardware-control support.
+- Overfitting profile matching to one exact model string.
+- Adding too much schema before real discovery data exists.
+- Mixing static decisions with live probing responsibilities.
+- Accidentally storing private identifiers, serial numbers, or user-specific data in profile resources.
+- Creating a profile loader that is hard to override when runtime probing later produces better evidence.
 
 ## Rollback Plan
 
-Rollback should be straightforward:
+Rollback should be simple:
 
-- remove the new settings and diagnostics contracts
-- remove the concrete infrastructure settings/logger implementations
-- remove the matching tests
-- revert any project reference or package changes added only for this milestone
-- keep the existing solution skeleton, domain contracts, and Windows identity provider intact
+- remove the static profile loader and bundled profile resources
+- remove capability-loading contracts or orchestration added only for this milestone
+- remove matching tests
+- revert any project file resource changes
+- keep `v0.4.0` settings/logging, `v0.3.0` identity provider, and `v0.2.0` contracts intact
 
 No hardware state should be changed by this milestone, so no device restore action should be required.
 
@@ -114,32 +117,34 @@ No hardware state should be changed by this milestone, so no device restore acti
 
 Use `GPT-5.5 Medium`.
 
-Reason: the task crosses Application, Infrastructure, and tests, but it is not hardware-control work. Use `GPT-5.5 Low` only if the implementation is limited to simple interfaces and in-memory tests; escalate to `GPT-5.5 High` only if settings migration, privacy rules, or logging schema tradeoffs become non-trivial.
+Reason: the work spans Application, Infrastructure, resources, and tests, but it remains read-only and deterministic. Escalate to `GPT-5.5 High` only if schema design or merge semantics become contentious.
 
 ## Recommended Commit Message
 
 ```text
-feat: add settings and logging foundation
+feat: add static capability profile loader
 ```
 
 ## Preparing For Later HP WMI Capability Probing
 
-This milestone prepares for HP WMI capability probing without adding HP WMI by establishing:
+This milestone prepares for later HP WMI capability probing without adding HP WMI by establishing:
 
-- a place to record which read-only probes ran and which were skipped
-- privacy-aware diagnostic events for unavailable or unsupported capabilities
-- settings that can later control diagnostics verbosity and safe defaults
-- tests proving failure paths stay quiet, deterministic, and non-destructive
+- a deterministic capability-profile schema
+- conservative matching between runtime identity and known profile data
+- explicit reasons for unknown, unsupported, unavailable, or deferred capabilities
+- a merge point where future live read-only probes can add evidence without enabling writes automatically
+- tests proving that known Victus identity still does not imply fan, thermal, telemetry, EC, or BIOS support
 
-Later HP WMI capability probing should use these foundations to report evidence and reasons, not to enable controls automatically. Even after HP-specific namespaces are discovered, fan control, thermal control, EC access, and BIOS writes must remain separate explicitly approved milestones.
+Later HP WMI capability probing should extend this pipeline by adding read-only evidence. It must not replace the conservative defaults, and it must not introduce fan control, thermal writes, EC access, or BIOS writes in the same milestone.
 
 ## Immediately After This Milestone
 
-After `v0.4.0-settings-and-logging-foundation`, update `SESSION_STATE.md` with the contracts, implementations, tests, and verification result.
+After `v0.5.0-static-capability-profile-loader`, update `SESSION_STATE.md` with the loader, resource data, tests, and verification result.
 
 The next planning decision should choose between:
 
-- `v0.5.0-read-only-system-snapshot`
-- `v0.5.0-read-only-capability-profile-builder`
+- `v0.6.0-read-only-system-snapshot`
+- `v0.6.0-app-startup-composition`
+- `v0.6.0-reference-command-inventory`
 
-Do not move to HP WMI writes, fan control, telemetry loops, EC access, BIOS writes, or UI controls until the read-only discovery pipeline can produce explainable capability evidence.
+Do not move to HP WMI writes, fan control, telemetry loops, EC access, BIOS writes, or UI controls until the read-only discovery pipeline can produce explainable capability evidence from both identity and conservative local profiles.
