@@ -6,14 +6,14 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 
 - Date: 2026-08-28
 - Branch: `main` tracking `origin/main`
-- Current objective: assess whether VictusControl can be based directly on G-Helper
-- Last completed work: created small token-safe G-Helper import assessment; no files copied and no source code changed
-- Files touched recently: `docs/ghelper-import-assessment.md`, `SESSION_STATE.md`
+- Current objective: decide licensing and first-step strategy for a possible direct G-Helper base
+- Last completed work: created small G-Helper import strategy decision; no files copied and no source code changed
+- Files touched recently: `docs/ghelper-import-strategy.md`, `SESSION_STATE.md`
 - Known build/test status: not run for this planning-only update; previous verified status was `dotnet restore VictusControl.sln`, `dotnet build VictusControl.sln`, and `dotnet test VictusControl.sln --no-build` passing after `v0.4.0`
-- Open questions: decide whether a direct G-Helper base is acceptable given GPL-3.0 and structural conflicts
-- Next likely files: `docs/ghelper-import-assessment.md`, `docs/next-milestone-plan.md`
+- Open questions: user must confirm GPL-3.0-compatible direction before any G-Helper source import
+- Next likely files: `docs/ghelper-import-assessment.md`, `docs/ghelper-import-strategy.md`
 - Reference commits reviewed: G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; only top-level/project/license/README metadata was inspected
-- Notes: no G-Helper source was copied; no HP WMI control methods, fan control, telemetry loops, EC access, BIOS writes, hardware-write logic, vendor binaries, UI features, application code, or reference repository changes were added
+- Notes: G-Helper import strategy decision completed; no G-Helper source was copied; no HP WMI control methods, fan control, telemetry loops, EC access, BIOS writes, hardware-write logic, vendor binaries, UI features, application code, or reference repository changes were added
 
 ## Update Template
 
