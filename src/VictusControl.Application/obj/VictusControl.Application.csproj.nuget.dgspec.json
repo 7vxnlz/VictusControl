@@ -155,7 +155,11 @@
           "net8.0": {
             "framework": "net8.0",
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\Projects\\Workspace\\VictusControl\\src\\VictusControl.Domain\\VictusControl.Domain.csproj": {
+                "projectPath": "D:\\Projects\\Workspace\\VictusControl\\src\\VictusControl.Domain\\VictusControl.Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

@@ -24,6 +24,9 @@
         }
       },
       "VictusControl.Hardware.Abstractions/1.0.0": {
+        "dependencies": {
+          "VictusControl.Domain": "1.0.0"
+        },
         "runtime": {
           "VictusControl.Hardware.Abstractions.dll": {
             "assemblyVersion": "1.0.0.0",

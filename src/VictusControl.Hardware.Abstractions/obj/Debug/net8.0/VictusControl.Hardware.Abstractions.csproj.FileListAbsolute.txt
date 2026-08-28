@@ -10,3 +10,7 @@ D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\obj\
 D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\obj\Debug\net8.0\refint\VictusControl.Hardware.Abstractions.dll
 D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\obj\Debug\net8.0\VictusControl.Hardware.Abstractions.pdb
 D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\obj\Debug\net8.0\ref\VictusControl.Hardware.Abstractions.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\bin\Debug\net8.0\VictusControl.Domain.dll
+D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\bin\Debug\net8.0\VictusControl.Domain.pdb
+D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\obj\Debug\net8.0\VictusControl.Hardware.Abstractions.csproj.AssemblyReference.cache
+D:\Projects\Workspace\VictusControl\src\VictusControl.Hardware.Abstractions\obj\Debug\net8.0\VictusCo.6DECB249.Up2Date

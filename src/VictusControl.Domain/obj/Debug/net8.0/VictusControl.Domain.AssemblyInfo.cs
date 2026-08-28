@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VictusControl.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cd4416a280629e5f5026b7b23d8f13db5017feb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a3abcb5b11dd17bd8945b3fc9b8385f384b147e")]
 [assembly: System.Reflection.AssemblyProductAttribute("VictusControl.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VictusControl.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
