@@ -1,4 +1,4 @@
-﻿using GHelper;
+using GHelper;
 using GHelper.USB;
 using System.Collections.Concurrent;
 using System.Management;
@@ -26,7 +26,7 @@ public enum AsusGPU
     Ultimate = 2
 }
 
-public class AsusACPI
+public class AsusACPI : IHardwareController
 {
 
     const string FILE_NAME = @"\\.\\ATKACPI";
@@ -971,3 +971,5 @@ public class AsusACPI
 
 
 }
+
+
