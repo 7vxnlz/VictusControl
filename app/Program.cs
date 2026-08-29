@@ -50,9 +50,26 @@ namespace GHelper
         // The main entry point for the application
         public static void Main(string[] args)
         {
+            try
+            {
+                MainCore(args);
+            }
+            catch (Exception ex)
+            {
+                WriteStartupCrashLog(args, ex);
+                throw;
+            }
+        }
+
+        private static void MainCore(string[] args)
+        {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
 
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => Logger.WriteLine("Unhandled: " + e.ExceptionObject);
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                Logger.WriteLine("Unhandled: " + e.ExceptionObject);
+                WriteStartupCrashLog(args, e.ExceptionObject as Exception ?? new Exception(e.ExceptionObject?.ToString() ?? "Unknown unhandled exception"));
+            };
             TaskScheduler.UnobservedTaskException += (s, e) => { Logger.WriteLine("Unobserved: " + e.Exception); e.SetObserved(); };
 
             bool explicitUnsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
@@ -524,6 +541,40 @@ namespace GHelper
             NativeMethods.UnregisterSuspendResumeNotification(unRegSuspendResume);
         }
 
+        private static void WriteStartupCrashLog(string[] args, Exception exception)
+        {
+            try
+            {
+                string logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VictusX", "Logs");
+                Directory.CreateDirectory(logDirectory);
+
+                var log = new StringBuilder();
+                log.AppendLine("--- VictusX startup exception ---");
+                log.AppendLine("Timestamp: " + DateTimeOffset.Now.ToString("O", CultureInfo.InvariantCulture));
+                log.AppendLine("Args: " + string.Join(" ", args.Select(SanitizeStartupLogArg)));
+                log.AppendLine("Exception: " + exception.GetType().FullName);
+                log.AppendLine("Message: " + exception.Message);
+                log.AppendLine("StackTrace:");
+                log.AppendLine(exception.StackTrace ?? "<no stack trace>");
+                log.AppendLine();
+
+                File.AppendAllText(Path.Combine(logDirectory, "startup.log"), log.ToString());
+            }
+            catch
+            {
+                // Startup crash logging must never create a second startup failure.
+            }
+        }
+
+        private static string SanitizeStartupLogArg(string arg)
+        {
+            if (string.IsNullOrWhiteSpace(arg)) return "\"\"";
+
+            string[] sensitiveMarkers = ["password", "passwd", "secret", "token", "apikey", "api-key", "credential"];
+            if (sensitiveMarkers.Any(marker => arg.Contains(marker, StringComparison.OrdinalIgnoreCase))) return "[redacted]";
+
+            return arg.Contains(' ') ? "\"" + arg.Replace("\"", "\\\"") + "\"" : arg;
+        }
         static void Charge()
         {
             if (!unsupportedHardwareMode && AppConfig.IsZ13())
@@ -587,6 +638,7 @@ namespace GHelper
 
     }
 }
+
 
 
 
