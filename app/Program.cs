@@ -3,6 +3,7 @@ using GHelper.Battery;
 using GHelper.Display;
 using GHelper.Gpu;
 using GHelper.Helpers;
+using GHelper.Hardware.Hp;
 using GHelper.Input;
 using GHelper.Mode;
 using GHelper.Overlay;
@@ -105,6 +106,12 @@ namespace GHelper
 
             Logger.WriteLine("----------------------");
             Logger.WriteLine("App launched: " + AppConfig.GetModel() + " :" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + CultureInfo.CurrentUICulture + (ProcessHelper.IsUserAdministrator() ? "." : ""));
+
+            if (hpVictusMode)
+            {
+                var hpSnapshot = HpVictusCapabilityProbe.Probe();
+                Logger.WriteLine("HP Victus capability probe: " + hpSnapshot.ToLogString());
+            }
 
             settingsForm = new SettingsForm();
             modeControl = new ModeControl();
@@ -638,6 +645,7 @@ namespace GHelper
 
     }
 }
+
 
 
 
