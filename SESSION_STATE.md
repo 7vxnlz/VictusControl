@@ -6,14 +6,14 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 
 - Date: 2026-08-29
 - Branch: `main` tracking `origin/main`
-- Current objective: assess imported G-Helper project shell
-- Last completed work: created G-Helper import shell assessment; no files copied and no source code changed
-- Files touched recently: `docs/ghelper-import-shell-assessment.md`, `SESSION_STATE.md`
-- Known build/test status: not run; build/test intentionally skipped for this documentation-only shell assessment
-- Open questions: decide whether to copy `app/Program.cs` next for startup dependency assessment
-- Next likely files: `ghelper-import/Program.cs` if the next tiny copy step is approved
+- Current objective: analyze imported G-Helper application entry layer
+- Last completed work: created one-level G-Helper entry dependency map; no source code changed
+- Files touched recently: `docs/ghelper-entry-dependency-map.md`, `SESSION_STATE.md`
+- Known build/test status: not run; build/test intentionally skipped for this analysis-only task
+- Open questions: whether to import `Settings.cs` next as the minimal UI startup dependency
+- Next likely files: `ghelper-import/Settings.cs`, `ghelper-import/Settings.Designer.cs`, `ghelper-import/Settings.resx` if approved
 - Reference commits reviewed: G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; only top-level/project/license/README metadata was inspected
-- Notes: G-Helper import shell assessment created.
+- Notes: Entry dependency map created.
 
 ## Update Template
 
@@ -27,4 +27,5 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Next likely files:
 - Reference commits reviewed:
 - Notes:
+
 
