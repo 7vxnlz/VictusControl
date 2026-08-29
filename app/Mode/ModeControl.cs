@@ -420,6 +420,7 @@ namespace GHelper.Mode
 
         public void SetCrossPower()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int gpucpu = AppConfig.GetMode("limit_gpucpu");
             int crossload = AppConfig.GetMode("limit_crossload");
             int cputemp = AppConfig.GetMode("limit_cputemp");
@@ -436,6 +437,7 @@ namespace GHelper.Mode
 
         public void SetGPUClocks(bool launchAsAdmin = true, bool reset = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
 
@@ -470,6 +472,7 @@ namespace GHelper.Mode
 
         public void SetGPUPower()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             int gpu_boost = AppConfig.GetMode("gpu_boost");
             int gpu_temp = AppConfig.GetMode("gpu_temp");
@@ -494,6 +497,7 @@ namespace GHelper.Mode
 
         public SmuStatus? SetCPUTemp(int cpuTemp, bool log = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return null;
             if (cpuTemp < CpuInfo.MinTemp || cpuTemp > CpuInfo.DefaultTemp) return null;
             if (cpuTemp == CpuInfo.DefaultTemp && _cpuTemp == CpuInfo.DefaultTemp) return null;
 
@@ -507,6 +511,7 @@ namespace GHelper.Mode
 
         public void SetUV(int cpuUV)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!CpuInfo.IsSupportedUV()) return;
 
             if (cpuUV >= CpuInfo.MinCPUUV && cpuUV <= CpuInfo.MaxCPUUV)
@@ -521,6 +526,7 @@ namespace GHelper.Mode
 
         public void SetUViGPU(int igpuUV)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!CpuInfo.IsSupportedUViGPU()) return;
 
             if (igpuUV >= CpuInfo.MinIGPUUV && igpuUV <= CpuInfo.MaxIGPUUV)
@@ -535,6 +541,7 @@ namespace GHelper.Mode
 
         public string SetRyzen(bool launchAsAdmin = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return string.Empty;
             if (!ProcessHelper.IsUserAdministrator())
             {
                 if (launchAsAdmin) ProcessHelper.RunAsAdmin("uv");
@@ -620,6 +627,7 @@ namespace GHelper.Mode
 
         public void ResetRyzen()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (_cpuUV != 0) SetUV(0);
             if (_igpuUV != 0) SetUViGPU(0);
             if (_cpuTemp != CpuInfo.DefaultTemp) SetCPUTemp(CpuInfo.DefaultTemp, true);
@@ -654,12 +662,14 @@ namespace GHelper.Mode
 
         public void ShutdownReset()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.IsShutdownReset()) return;
             Program.acpi.DeviceSet(AsusACPI.PerformanceMode,AsusACPI.PerformanceBalanced, "Mode Reset");
         }
 
         public void SleepReset()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.IsSleepReset()) return;
             Program.acpi.DeviceSet(AsusACPI.PerformanceMode, Modes.GetCurrentBase(), "Sleep Reset");
         }

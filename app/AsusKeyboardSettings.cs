@@ -349,6 +349,7 @@ namespace GHelper
 
         private void ApplyEnergySettings(int lowBatteryWarning, PowerOffSetting powerOff)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() => { try { keyboard.SetEnergySettings(lowBatteryWarning, powerOff); } catch { } });
         }
 
@@ -443,6 +444,7 @@ namespace GHelper
 
         private void ComboBoxAutoPowerOff_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var values = Enum.GetValues(typeof(PowerOffSetting));
             int idx = comboBoxAutoPowerOff.SelectedIndex;
             if (idx < 0 || idx >= values.Length) return;
@@ -484,6 +486,7 @@ namespace GHelper
 
         private void ComboBoxProfile_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (loadingSettings || comboBoxProfile.SelectedIndex < 0) return;
             if (comboBoxProfile.SelectedIndex == keyboard.Profile) return;
 
@@ -550,6 +553,7 @@ namespace GHelper
 
         private void BindingCombo_Changed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (updatingBindings || selectedKey is null) return;
             if (comboBoxKeyBinding.SelectedItem is BindingSeparator)
             {
@@ -658,6 +662,7 @@ namespace GHelper
 
         private void ButtonFillAll_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (checkBoxSyncAura.Checked || SelectedMode() != KeyboardLightingMode.Direct) return;
 
             Array.Fill(keyColors, paintColor);
@@ -798,6 +803,7 @@ namespace GHelper
 
         private void ButtonResetBindings_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             settingsChanged = true;
             Task.Run(() =>
             {
@@ -815,6 +821,7 @@ namespace GHelper
 
         private void KeyTile_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (sender is not Button key || key.Tag is not int led) return;
 
             SelectKey(key);
@@ -899,6 +906,7 @@ namespace GHelper
 
         private void CheckBoxSyncAura_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (loadingSettings) return;
 
             PeripheralsProvider.SetKeyboardAuraSync(checkBoxSyncAura.Checked);
@@ -910,6 +918,7 @@ namespace GHelper
 
         private void StoreSettings()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             keyboard.StoreLighting(
                 SelectedMode(),
                 buttonLightingColor.SwatchColor ?? Color.Red,
@@ -923,6 +932,7 @@ namespace GHelper
 
         private void ApplySettings()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (loadingSettings || checkBoxSyncAura.Checked) return;
 
             VisualizeControls();
@@ -933,6 +943,7 @@ namespace GHelper
 
         private void SliderBrightness_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (loadingSettings) return;
 
             StoreSettings();
@@ -943,6 +954,7 @@ namespace GHelper
 
         private void AsusKeyboardSettings_FormClosing(object? sender, FormClosingEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             keyboard.BatteryUpdated -= Keyboard_BatteryUpdated;
             keyboard.Disconnect -= Keyboard_Disconnect;
             previewTimer.Stop();

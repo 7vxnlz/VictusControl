@@ -1,4 +1,4 @@
-﻿using GHelper.Display;
+using GHelper.Display;
 using GHelper.Gpu.AMD;
 using GHelper.Helpers;
 using GHelper.Input;
@@ -262,6 +262,8 @@ namespace GHelper
             {
                 labelFNV.Visible = comboFNV.Visible = textFNV.Visible = false;
             }
+
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             if (!Program.acpi.IsSupported(AsusACPI.GPUEco))
             {
@@ -529,11 +531,13 @@ namespace GHelper
 
         private void CheckLEDStatus_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             InputDispatcher.SetStatusLED(checkStatusLed.Checked);
         }
 
         private void CheckNumberPad_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             NumberPad.Set(checkNumberPad.Checked);
         }
 
@@ -552,6 +556,7 @@ namespace GHelper
 
         private void ButtonACPISend_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             try
             {
                 int deviceID = Convert.ToInt32(textACPICommand.Text, 16);
@@ -607,6 +612,7 @@ namespace GHelper
 
         private void ButtonCores_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             DialogResult dialogResult = MessageBox.Show(Properties.Strings.AlertAPUMemoryRestart, Properties.Strings.AlertAPUMemoryRestartTitle, MessageBoxButtons.YesNo);
 
             if (dialogResult == DialogResult.Yes)
@@ -619,6 +625,7 @@ namespace GHelper
 
         private void PictureScan_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             string logFile = Program.acpi.ScanRange();
             new Process
             {
@@ -662,6 +669,7 @@ namespace GHelper
 
         private void ComboAPU_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int mem = comboAPU.SelectedIndex;
 
             if (vramOptions.Length == 0) Program.acpi.SetAPUMem(mem);
@@ -681,6 +689,7 @@ namespace GHelper
 
         private void CheckBootSound_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int bootSound = checkBootSound.Checked ? 1 : 0;
             Program.acpi.DeviceSet(AsusACPI.BootSound, bootSound, "BootSound");
             AppConfig.Set("boot_sound", bootSound);
@@ -722,6 +731,7 @@ namespace GHelper
 
         private void SliderBrightness_ValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             bool onBattery = SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Online;
 
             if (onBattery)
@@ -765,6 +775,7 @@ namespace GHelper
 
         public void ServiesToggle()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             buttonServices.Enabled = false;
 
             if (AsusService.GetRunningCount() > 0)
@@ -796,6 +807,7 @@ namespace GHelper
 
         private void ButtonServices_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (ProcessHelper.IsUserAdministrator())
                 ServiesToggle();
             else
@@ -816,6 +828,7 @@ namespace GHelper
 
         private void CheckXGM_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("xmg_light", (checkXGM.Checked ? 1 : 0));
             XGM.Light(checkXGM.Checked);
         }
@@ -846,6 +859,7 @@ namespace GHelper
 
         private void CheckNoOverdrive_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("no_overdrive", (checkNoOverdrive.Checked ? 1 : 0));
             ScreenControl.AutoScreen(true);
         }
@@ -859,6 +873,7 @@ namespace GHelper
 
         private void CheckPower_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("keyboard_awake", (checkAwake.Checked ? 1 : 0));
             AppConfig.Set("keyboard_boot", (checkBoot.Checked ? 1 : 0));
             AppConfig.Set("keyboard_sleep", (checkSleep.Checked ? 1 : 0));
@@ -894,6 +909,7 @@ namespace GHelper
 
         private void ComboKeyboardSpeed_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("aura_speed", (int)comboKeyboardSpeed.SelectedValue);
             Aura.ApplyAura();
         }

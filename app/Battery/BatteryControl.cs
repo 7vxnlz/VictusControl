@@ -23,12 +23,14 @@ namespace GHelper.Battery
 
         public static void ToggleBatteryLimitFull()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (chargeFull) SetBatteryChargeLimit();
             else SetBatteryLimitFull();
         }
 
         public static void SetBatteryLimitFull()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             chargeFull = true;
             Program.acpi.DeviceSet(AsusACPI.BatteryLimit, 100, "BatteryLimit");
             Program.settingsForm.VisualiseBatteryFull();
@@ -36,6 +38,7 @@ namespace GHelper.Battery
 
         public static void UnSetBatteryLimitFull()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             chargeFull = false;
             Logger.WriteLine("Battery fully charged");
             Program.settingsForm.Invoke(Program.settingsForm.VisualiseBatteryFull);
@@ -50,6 +53,7 @@ namespace GHelper.Battery
 
         public static void SetAsusChargeLimit(int value)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!ProcessHelper.IsUserAdministrator()) return;
             const string keyPath = @"SOFTWARE\ASUS\ASUS System Control Interface\AsusOptimization\ASUS Keyboard Hotkeys";
             try
@@ -65,6 +69,7 @@ namespace GHelper.Battery
 
         public static void SetBatteryChargeLimit(int setLimit = -1)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int limit = setLimit;
             if (limit < 0) limit = AppConfig.Get("charge_limit");
             if (limit < 40 || limit > 100) return;

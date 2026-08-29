@@ -233,11 +233,13 @@ namespace GHelper.Display
 
         public static void SetRegStatus(int status = 1)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Registry.SetValue(GameVisualKey, GameVisualValue, status, RegistryValueKind.DWord);
         }
 
         public static void InitGamut()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int gamut = AppConfig.Get("gamut");
 
             if (gamut < 0) return;
@@ -248,6 +250,7 @@ namespace GHelper.Display
 
         public static void SetGamut(int mode = -1)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (skipGamut) return;
             if (mode < 0) mode = (int)GetDefaultGamut();
 
@@ -275,6 +278,7 @@ namespace GHelper.Display
 
         public static void SetVisual(SplendidCommand mode = SplendidCommand.Default, int whiteBalance = DefaultColorTemp, bool init = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 if (AmdDisplay.IsOledPowerOptimization()) Program.settingsForm.VisualiseAmdOled(true);
@@ -407,6 +411,7 @@ namespace GHelper.Display
 
         private static int RunSplendid(SplendidCommand command, int? param1 = null, int? param2 = null, int? param3 = null)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return 0;
             string splendidPath = GetSplendidPath();
             string splendidExe = $"{splendidPath}\\AsusSplendid.exe";
             bool isVivo = AppConfig.IsVivoZenPro();
@@ -445,6 +450,7 @@ namespace GHelper.Display
 
         private static void BrightnessTimerTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             brightnessTimer.Stop();
 
             var dimmingCommand = AppConfig.IsVivoZenPro() ? SplendidCommand.DimmingVivo : SplendidCommand.DimmingVisual;
@@ -464,6 +470,7 @@ namespace GHelper.Display
 
         public static void InitBrightness()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.IsOLED()) return;
             if (!AppConfig.SaveDimming()) return;
 
@@ -483,6 +490,7 @@ namespace GHelper.Display
 
         public static int SetBrightness(int brightness = -1, int delta = 0)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return -1;
             if (!AppConfig.IsOLED()) return -1;
             if (brightness < 0) brightness = GetBrightness();
 
@@ -500,6 +508,7 @@ namespace GHelper.Display
 
         public static void ResetGamut()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int defaultGamut = (int)GetDefaultGamut();
 
             if (AppConfig.Get("gamut") != defaultGamut)

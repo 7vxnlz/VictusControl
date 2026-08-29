@@ -1,4 +1,4 @@
-﻿using GHelper.Peripherals;
+using GHelper.Peripherals;
 using GHelper.Peripherals.Mouse;
 using GHelper.UI;
 
@@ -143,6 +143,8 @@ namespace GHelper
             buttonLightingZoneUnderglow.Click += ButtonLightingZoneUnderglow_Click;
             buttonLightingZoneScroll.Click += ButtonLightingZoneScroll_Click;
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             InitMouseCapabilities();
             Logger.WriteLine(mouse.GetDisplayName() + " (GUI): Initialized capabilities. Synchronizing mouse data");
             RefreshMouseData();
@@ -266,6 +268,7 @@ namespace GHelper
 
         private void ComboProfile_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (mouse.Profile == comboProfile.SelectedIndex)
             {
                 return;
@@ -277,12 +280,14 @@ namespace GHelper
 
         private void ComboBoxPollingRate_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetPollingRate(mouse.SupportedPollingrates()[comboBoxPollingRate.SelectedIndex]);
             UpdateMotionSyncState();
         }
 
         private void ButtonDPIColor_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AsusMouseDPI dpi = mouse.DpiSettings[mouse.DpiProfile - 1];
 
             RColorPicker colorDlg = new RColorPicker(dpi.Color);
@@ -337,6 +342,7 @@ namespace GHelper
 
         private void ButtonDPI_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int index = -1;
 
             for (int i = 0; i < dpiButtons.Length; ++i)
@@ -386,12 +392,14 @@ namespace GHelper
 
         private void UpdateLightingSettings(LightingSetting settings, LightingZone zone)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetLightingSetting(settings, visibleZone);
             VisusalizeLightingSettings();
         }
 
         private void CheckBoxRandomColor_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             LightingSetting? ls = mouse.LightingSettingForZone(visibleZone);
             ls.RandomColor = checkBoxRandomColor.Checked;
 
@@ -400,6 +408,7 @@ namespace GHelper
 
         private void CheckBoxSyncAura_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             ApplyAuraSyncUIState();
             if (loadingSettings) return;
 
@@ -425,6 +434,7 @@ namespace GHelper
 
         private void ComboBoxAnimationDirection_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             LightingSetting? ls = mouse.LightingSettingForZone(visibleZone);
             ls.AnimationDirection = (AnimationDirection)comboBoxAnimationDirection.SelectedIndex;
 
@@ -433,6 +443,7 @@ namespace GHelper
 
         private void ComboBoxAnimationSpeed_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             LightingSetting? ls = mouse.LightingSettingForZone(visibleZone);
             // 0 => 0x9
             // 1 => 0x7
@@ -443,6 +454,7 @@ namespace GHelper
 
         private void SliderBrightness_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             LightingSetting? ls = mouse.LightingSettingForZone(visibleZone);
             ls.Brightness = sliderBrightness.Value;
 
@@ -451,6 +463,7 @@ namespace GHelper
 
         private void ComboBoxLightingMode_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!mouse.HasRGB())
             {
                 return;
@@ -473,6 +486,7 @@ namespace GHelper
 
         private void ButtonLightingColor_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             LightingSetting? ls = mouse.LightingSettingForZone(visibleZone);
             if (ls is null) return;
 
@@ -492,12 +506,14 @@ namespace GHelper
 
         private void SliderLowBatteryWarning_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetEnergySettings(sliderLowBatteryWarning.Value, mouse.PowerOffSetting);
         }
 
 
         private void ComboBoxAutoPowerOff_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             object? obj = Enum.GetValues(typeof(PowerOffSetting)).GetValue(comboBoxAutoPowerOff.SelectedIndex);
             if (obj is null)
             {
@@ -516,27 +532,32 @@ namespace GHelper
 
         private void SliderAngleAdjustment_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetAngleAdjustment((short)sliderAngleAdjustment.Value);
         }
 
         private void ComboBoxLiftOffDistance_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetLiftOffDistance((LiftOffDistance)comboBoxLiftOffDistance.SelectedIndex);
         }
 
         private void CheckAngleSnapping_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetAngleSnapping(checkBoxAngleSnapping.Checked);
             mouse.SetAngleAdjustment((short)sliderAngleAdjustment.Value);
         }
 
         private void CheckBoxMotionSync_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetMotionSync(checkBoxMotionSync.Checked);
         }
 
         private void CheckBoxZoneMode_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SetZoneMode(checkBoxZoneMode.Checked);
             UpdateZoneModeUIState();
         }
@@ -548,6 +569,7 @@ namespace GHelper
 
         private void SliderZoneModeDPI_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.ZoneModeDPI = sliderZoneModeDPI.Value;
             if (mouse.ZoneMode)
             {
@@ -567,6 +589,7 @@ namespace GHelper
 
         private void ComboBoxZoneModePollingRate_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             PollingRate[] zoneModePollingRates = { PollingRate.PR1000Hz, PollingRate.PR2000Hz, PollingRate.PR4000Hz, PollingRate.PR8000Hz };
             if (comboBoxZoneModePollingRate.SelectedIndex >= 0 && comboBoxZoneModePollingRate.SelectedIndex < zoneModePollingRates.Length)
             {
@@ -596,12 +619,14 @@ namespace GHelper
 
         private void SliderDPI_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             updateMouseDPI = true;
             UpdateMouseDPISettings();
         }
 
         private void UpdateMouseDPISettings()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!updateMouseDPI)
             {
                 return;
@@ -631,6 +656,7 @@ namespace GHelper
 
         private void RefreshMouseData()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.SynchronizeDevice();
 
             Logger.WriteLine(mouse.GetDisplayName() + " (GUI): Mouse data synchronized");
@@ -973,6 +999,7 @@ namespace GHelper
 
         private void ButtonResetBindings_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             mouse.ResetButtonBindings();
             VisualizeButtonBindings();
             Program.inputDispatcher?.RegisterKeys();
@@ -980,6 +1007,7 @@ namespace GHelper
 
         private void BindingCombo_Changed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (_updatingBindings || sender is not UI.RComboBox cmb || cmb.Tag is not int slot) return;
             if (cmb.SelectedItem is BindingSeparator)
             {
@@ -1376,11 +1404,13 @@ namespace GHelper
 
         private void ButtonSync_Click(object sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             RefreshMouseData();
         }
 
         private void buttonImport_Click(object sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             byte[] data = null;
 
             Thread t = new Thread(() =>

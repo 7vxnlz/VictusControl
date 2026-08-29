@@ -1,4 +1,4 @@
-﻿using GHelper.Ally;
+using GHelper.Ally;
 using GHelper.AnimeMatrix;
 using GHelper.AutoUpdate;
 using GHelper.Battery;
@@ -299,6 +299,7 @@ namespace GHelper
 
         private void ButtonArmoury_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var dialogResult = MessageBox.Show(this, "Armoury Crate is active, download official uninstaller app?", "Armoury Crate", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes) AsusService.RunArmouryUninstaller();
         }
@@ -355,6 +356,7 @@ namespace GHelper
 
         private void ButtonAutoTDP_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             allyControl.ToggleAutoTDP();
         }
 
@@ -561,16 +563,19 @@ namespace GHelper
 
         private void ButtonFPS_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             allyControl.ToggleFPSLimit();
         }
 
         private void ButtonBacklight_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             allyControl.ToggleBacklight();
         }
 
         private void ButtonControllerMode_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             allyControl.ToggleMode();
         }
 
@@ -1057,6 +1062,7 @@ namespace GHelper
         private void ButtonMatrix_Click(object? sender, EventArgs e)
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (matrixControl.IsSlash)
             {
                 if (slashForm == null || slashForm.Text == "")
@@ -1105,6 +1111,7 @@ namespace GHelper
 
         public void SetMatrixRunning(int mode)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             VisualiseMatrixRunning(mode);
             AppConfig.Set("matrix_running", mode);
             matrixControl.SetDevice();
@@ -1113,6 +1120,7 @@ namespace GHelper
 
         private void ComboMatrixRunning_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             SetMatrixRunning(comboMatrixRunning.SelectedIndex);
             if (!matrixControl.IsSlash && comboMatrixRunning.SelectedIndex == (int)MatrixMode.Text && (matrixForm == null || !matrixForm.Visible)) ButtonMatrix_Click(sender, e);
         }
@@ -1120,6 +1128,7 @@ namespace GHelper
 
         private void ComboMatrix_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_brightness", comboMatrix.SelectedIndex);
             matrixControl.SetDevice();
         }
@@ -1133,6 +1142,7 @@ namespace GHelper
 
         private void ButtonKeyboardColor2_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             SetColorPicker("aura_color2", Aura.Color2);
         }
 
@@ -1168,6 +1178,7 @@ namespace GHelper
 
         public void FansToggle(int index = 0)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (fansForm == null || fansForm.Text == "")
             {
                 fansForm = new Fans();
@@ -1205,22 +1216,26 @@ namespace GHelper
 
         private void ButtonKeyboardColor_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             SetColorPicker("aura_color", Aura.Color1);
         }
 
         private void ButtonRearColor_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             SetColorPicker("rear_color", Aura.RearColor);
         }
 
         private void ComboRearLight_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("rear_mode", (int)comboRearLight.SelectedValue);
             SetAura();
         }
 
         public void InitRearLight()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.HasRearLight())
                 return;
 
@@ -1242,6 +1257,7 @@ namespace GHelper
 
         public void InitAura()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             comboKeyboard.DropDownStyle = ComboBoxStyle.DropDownList;
             if (!Aura.IsBacklightDetected)
                 Aura.Init();
@@ -1275,6 +1291,7 @@ namespace GHelper
 
         public void SetAura()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 Aura.ApplyAura();
@@ -1317,6 +1334,7 @@ namespace GHelper
         public void InitMatrix()
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!matrixControl.IsValid)
             {
                 panelMatrix.Visible = false;
@@ -1344,6 +1362,7 @@ namespace GHelper
 
         public void CycleMatrix(int delta)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             comboMatrix.SelectedIndex = Math.Min(Math.Max(0, comboMatrix.SelectedIndex + delta), comboMatrix.Items.Count - 1);
             AppConfig.Set("matrix_brightness", comboMatrix.SelectedIndex);
             matrixControl.SetDevice();
@@ -1598,6 +1617,7 @@ namespace GHelper
 
         private void ButtonOptimized_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("gpu_auto", (AppConfig.Get("gpu_auto") == 1) ? 0 : 1);
             VisualiseGPUMode();
             gpuControl.AutoGPUMode(true);
@@ -1605,6 +1625,7 @@ namespace GHelper
 
         private void ButtonStopGPU_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             gpuControl.KillGPUApps();
         }
 
@@ -1782,6 +1803,7 @@ namespace GHelper
         public void VisualizeXGM(int GPUMode = -1)
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) { Invoke(() => VisualizeXGM(false, -1, GPUMode)); return; }
             bool connected = Program.acpi.IsXGConnected();
             int activated = connected ? Program.acpi.DeviceGet(AsusACPI.GPUXG) : -1;
             Invoke(() => VisualizeXGM(connected, activated, GPUMode));

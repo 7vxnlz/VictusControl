@@ -1,4 +1,4 @@
-﻿using GHelper.Helpers;
+using GHelper.Helpers;
 using Microsoft.Win32;
 using System.Diagnostics;
 
@@ -19,6 +19,7 @@ namespace GHelper.Display
 
         public static void AutoScreen(bool force = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (force || AppConfig.Is("screen_auto"))
             {
                 if (SystemInformation.PowerStatus.PowerLineStatus == PowerLineStatus.Online)
@@ -34,12 +35,14 @@ namespace GHelper.Display
 
         public static void SetAutoRefresh(int auto)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("screen_auto", auto);
             if (auto == 0) SetAsusRefreshFlag(0);
         }
 
         public static void SetAsusRefreshFlag(int value)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!ProcessHelper.IsUserAdministrator()) return;
             const string keyPath = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{8714A8D1-0F08-4681-9DF6-A8C4607A58B4}";
             try
@@ -55,6 +58,7 @@ namespace GHelper.Display
 
         public static void ToggleScreenRate()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var laptopScreen = ScreenNative.FindLaptopScreen(true);
             var refreshRate = ScreenNative.GetRefreshRate(laptopScreen);
             if (refreshRate < 0) return;
@@ -66,6 +70,7 @@ namespace GHelper.Display
 
         public static void SetScreen(int frequency = -1, int overdrive = -1, int miniled = -1)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var laptopScreen = ScreenNative.FindLaptopScreen(true);
             var refreshRate = ScreenNative.GetRefreshRate(laptopScreen);
 
@@ -97,6 +102,7 @@ namespace GHelper.Display
 
         public static void SetMiniled(int miniled = -1)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (miniled >= 0)
             {
                 if (Program.acpi.IsSupported(AsusACPI.ScreenMiniled1))
@@ -111,6 +117,7 @@ namespace GHelper.Display
 
         public static void InitMiniled()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.IsForceMiniled())
             {
                 if (ScreenCCD.IsHDR()) SetHDRControl(AppConfig.Get("hdr_control"));
@@ -120,12 +127,14 @@ namespace GHelper.Display
 
         public static void InitOptimalBrightness()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int optimalBrightness = AppConfig.Get("optimal_brightness");
             if (optimalBrightness >= 0) SetOptimalBrightness(optimalBrightness);
         }
 
         public static void SetOptimalBrightness(int status)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("optimal_brightness", status);
             if (status == 2) status = SystemInformation.PowerStatus.PowerLineStatus == PowerLineStatus.Offline ? 1 : 0;
             Program.acpi.DeviceSet(AsusACPI.ScreenOptimalBrightness, status, "Optimal Brightness");
@@ -133,11 +142,13 @@ namespace GHelper.Display
 
         public static int GetOptimalBrightness()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return -1;
             return Program.acpi.DeviceGet(AsusACPI.ScreenOptimalBrightness);
         }
 
         public static void ToogleFHD()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int fhd = Program.acpi.DeviceGet(AsusACPI.ScreenFHD);
             Logger.WriteLine($"FHD Toggle: {fhd}");
 
@@ -151,6 +162,7 @@ namespace GHelper.Display
 
         public static void SetHDRControl(int status = -1)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (status >= 0)
             {
                 AppConfig.Set("hdr_control", status);
@@ -160,6 +172,7 @@ namespace GHelper.Display
 
         public static void ToogleHDRControl()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int hdrControl = Program.acpi.DeviceGet(AsusACPI.ScreenHDRControl);
             Logger.WriteLine($"HDR Control Toggle: {hdrControl}");
             SetHDRControl((hdrControl == 1) ? 1 : 0);
@@ -169,6 +182,7 @@ namespace GHelper.Display
 
         public static string ToogleMiniled()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return string.Empty;
             int miniled1 = Program.acpi.DeviceGet(AsusACPI.ScreenMiniled1);
             int miniled2 = Program.acpi.DeviceGet(AsusACPI.ScreenMiniled2);
 
@@ -218,6 +232,7 @@ namespace GHelper.Display
 
         public static void InitScreen()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var laptopScreen = ScreenNative.FindLaptopScreen();
             int frequency = ScreenNative.GetRefreshRate(laptopScreen);
             int maxFrequency = GetMaxRate(laptopScreen);

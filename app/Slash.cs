@@ -57,6 +57,7 @@ namespace GHelper
 
         private void LoadFlags()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (slash is null) return;
             try
             {
@@ -79,6 +80,7 @@ namespace GHelper
 
         private void SetFlag(byte region, bool status)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             try
             {
                 slash?.SetFlag(region, status);
@@ -91,6 +93,7 @@ namespace GHelper
 
         private void CheckAutoOff_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_auto", checkAutoOff.Checked ? 1 : 0);
             try
             {
@@ -104,6 +107,7 @@ namespace GHelper
 
         private void CheckLidOff_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_lid", checkLidOff.Checked ? 1 : 0);
             try
             {
@@ -124,6 +128,7 @@ namespace GHelper
 
         private void SliderInterval_Commit(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.Get("matrix_interval", 0) == sliderInterval.Value) return;
             AppConfig.Set("matrix_interval", sliderInterval.Value);
             Program.settingsForm.matrixControl.SetDevice();
@@ -131,11 +136,13 @@ namespace GHelper
 
         private void CheckSleepAnimation_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             SetFlag(0xA1, checkSleepAnimation.Checked);
         }
 
         private void ComboSleepPattern_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             try
             {
                 byte pattern = comboSleepPattern.SelectedIndex == 0
@@ -152,6 +159,7 @@ namespace GHelper
 
         private void CheckBatteryLevel_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             try
             {
                 slash?.SetBatteryAnimation(checkBatteryLevel.Checked);
@@ -165,6 +173,7 @@ namespace GHelper
 
         private void CheckPowerSaving_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             try
             {
                 slash?.SetPowerSaving(checkPowerSaving.Checked, AppConfig.Get("slash_dim", 20));
@@ -178,6 +187,7 @@ namespace GHelper
 
         private void ComboDim_DropDownClosed(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int level = dimLevels[Math.Max(0, comboDim.SelectedIndex)];
             AppConfig.Set("slash_dim", level);
             try

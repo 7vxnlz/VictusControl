@@ -1,4 +1,4 @@
-﻿namespace GHelper.Mode
+namespace GHelper.Mode
 {
     internal class Modes
     {
@@ -109,6 +109,7 @@
 
         public static void InitFullSpeed()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int vivoMode = Program.acpi.DeviceGet(AsusACPI.VivoBookMode);
             if (vivoMode < 0) return;
             Logger.WriteLine($"VivoBookMode: {vivoMode} (0x{vivoMode:X})");

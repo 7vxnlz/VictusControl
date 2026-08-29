@@ -1368,6 +1368,7 @@ namespace GHelper.Input
 
         public static void SetStatusLED(bool status)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Program.acpi.DeviceSet(AsusACPI.StatusLed, status ? 7 : 0, "StatusLED");
         }
 
@@ -1379,6 +1380,7 @@ namespace GHelper.Input
 
         public static void ShutdownStatusLed()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.IsAutoStatusLed()) SetStatusLED(false);
         }
 

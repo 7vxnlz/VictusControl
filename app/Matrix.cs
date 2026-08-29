@@ -77,6 +77,8 @@ namespace GHelper
             buttonAudioMode.Click += ButtonAudioMode_Click;
             buttonTextMode.Click += ButtonTextMode_Click;
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             matrixControl.deviceMatrix.OnPresent = VisualisePicture;
 
             picturePreview.MouseDown += PicturePreview_MouseDown;
@@ -321,6 +323,7 @@ namespace GHelper
 
         private void PicturePreview_MouseDown(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (e.Button != MouseButtons.Left) return;
 
             MatrixMode running = AniMatrixControl.Mode;
@@ -360,6 +363,7 @@ namespace GHelper
 
         private void PicturePreview_MouseMove(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!dragging) return;
 
             MatrixMode running = AniMatrixControl.Mode;
@@ -408,6 +412,7 @@ namespace GHelper
 
         private void PicturePreview_MouseUp(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!dragging) return;
             dragging = false;
             dragTimer.Stop();
@@ -449,6 +454,7 @@ namespace GHelper
 
         private void TrackMatrix_MouseUp(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_contrast", trackContrast.Value);
             AppConfig.Set("matrix_gamma", trackGamma.Value);
             ApplyPicture();
@@ -457,18 +463,21 @@ namespace GHelper
 
         private void ComboRotation_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_rotation", comboRotation.SelectedIndex);
             ApplyPicture();
         }
 
         private void ComboScaling_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_quality", comboScaling.SelectedIndex);
             ApplyPicture();
         }
 
         private void ComboAudioMode_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_audio_mode", comboAudioMode.SelectedIndex);
             SetRunningMode(MatrixMode.Audio);
         }
@@ -499,6 +508,7 @@ namespace GHelper
 
         private void ApplyText()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_text", textMatrix.Text);
             AppConfig.Set("matrix_text2", textMatrix2.Text);
             AppConfig.Set("matrix_text_font", comboTextFont.SelectedIndex);
@@ -513,18 +523,21 @@ namespace GHelper
 
         private void CheckAutoOff_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_auto", checkAutoOff.Checked ? 1 : 0);
             matrixControl.SetBatteryAuto();
         }
 
         private void CheckLidOff_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_lid", checkLidOff.Checked ? 1 : 0);
             matrixControl.SetLidMode(true);
         }
 
         private void CheckClockBattery_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_clock_battery", checkClockBattery.Checked ? 1 : 0);
             textClockDate.Enabled = !checkClockBattery.Checked;
             matrixControl.deviceMatrix.PresentClock();
@@ -532,6 +545,7 @@ namespace GHelper
 
         private void ApplyClock()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             // only save formats that actually parse
             try { DateTime.Now.ToString(textClockTime.Text); if (textClockTime.Text.Length > 0) AppConfig.Set("matrix_time", textClockTime.Text); } catch { }
             try { DateTime.Now.ToString(textClockDate.Text); if (textClockDate.Text.Length > 0) AppConfig.Set("matrix_date", textClockDate.Text); } catch { }
@@ -541,6 +555,7 @@ namespace GHelper
 
         private void Matrix_FormClosed(object? sender, FormClosingEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             matrixControl.deviceMatrix.OnPresent = null;
             textTimer.Dispose();
             clockTimer.Dispose();
@@ -572,6 +587,7 @@ namespace GHelper
 
         private void ButtonReset_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             MatrixMode running = AniMatrixControl.Mode;
 
             if (running == MatrixMode.Text)
@@ -615,6 +631,7 @@ namespace GHelper
 
         private void TrackZoom_MouseUp(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("matrix_zoom", trackZoom.Value);
             ApplyPicture();
         }
@@ -626,6 +643,7 @@ namespace GHelper
 
         private async void Matrix_Shown(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             VisualiseMode();
 
             // gated: render for preview, otherwise just load picture for dragging
@@ -637,6 +655,7 @@ namespace GHelper
 
         private void ApplyPicture()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             string path = AppConfig.GetString("matrix_picture");
             if (path is null) return;
 
@@ -646,6 +665,7 @@ namespace GHelper
 
         private void ButtonPicture_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             matrixControl.OpenMatrixPicture();
             VisualiseMode();
         }
