@@ -13,6 +13,7 @@
     <Platforms>x64</Platforms>
     <Platform>x64</Platform>
     <AssemblyName>VictusX</AssemblyName>
+    <RootNamespace>GHelper</RootNamespace>
     <PlatformTarget>x64</PlatformTarget>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <DebugType>embedded</DebugType>
@@ -88,4 +89,5 @@
 		<Exec Command="powershell -NoProfile -Command &quot;$exe = '$(PublishDir)VictusX.exe'; for ($i = 0; $i -lt 30; $i++) { try { [IO.File]::Open($exe, 'Open', 'Read', 'None').Close(); break } catch { Start-Sleep -Milliseconds 200 } }; Compress-Archive -Path $exe -DestinationPath '$(PublishDir)VictusX.zip' -Force&quot;" />
 	</Target>
 </Project>
+
 
