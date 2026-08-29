@@ -7,12 +7,23 @@ using System.Text.RegularExpressions;
 
 public static class AppConfig
 {
+    private const string UnsupportedHardwareFlag = "--unsupported-hardware";
+    private const string HpVictusHardwareFlag = "--hp-victus";
+
     private static bool unsupportedHardwareMode;
+    private static bool hpVictusHardwareMode;
 
     public static bool IsUnsupportedHardwareMode() =>
-        unsupportedHardwareMode || Environment.GetCommandLineArgs().Any(arg => string.Equals(arg, "--unsupported-hardware", StringComparison.OrdinalIgnoreCase));
+        unsupportedHardwareMode ||
+        Environment.GetCommandLineArgs().Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase)) ||
+        IsHpVictusHardwareMode();
 
     public static void SetUnsupportedHardwareMode(bool enabled) => unsupportedHardwareMode = enabled;
+
+    public static bool IsHpVictusHardwareMode() =>
+        hpVictusHardwareMode || Environment.GetCommandLineArgs().Any(arg => string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase));
+
+    public static void SetHpVictusHardwareMode(bool enabled) => hpVictusHardwareMode = enabled;
 
     private static string configFile;
     private static string fallbackConfigFile;
@@ -824,4 +835,5 @@ public static class AppConfig
 
 
 }
+
 

@@ -22,8 +22,10 @@ namespace GHelper
     {
         public static NotifyIcon trayIcon;
         private const string UnsupportedHardwareFlag = "--unsupported-hardware";
+        private const string HpVictusHardwareFlag = "--hp-victus";
         public static IHardwareController acpi;
         private static bool unsupportedHardwareMode;
+        private static bool hpVictusMode;
 
         public static SettingsForm settingsForm;
 
@@ -53,9 +55,14 @@ namespace GHelper
             AppDomain.CurrentDomain.UnhandledException += (s, e) => Logger.WriteLine("Unhandled: " + e.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (s, e) => { Logger.WriteLine("Unobserved: " + e.Exception); e.SetObserved(); };
 
-            unsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
+            bool explicitUnsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
+            hpVictusMode = args.Any(arg => string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase));
+            unsupportedHardwareMode = explicitUnsupportedHardwareMode || hpVictusMode;
+            AppConfig.SetHpVictusHardwareMode(hpVictusMode);
             AppConfig.SetUnsupportedHardwareMode(unsupportedHardwareMode);
-            string action = args.FirstOrDefault(arg => !string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase)) ?? "";
+            string action = args.FirstOrDefault(arg =>
+                !string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase)) ?? "";
 
             if (action == "charge")
             {
@@ -100,7 +107,7 @@ namespace GHelper
             AppConfig.Set("start_count", startCount);
             Logger.WriteLine("Start Count: " + startCount);
 
-            acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode);
+            acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode, hpVictusMode);
 
             if (!unsupportedHardwareMode && !acpi.IsConnected() && AppConfig.IsASUS() && !AppConfig.IsDesktop())
             {
@@ -530,7 +537,7 @@ namespace GHelper
             try
             {
                 int limit = AppConfig.Get("charge_limit");
-                acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode);
+                acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode, hpVictusMode);
                 if (limit > 0 && limit < 100)
                 {
                     Logger.WriteLine($"------- Startup Battery Limit {limit} -------");
@@ -580,6 +587,7 @@ namespace GHelper
 
     }
 }
+
 
 
 

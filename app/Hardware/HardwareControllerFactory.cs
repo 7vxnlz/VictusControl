@@ -26,5 +26,13 @@ public static class HardwareControllerFactory
             ? CreateUnsupportedController()
             : CreateDefaultController();
     }
+
+    public static IHardwareController CreateController(bool useUnsupportedController, bool useHpVictusController)
+    {
+        return useHpVictusController
+            ? CreateHpVictusController()
+            : CreateController(useUnsupportedController);
+    }
 }
+
 
