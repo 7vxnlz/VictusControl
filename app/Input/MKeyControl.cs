@@ -57,6 +57,7 @@ namespace GHelper.Input
 
         public static void ApplyAll()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (Skip || !IsSupported()) return;
 
             foreach (string name in slots.Keys) Apply(name);
@@ -64,6 +65,7 @@ namespace GHelper.Input
 
         public static void Reset()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (Skip || !IsSupported()) return;
 
             foreach (int key in slots.Values) SetOpcode(key, DefaultOpcode(key));

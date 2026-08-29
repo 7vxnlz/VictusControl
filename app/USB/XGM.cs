@@ -1,4 +1,4 @@
-﻿// Reference : thanks to https://github.com/RomanYazvinsky/ for initial discovery of XGM payloads
+// Reference : thanks to https://github.com/RomanYazvinsky/ for initial discovery of XGM payloads
 
 using GHelper.Helpers;
 using HidSharp;
@@ -42,6 +42,7 @@ namespace GHelper.USB
 
         public static bool IsConnected()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return false;
             return GetDevice() is not null;
         }
 
@@ -73,6 +74,7 @@ namespace GHelper.USB
 
         public static void Init()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 if (IsConnected())
@@ -86,6 +88,7 @@ namespace GHelper.USB
 
         public static void Light(bool status)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Write([XGM_REPORT_ID, 0xc5, status ? (byte)0x50 : (byte)0]);
             Write([XGM_REPORT_ID, 0xbd, 0x00, status ? (byte)0x01 : (byte)0x00]);
         }
@@ -103,6 +106,7 @@ namespace GHelper.USB
 
         public static void LightMode(AuraMode mode, Color color, Color color2, int speed)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 if (IsConnected())
@@ -131,6 +135,7 @@ namespace GHelper.USB
 
         public static void Reset()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 if (IsConnected()) Write([XGM_REPORT_ID, 0xd1, 0x02]);
@@ -139,6 +144,7 @@ namespace GHelper.USB
 
         public static void SetFan(byte[] curve)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 if (AsusACPI.IsInvalidCurve(curve)) return;

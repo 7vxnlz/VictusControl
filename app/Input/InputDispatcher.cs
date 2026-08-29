@@ -900,6 +900,7 @@ namespace GHelper.Input
 
         static void HandleEvent(int EventID)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             string carrier = MKeyControl.CarrierSlot(EventID);
             if (carrier is not null)
             {
