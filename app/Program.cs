@@ -21,7 +21,9 @@ namespace GHelper
     static class Program
     {
         public static NotifyIcon trayIcon;
-        public static AsusACPI acpi;
+        private const string UnsupportedHardwareFlag = "--unsupported-hardware";
+        public static IHardwareController acpi;
+        private static bool unsupportedHardwareMode;
 
         public static SettingsForm settingsForm;
 
@@ -51,8 +53,8 @@ namespace GHelper
             AppDomain.CurrentDomain.UnhandledException += (s, e) => Logger.WriteLine("Unhandled: " + e.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (s, e) => { Logger.WriteLine("Unobserved: " + e.Exception); e.SetObserved(); };
 
-            string action = "";
-            if (args.Length > 0) action = args[0];
+            unsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
+            string action = args.FirstOrDefault(arg => !string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase)) ?? "";
 
             if (action == "charge")
             {
@@ -97,7 +99,7 @@ namespace GHelper
             AppConfig.Set("start_count", startCount);
             Logger.WriteLine("Start Count: " + startCount);
 
-            acpi = global::HardwareControllerFactory.CreateDefaultController();
+            acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode);
 
             if (!acpi.IsConnected() && AppConfig.IsASUS() && !AppConfig.IsDesktop())
             {
@@ -489,7 +491,7 @@ namespace GHelper
 
         static void Charge()
         {
-            if (AppConfig.IsZ13())
+            if (!unsupportedHardwareMode && AppConfig.IsZ13())
             {
                 AsusHid.Write([
                     Encoding.ASCII.GetBytes("]ASUS Tech.Inc."),
@@ -500,12 +502,12 @@ namespace GHelper
             try
             {
                 int limit = AppConfig.Get("charge_limit");
-                acpi = global::HardwareControllerFactory.CreateDefaultController();
+                acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode);
                 if (limit > 0 && limit < 100)
                 {
                     Logger.WriteLine($"------- Startup Battery Limit {limit} -------");
                     if (acpi.IsConnected()) acpi.DeviceSet(AsusACPI.BatteryLimit, limit, "Limit");
-                    else AsusACPI.DeviceSetWmi(AsusACPI.BatteryLimit, limit);
+                    else if (!unsupportedHardwareMode) AsusACPI.DeviceSetWmi(AsusACPI.BatteryLimit, limit);
                 }
             }
             catch (Exception ex)
@@ -550,3 +552,7 @@ namespace GHelper
 
     }
 }
+
+
+
+

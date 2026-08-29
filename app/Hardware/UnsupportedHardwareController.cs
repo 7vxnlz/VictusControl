@@ -1,5 +1,6 @@
 using GHelper.USB;
 using System.Drawing;
+using System.Management;
 
 public sealed class UnsupportedHardwareController : IHardwareController
 {
@@ -25,6 +26,10 @@ public sealed class UnsupportedHardwareController : IHardwareController
 
     public bool IsSupported(uint deviceId) => false;
 
+    public void SubscribeToEvents(Action<object, EventArrivedEventArgs> eventHandler)
+    {
+    }
+
     public int GetFan(AsusFan device) => -1;
 
     public int SetFanRange(AsusFan device, byte[] curve) => -1;
@@ -42,6 +47,12 @@ public sealed class UnsupportedHardwareController : IHardwareController
     public int SetPerformanceMode(int mode, string log = "Mode") => -1;
 
     public int SetVivoMode(int mode) => -1;
+
+    public (int eCores, int pCores) GetCores(uint device = AsusACPI.CORES_CPU) => (-1, -1);
+
+    public void SetCores(int eCores, int pCores)
+    {
+    }
 
     public void TUFKeyboardBrightness(int brightness, string log = "TUF Backlight")
     {
@@ -66,4 +77,25 @@ public sealed class UnsupportedHardwareController : IHardwareController
     public bool IsAllAmdPPT() => false;
 
     public bool IsNVidiaGPU() => false;
+
+    public int[] GetVramOptions(out int unitMb)
+    {
+        unitMb = 0;
+        return [];
+    }
+
+    public int GetVramMem() => -1;
+
+    public void SetVramMem(int value)
+    {
+    }
+
+    public int GetAPUMem() => -1;
+
+    public void SetAPUMem(int memory = 4)
+    {
+    }
+
+    public string ScanRange() => string.Empty;
 }
+

@@ -1,5 +1,6 @@
 using GHelper.USB;
 using System.Drawing;
+using System.Management;
 
 public interface IEmbeddedController
 {
@@ -12,6 +13,7 @@ public interface IEmbeddedController
     int DeviceSet(uint deviceId, int status, string? logName);
     int DeviceSet(uint deviceId, byte[] parameters, string? logName);
     bool IsSupported(uint deviceId);
+    void SubscribeToEvents(Action<object, EventArrivedEventArgs> eventHandler);
 }
 
 public interface IDeviceController : IEmbeddedController
@@ -33,6 +35,8 @@ public interface IPerformanceModeController
 {
     int SetPerformanceMode(int mode, string log = "Mode");
     int SetVivoMode(int mode);
+    (int eCores, int pCores) GetCores(uint device = AsusACPI.CORES_CPU);
+    void SetCores(int eCores, int pCores);
 }
 
 public interface IKeyboardController
@@ -58,6 +62,11 @@ public interface IGpuModeController
     bool IsXGConnected();
     bool IsAllAmdPPT();
     bool IsNVidiaGPU();
+    int[] GetVramOptions(out int unitMb);
+    int GetVramMem();
+    void SetVramMem(int value);
+    int GetAPUMem();
+    void SetAPUMem(int memory = 4);
 }
 
 public interface IHardwareController :
@@ -69,4 +78,5 @@ public interface IHardwareController :
     IDisplayController,
     IGpuModeController
 {
+    string ScanRange();
 }
