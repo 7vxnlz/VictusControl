@@ -1,4 +1,4 @@
-﻿using GHelper.Gpu.AMD;
+using GHelper.Gpu.AMD;
 using GHelper.Helpers;
 using GHelper.Input;
 using GHelper.Mode;
@@ -344,6 +344,7 @@ namespace GHelper.Ally
 
         private void SetTDP(int tdp, string log)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (tdp < tdpStable) tdp = tdpStable;
 
             int max = GetMaxTDP();
@@ -361,6 +362,7 @@ namespace GHelper.Ally
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!autoTDP && _mode != ControllerMode.Auto) return;
 
             float fps = amdControl.GetFPS();
@@ -413,6 +415,7 @@ namespace GHelper.Ally
 
         public void ToggleAutoTDP()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             autoTDP = !autoTDP;
             tdpCurrent = -1;
 

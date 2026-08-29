@@ -1,4 +1,4 @@
-﻿using GHelper.Fan;
+using GHelper.Fan;
 using GHelper.Gpu.NVidia;
 using GHelper.Helpers;
 using GHelper.Mode;
@@ -297,6 +297,8 @@ namespace GHelper
 
             ToggleNavigation(0);
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             if (!Program.acpi.IsSupported(AsusACPI.DevsCPUFanCurve)) buttonCalibrate.Visible = false;
 
             gpuPowerBase = Program.acpi.DeviceGet(AsusACPI.GPU_BASE);
@@ -336,6 +338,7 @@ namespace GHelper
 
         private void ButtonCalibrate_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             buttonCalibrate.Enabled = false;
             fanSensorControl.StartCalibration();
         }
@@ -436,6 +439,7 @@ namespace GHelper
 
         private void ButtonApplyAdvanced_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             string result = modeControl.SetRyzen(true);
             checkApplyUV.Enabled = true;
             ShowLabelRisky(result);
@@ -443,6 +447,7 @@ namespace GHelper
 
         private void ButtonReadLimits_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             ShowLabelRisky(modeControl.ReadRyzenLimits());
         }
 
@@ -593,16 +598,19 @@ namespace GHelper
 
         private void TrackGPU_MouseUp(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             modeControl.SetGPUPower();
         }
 
         private void TrackGPUClocks_MouseUp(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             modeControl.SetGPUClocks(true);
         }
 
         private void InitGPUPower()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!isGPUPower) return;
 
             int maxGPUPower = NvidiaSmi.GetMaxGPUPower();
@@ -632,6 +640,7 @@ namespace GHelper
 
         public void InitGPU()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 if (Program.acpi.DeviceGet(AsusACPI.GPUEco) == 1)
@@ -743,6 +752,7 @@ namespace GHelper
 
         private void InitHysteresis()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var defaults = Program.acpi.GetFanHysteresis();
             if (defaults.up < 0 || defaults.down < 0)
             {
@@ -772,6 +782,7 @@ namespace GHelper
 
         private void TrackHysteresis_MouseUp(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Program.acpi.SetFanHysteresis(trackHysteresisUp.Value, trackHysteresisDown.Value);
         }
 
@@ -918,6 +929,7 @@ namespace GHelper
 
         private void TrackPower_MouseUp(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Task.Run(() =>
             {
                 modeControl.AutoPower(true);
@@ -1024,6 +1036,7 @@ namespace GHelper
         public void InitPower()
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             bool modeA = Program.acpi.IsSupported(AsusACPI.PPT_APUA0) || CpuInfo.IsAMD;
             bool modeB0 = Program.acpi.IsAllAmdPPT();
             bool modeC1 = Program.acpi.IsSupported(AsusACPI.PPT_APUC1);
@@ -1121,6 +1134,7 @@ namespace GHelper
 
         private void SavePower()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             labelTotal.Text = trackTotal.Value.ToString() + "W";
             labelSlow.Text = trackSlow.Value.ToString() + "W";
             labelCPU.Text = trackCPU.Value.ToString() + "W";
@@ -1177,6 +1191,7 @@ namespace GHelper
         public void InitFans()
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int chartCount = 2;
 
             // Middle / system fan check
@@ -1253,6 +1268,7 @@ namespace GHelper
         void LoadProfile(Series series, AsusFan device, bool reset = false)
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             series.ChartType = SeriesChartType.Line;
             series.MarkerSize = 10;
             series.MarkerStyle = MarkerStyle.Circle;
