@@ -1,4 +1,4 @@
-﻿using GHelper.Ally;
+using GHelper.Ally;
 using GHelper.UI;
 
 namespace GHelper
@@ -96,6 +96,7 @@ namespace GHelper
 
         private void CheckController_CheckedChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AppConfig.Set("controller_disabled", checkController.Checked ? 1 : 0);
             AllyControl.DisableXBoxController(checkController.Checked);
         }
@@ -174,6 +175,7 @@ namespace GHelper
 
         private void Binding_SelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (_updatingBindings || sender is null) return;
             RComboBox combo = (RComboBox)sender;
 
@@ -199,6 +201,7 @@ namespace GHelper
 
         private void TurboSelectedValueChanged(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (sender is null) return;
             RComboBox combo = (RComboBox)sender;
             int ms = ((KeyValuePair<int, string>)combo.SelectedItem).Key;
@@ -278,11 +281,13 @@ namespace GHelper
 
         private void Controller_Complete(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             AllyControl.SetDeadzones();
         }
 
         private void ButtonReset_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             trackLSMin.Value = 0;
             trackLSMax.Value = 100;
             trackRSMin.Value = 0;

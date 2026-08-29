@@ -1,4 +1,4 @@
-﻿using HidSharp;
+using HidSharp;
 using HidSharp.Reports;
 using System.Text;
 
@@ -22,6 +22,7 @@ public static class AsusHid
 
     static void EnsureAuraStream()
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         if (auraStream != null) return;
         auraStream = FindHidStream(AURA_ID);
         if (auraStream == null) return;
@@ -39,6 +40,7 @@ public static class AsusHid
 
     public static IEnumerable<HidDevice>? FindDevices(byte reportId, int[]? pids = null)
     {
+            if (AppConfig.IsUnsupportedHardwareMode()) yield break;
         IEnumerable<HidDevice> deviceList;
 
         try
@@ -88,6 +90,7 @@ public static class AsusHid
 
     public static HidStream? FindHidStream(byte reportId)
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return null;
         try
         {
             var devices = FindDevices(reportId);
@@ -126,6 +129,7 @@ public static class AsusHid
 
     public static void WriteInput(byte[] data, string? log = "USB")
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         lock (hidLock)
         foreach (var device in FindDevices(INPUT_ID))
         {
@@ -149,16 +153,19 @@ public static class AsusHid
 
     public static void InitInput(string? log = "Input Init")
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         WriteInput([INPUT_ID, .. Encoding.ASCII.GetBytes("ASUS Tech.Inc.")], log);
     }
 
     public static void Write(byte[] data, string log = "USB")
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         Write(new List<byte[]> { data }, log);
     }
 
     public static void Write(List<byte[]> dataList, string log = "USB", int[]? pids = null)
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         var devices = FindDevices(AURA_ID, pids);
         if (devices is null) return;
 
@@ -186,6 +193,7 @@ public static class AsusHid
 
     public static void SetFeatureAura(byte[] data, bool retry = true)
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         EnsureAuraStream();
         if (auraStream == null)
         {
@@ -214,6 +222,7 @@ public static class AsusHid
 
     public static void DebugScanAllAsusDevices()
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         try
         {
             var devices = DeviceList.Local.GetHidDevices(ASUS_ID).Where(d => d.CanOpen).ToList();
@@ -253,6 +262,7 @@ public static class AsusHid
 
     public static byte[]? AuraProbe(bool query, string log = "Aura Probe")
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return null;
         var device = FindDevices(AURA_ID)?.FirstOrDefault();
         if (device == null)
         {

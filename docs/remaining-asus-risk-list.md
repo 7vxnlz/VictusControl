@@ -20,14 +20,14 @@ This list tracks ASUS-specific code that still exists after the unsupported-hard
 |---|---|---|---|
 | `app/Settings.cs` | Armoury, GPU, fan, Matrix, Aura, XGM, Ally button handlers | Already guarded on direct high-risk handlers | Leave UI in place until a later UI pruning/rebrand pass |
 | `app/Extra.cs` | ACPI testing, boot sound, status LED, NumberPad, ASUS services, cores/VRAM/APU controls | Already guarded at constructor edge and direct handlers | Later split ASUS-only advanced controls from generic settings |
-| `app/Handheld.cs` | Ally controller configuration | Still ASUS/ROG Ally-specific; likely not opened unless Ally UI is visible | Leave unchanged for dedicated Ally UI isolation |
+| `app/Handheld.cs` | Ally controller configuration | User-triggered Ally hardware actions now no-op in unsupported mode | Leave UI intact until dedicated Ally UI isolation |
 | `app/AsusKeyboardSettings.cs`, `app/AsusMouseSettings.cs` | ASUS peripheral writes | Direct write handlers already guarded | Leave class names and screens unchanged until rebrand/removal pass |
 
 ## Sensor/telemetry
 
 | Path | Risk | Status | Next action |
 |---|---|---|---|
-| `app/HardwareControl.cs` | ACPI sensor fallback reads for CPU/GPU temps, fan RPM, battery discharge | Main read loops already guarded; some helper-level direct reads remain and should be abstracted later | Leave unchanged unless unsupported mode can call helpers directly |
+| `app/HardwareControl.cs` | ACPI sensor fallback reads for CPU/GPU temps, fan RPM, battery discharge | Main read loops and direct helper fallbacks now skip ASUS ACPI in unsupported mode | Later add cleaner hardware-neutral sensor abstraction |
 | `app/Fan/FanSensorControl.cs` | Fan calibration and RPM polling | Startup/calibration callers guarded; internal calibration still ASUS-specific | Leave unchanged until fan control abstraction replaces it |
 | `app/Pawn/` | Low-level CPU/SMU access | Still present from G-Helper; not ASUS-only but hardware-sensitive | Leave unchanged; inventory before any HP-specific use |
 
@@ -37,7 +37,7 @@ This list tracks ASUS-specific code that still exists after the unsupported-hard
 |---|---|---|---|
 | `app/USB/Aura.cs` | ASUS HID and ACPI lighting writes | Shared writer methods already guarded | Later extract generic lighting capability interface |
 | `app/USB/XGM.cs` | ASUS XG Mobile HID discovery/writes | Safe guards added to public XGM methods | Later remove or isolate behind external-GPU capability |
-| `app/USB/AsusHid.cs` | Raw ASUS HID discovery and writes | Still ASUS-specific; currently called through guarded higher-level paths | Do not touch yet; central dependency for later abstraction |
+| `app/USB/AsusHid.cs` | Raw ASUS HID discovery and writes | Public read/write helpers now return safe defaults in unsupported mode | Still central dependency; isolate behind capability interfaces later |
 | `app/USB/AsusLampArray.cs` | ASUS lighting device access | Still ASUS-specific; reached from Aura paths, now largely guarded by Aura entry points | Leave unchanged until Aura abstraction pass |
 | `app/Peripherals/` | ASUS mouse/keyboard HID models and detection | Detection and settings handlers already guarded; model classes remain ASUS-specific | Leave unchanged until peripheral abstraction/removal pass |
 | `app/AnimeMatrix/`, `app/Matrix.cs`, `app/Slash.cs`, `app/Input/NumberPad.cs` | ASUS lighting panels and NumberPad control | UI entry/handler paths guarded; low-level device classes remain ASUS-specific | Leave unchanged for dedicated lighting/peripheral removal pass |
@@ -65,7 +65,7 @@ This list tracks ASUS-specific code that still exists after the unsupported-hard
 | Path | Risk | Status | Next action |
 |---|---|---|---|
 | `app/Helpers/AsusService.cs` | ASUS service detection/start/stop | Startup and UI callers guarded; service helper remains ASUS-specific | Later isolate behind service-management abstraction |
-| `app/UpdatesController.cs` | ASUS package/update metadata and ASUS registry reads | Still ASUS-specific but not part of unsupported hardware control path | Leave unchanged until update/rebrand phase |
+| `app/UpdatesController.cs` | ASUS package/update metadata and ASUS registry reads | ASUS-specific firmware/package registry probes now skipped in unsupported mode | Leave generic update inventory behavior unchanged until rebrand phase |
 | `app/AppConfig.cs` | ASUS model-family detection and ASUS registry read for OLED care | Still ASUS-specific by design during fork transition | Leave unchanged until device identity abstraction replaces model heuristics |
 
 ## Highest-risk remaining unguarded areas
@@ -77,4 +77,4 @@ This list tracks ASUS-specific code that still exists after the unsupported-hard
 
 ## Safest next tiny fix
 
-Add helper-level safe defaults in `app/HardwareControl.cs` for unsupported mode, then separately isolate `AsusHid` behind a narrow peripheral/lighting boundary. Do not remove ASUS code yet.
+Next safest step is a focused abstraction pass around `AsusHid`, peripherals, and lighting. Do not remove ASUS code yet.

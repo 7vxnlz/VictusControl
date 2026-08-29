@@ -282,6 +282,7 @@ namespace GHelper
 
         static string? McuFirmwareVersion()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return null;
             const string k = @"HKEY_LOCAL_MACHINE\SOFTWARE\ASUS\FWVersion\ROGMCUFW";
             var raw = (Registry.GetValue(k, "Main FW version", null) ?? Registry.GetValue(k, "FW version", null)) as string;
             return string.IsNullOrEmpty(raw) ? null : raw.Split('.')[^1];
@@ -289,6 +290,7 @@ namespace GHelper
 
         static string? FirmwareVersion(string title)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return null;
             var key = title.Split('_', ' ')[0];
             if (key.Length < 2) return null;
 
@@ -310,6 +312,7 @@ namespace GHelper
 
         static void AddAsusInstalledVersions(List<LocalDriver> list)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             try
             {
                 using var asus = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ASUS");

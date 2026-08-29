@@ -324,7 +324,7 @@ public static class HardwareControl
     {
         var now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-        if (isAlly)
+        if (isAlly && !AppConfig.IsUnsupportedHardwareMode())
         {
             try
             {
@@ -452,7 +452,7 @@ public static class HardwareControl
         lastUpdate = last;
 
         if (isPZ13) return (float)GetCPUTempWMI();
-        cpuTemp = Program.acpi.DeviceGet(AsusACPI.Temp_CPU);
+        if (!AppConfig.IsUnsupportedHardwareMode()) cpuTemp = Program.acpi.DeviceGet(AsusACPI.Temp_CPU);
 
         if (cpuTemp < 0) try
         {
@@ -508,7 +508,7 @@ public static class HardwareControl
             //Debug.WriteLine("Failed reading GPU temp :" + ex.Message);
         }
 
-        if (gpuTemp is null || gpuTemp < 0 || gpuTemp >= 125)
+        if (!AppConfig.IsUnsupportedHardwareMode() && (gpuTemp is null || gpuTemp < 0 || gpuTemp >= 125))
         {
             int acpiTemp = Program.acpi.DeviceGet(AsusACPI.Temp_GPU);
             gpuTemp = (acpiTemp > 0 && acpiTemp < 125) ? acpiTemp : null;
@@ -1089,6 +1089,7 @@ public static class HardwareControl
     public static void KillGPUApps()
     {
 
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         List<string> tokill = new() { "EADesktop", "epicgameslauncher", "ASUSSmartDisplayControl" };
 
         foreach (string kill in tokill) ProcessHelper.KillByName(kill);
