@@ -13,7 +13,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Open questions: whether to import `Settings.cs` next as the minimal UI startup dependency
 - Next likely files: `ghelper-import/Settings.cs`, `ghelper-import/Settings.Designer.cs`, `ghelper-import/Settings.resx` if approved
 - Reference commits reviewed: G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; only top-level/project/license/README metadata was inspected
-- Notes: Entry dependency map created.
+- Notes: ASUS dependency inventory completed.
 
 ## Update Template
 
@@ -27,5 +27,6 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Next likely files:
 - Reference commits reviewed:
 - Notes:
+
 
 
