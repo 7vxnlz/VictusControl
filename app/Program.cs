@@ -54,6 +54,7 @@ namespace GHelper
             TaskScheduler.UnobservedTaskException += (s, e) => { Logger.WriteLine("Unobserved: " + e.Exception); e.SetObserved(); };
 
             unsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
+            AppConfig.SetUnsupportedHardwareMode(unsupportedHardwareMode);
             string action = args.FirstOrDefault(arg => !string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase)) ?? "";
 
             if (action == "charge")
@@ -101,7 +102,7 @@ namespace GHelper
 
             acpi = global::HardwareControllerFactory.CreateController(unsupportedHardwareMode);
 
-            if (!acpi.IsConnected() && AppConfig.IsASUS() && !AppConfig.IsDesktop())
+            if (!unsupportedHardwareMode && !acpi.IsConnected() && AppConfig.IsASUS() && !AppConfig.IsDesktop())
             {
                 DialogResult dialogResult = MessageBox.Show(Properties.Strings.ACPIError, Properties.Strings.StartupError, MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
@@ -113,12 +114,15 @@ namespace GHelper
                 return;
             }
 
-            ProcessHelper.KillSmartDisplayControl();
-            AsusService.StopOnStartup();
+            if (!unsupportedHardwareMode)
+            {
+                ProcessHelper.KillSmartDisplayControl();
+                AsusService.StopOnStartup();
+            }
 
             Application.EnableVisualStyles();
 
-            HardwareControl.RecreateGpuControl();
+            if (!unsupportedHardwareMode) HardwareControl.RecreateGpuControl();
 
             trayIcon = new NotifyIcon
             {
@@ -142,12 +146,15 @@ namespace GHelper
 
             inputDispatcher = new InputDispatcher();
 
-            settingsForm.InitAura();
-            settingsForm.InitMatrix();
+            if (!unsupportedHardwareMode)
+            {
+                settingsForm.InitAura();
+                settingsForm.InitMatrix();
 
-            ScreenControl.InitScreen();
+                ScreenControl.InitScreen();
 
-            SetAutoModes(init: true);
+                SetAutoModes(init: true);
+            }
 
             powerSettleTimer.Elapsed += OnPowerSettled;
 
@@ -168,59 +175,72 @@ namespace GHelper
             unRegSuspendResume = NativeMethods.RegisterSuspendResumeNotification(settingsForm.Handle, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
 
 
-            Task task = Task.Run(() =>
+            if (!unsupportedHardwareMode)
             {
-                PeripheralsProvider.DetectAllAsusMice();
-                PeripheralsProvider.DetectAllAsusKeyboards();
-            });
-            PeripheralsProvider.RegisterForDeviceEvents();
+                Task task = Task.Run(() =>
+                {
+                    PeripheralsProvider.DetectAllAsusMice();
+                    PeripheralsProvider.DetectAllAsusKeyboards();
+                });
+                PeripheralsProvider.RegisterForDeviceEvents();
+            }
 
             if (Environment.CurrentDirectory.Trim('\\') == Application.StartupPath.Trim('\\') || action.Length > 0)
             {
                 SettingsToggle(false);
             }
 
-            switch (action)
+            if (!unsupportedHardwareMode)
             {
-                case "cpu":
-                    Startup.ReScheduleAdmin();
-                    settingsForm.FansToggle();
-                    break;
-                case "gpu":
-                    Startup.ReScheduleAdmin();
-                    settingsForm.FansToggle(1);
-                    break;
-                case "services":
-                    settingsForm.extraForm = new Extra();
-                    settingsForm.extraForm.Show();
-                    settingsForm.extraForm.ServiesToggle();
-                    break;
-                case "uv":
-                    Startup.ReScheduleAdmin();
-                    settingsForm.FansToggle(2);
-                    modeControl.SetRyzen();
-                    break;
-                case "colors":
-                    Task.Run(async () =>
-                    {
-                        await ColorProfileHelper.InstallProfile();
-                        settingsForm.Invoke(delegate
+                switch (action)
+                {
+                    case "cpu":
+                        Startup.ReScheduleAdmin();
+                        settingsForm.FansToggle();
+                        break;
+                    case "gpu":
+                        Startup.ReScheduleAdmin();
+                        settingsForm.FansToggle(1);
+                        break;
+                    case "services":
+                        settingsForm.extraForm = new Extra();
+                        settingsForm.extraForm.Show();
+                        settingsForm.extraForm.ServiesToggle();
+                        break;
+                    case "uv":
+                        Startup.ReScheduleAdmin();
+                        settingsForm.FansToggle(2);
+                        modeControl.SetRyzen();
+                        break;
+                    case "colors":
+                        Task.Run(async () =>
                         {
-                            settingsForm.InitVisual();
+                            await ColorProfileHelper.InstallProfile();
+                            settingsForm.Invoke(delegate
+                            {
+                                settingsForm.InitVisual();
+                            });
                         });
-                    });
-                    break;
-                default:
-                    Task.Run(Startup.StartupCheck);
-                    break;
+                        break;
+                    default:
+                        Task.Run(Startup.StartupCheck);
+                        break;
+                }
+            }
+            else if (action.Length > 0)
+            {
+                Logger.WriteLine("Unsupported hardware mode: skipped startup action " + action);
             }
 
-            Task.Run(() =>
+            if (!unsupportedHardwareMode)
             {
-                settingsForm.VisualiseArmoury(AsusService.IsArmouryRunning());
-            });
+                Task.Run(() =>
+                {
+                    settingsForm.VisualiseArmoury(AsusService.IsArmouryRunning());
+                });
+            }
 
-            if (AppConfig.IsOverlay())
+            if (!unsupportedHardwareMode && AppConfig.IsOverlay())
                 hardwareOverlay?.StartOverlay();
 
             Application.ApplicationExit += OnExit;
@@ -230,6 +250,8 @@ namespace GHelper
 
         private static void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
         {
+            if (unsupportedHardwareMode) return;
+
             gpuControl.StandardModeFix();
             modeControl.ShutdownReset();
             BatteryControl.AutoBattery();
@@ -239,6 +261,8 @@ namespace GHelper
 
         private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
+            if (unsupportedHardwareMode) return;
+
             if (e.Reason == SessionSwitchReason.SessionLogon || e.Reason == SessionSwitchReason.SessionUnlock || e.Reason == SessionSwitchReason.ConsoleConnect)
             {
                 Logger.WriteLine("Session:" + e.Reason.ToString());
@@ -304,6 +328,8 @@ namespace GHelper
 
         public static bool SetAutoModes(bool powerChanged = false, bool init = false, bool wakeup = false)
         {
+            if (unsupportedHardwareMode) return false;
+
             int skipDelay = wakeup ? 10000 : 3000;
 
             if (init) gpuControl.CaptureNvBootState();
@@ -401,6 +427,8 @@ namespace GHelper
 
         private static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
+            if (unsupportedHardwareMode) return;
+
             if (e.Mode == PowerModes.Suspend)
             {
                 Logger.WriteLine("Power Mode Changed:" + e.Mode.ToString());
@@ -481,7 +509,7 @@ namespace GHelper
                 trayIcon.Dispose();
             }
 
-            PeripheralsProvider.UnregisterForDeviceEvents();
+            if (!unsupportedHardwareMode) PeripheralsProvider.UnregisterForDeviceEvents();
             clamshellControl.UnregisterDisplayEvents();
             NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotify);
             NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyLid);
@@ -517,7 +545,7 @@ namespace GHelper
 
             try
             {
-                InputDispatcher.StartupBacklight();
+                if (!unsupportedHardwareMode) InputDispatcher.StartupBacklight();
             }
             catch (Exception ex)
             {
@@ -552,6 +580,8 @@ namespace GHelper
 
     }
 }
+
+
 
 
 

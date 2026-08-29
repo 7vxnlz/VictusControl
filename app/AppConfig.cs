@@ -7,6 +7,11 @@ using System.Text.RegularExpressions;
 
 public static class AppConfig
 {
+    private static bool unsupportedHardwareMode;
+
+    public static bool IsUnsupportedHardwareMode() => unsupportedHardwareMode;
+
+    public static void SetUnsupportedHardwareMode(bool enabled) => unsupportedHardwareMode = enabled;
 
     private static string configFile;
     private static string fallbackConfigFile;
@@ -818,3 +823,4 @@ public static class AppConfig
 
 
 }
+
