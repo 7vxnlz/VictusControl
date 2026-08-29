@@ -97,7 +97,7 @@ namespace GHelper
             AppConfig.Set("start_count", startCount);
             Logger.WriteLine("Start Count: " + startCount);
 
-            acpi = new AsusACPI();
+            acpi = global::HardwareControllerFactory.CreateDefaultController();
 
             if (!acpi.IsConnected() && AppConfig.IsASUS() && !AppConfig.IsDesktop())
             {
@@ -500,7 +500,7 @@ namespace GHelper
             try
             {
                 int limit = AppConfig.Get("charge_limit");
-                acpi = new AsusACPI();
+                acpi = global::HardwareControllerFactory.CreateDefaultController();
                 if (limit > 0 && limit < 100)
                 {
                     Logger.WriteLine($"------- Startup Battery Limit {limit} -------");
