@@ -1,4 +1,4 @@
-﻿using GHelper.Display;
+using GHelper.Display;
 using GHelper.Gpu.NVidia;
 using GHelper.Helpers;
 using GHelper.USB;
@@ -23,6 +23,12 @@ namespace GHelper.Gpu
 
         public void InitGPUMode()
         {
+            if (AppConfig.IsUnsupportedHardwareMode())
+            {
+                settings.HideGPUModes(false);
+                return;
+            }
+
             if (AppConfig.NoGpu())
             {
                 settings.HideGPUModes(false);
@@ -79,6 +85,7 @@ namespace GHelper.Gpu
 
         public void SetGPUMode(int GPUMode, int auto = 0)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             int CurrentGPU = AppConfig.Get("gpu_mode");
             AppConfig.Set("gpu_auto", auto);
@@ -238,6 +245,7 @@ namespace GHelper.Gpu
 
         public bool AutoGPUMode(bool optimized = false, int delay = 0)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return false;
 
             bool GpuAuto = AppConfig.Is("gpu_auto");
             bool ForceGPU = AppConfig.IsForceSetGPUMode() && !GpuAuto;
@@ -294,6 +302,7 @@ namespace GHelper.Gpu
 
         public void ToggleXGM(bool silent = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             Task.Run(async () =>
             {
@@ -365,6 +374,7 @@ namespace GHelper.Gpu
 
         public void CheckStandardHalfState()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (gpuMode != AsusACPI.GPUModeStandard || HardwareControl.GpuControl is not null) return;
 
             Logger.WriteLine("Standard half-state");

@@ -51,6 +51,8 @@ namespace GHelper.Mode
 
         public ModeControl()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             int reapplyTime = AppConfig.Get("reapply_time", IsReapplyTempRequired() ? 30 : 0);
             if (reapplyTime > 0)
             {
@@ -80,6 +82,8 @@ namespace GHelper.Mode
 
         private void ReapplyTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             SetCPUTemp(AppConfig.GetMode("cpu_temp"));
             SetRyzenPower();
         }
@@ -91,6 +95,8 @@ namespace GHelper.Mode
 
         public void AutoPerformance(bool powerChanged = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             int mode = AppConfig.Get("performance_" + Program.PerformanceKey());
             Logger.WriteLine($"{Program.currentSource} Performance Mode: {Modes.GetName(mode == -1 ? Modes.GetCurrent() : mode)}");
 
@@ -103,6 +109,8 @@ namespace GHelper.Mode
 
         public void ResetPerformanceMode()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             ResetRyzen();
 
             Program.acpi.SetPerformanceMode(Modes.GetCurrentBase());
@@ -119,6 +127,7 @@ namespace GHelper.Mode
 
         public void SetPerformanceMode(int mode = -1, bool notify = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             int oldMode = Modes.GetCurrent();
             if (mode < 0) mode = oldMode;
@@ -207,6 +216,7 @@ namespace GHelper.Mode
         private void ModeToggleTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             modeToggleTimer.Stop();
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Logger.WriteLine($"Hotkey mode: {Modes.GetCurrent()}");
             SetPerformanceMode();
 
@@ -230,6 +240,8 @@ namespace GHelper.Mode
 
         public void AutoFans(bool force = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             customFans = false;
 
             if (AppConfig.IsApplyFans() || force)
@@ -295,6 +307,7 @@ namespace GHelper.Mode
 
         public void AutoPower(bool launchAsAdmin = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             customPower = 0;
 
@@ -615,6 +628,7 @@ namespace GHelper.Mode
 
         public void AutoRyzen()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!CpuInfo.IsAMD) return;
 
             if (AppConfig.IsApplyUV()) SetRyzen();
@@ -623,6 +637,7 @@ namespace GHelper.Mode
 
         public void AutoCPUTemp()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!CpuInfo.IsAMD) return;
             if (!AppConfig.IsApplyUV()) return;
             if (!ProcessHelper.IsUserAdministrator()) return;

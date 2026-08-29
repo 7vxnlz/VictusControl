@@ -1,4 +1,4 @@
-﻿using GHelper.Peripherals.Keyboard;
+using GHelper.Peripherals.Keyboard;
 using GHelper.Peripherals.Keyboard.Models;
 using GHelper.Peripherals.Mouse;
 using GHelper.Peripherals.Mouse.Models;
@@ -92,6 +92,7 @@ namespace GHelper.Peripherals
 
         public static void RefreshBatteryForAllDevices()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             RefreshBatteryForAllDevices(false);
         }
 
@@ -142,6 +143,7 @@ namespace GHelper.Peripherals
 
         public static void RefreshBatteryForAllDevices(bool force)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             //Polling the battery every 20s should be enough
             if (!force && Math.Abs(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastRefresh) < 20_000) return;
             lastRefresh = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -378,6 +380,7 @@ namespace GHelper.Peripherals
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DetectAllAsusMice()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             //Add one line for every supported mouse class here to support them.
             DedectOmniMouse();
             DetectHarpeIIWireless();
@@ -442,6 +445,7 @@ namespace GHelper.Peripherals
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void DetectAllAsusKeyboards()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.Is("keyboard_test")) DetectKeyboard(new Azoth() { TestMode = true });
 
             DetectKeyboard(new Azoth());
@@ -674,6 +678,7 @@ namespace GHelper.Peripherals
 
         public static void RegisterForDeviceEvents()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             HidSharp.DeviceList.Local.Changed += Device_Changed;
         }
 
@@ -690,6 +695,7 @@ namespace GHelper.Peripherals
         private static void DeviceTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             timer.Stop();
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Logger.WriteLine("HID Device Event: Checking for new ASUS Mice");
             DetectAllAsusMice();
             DetectAllAsusKeyboards();

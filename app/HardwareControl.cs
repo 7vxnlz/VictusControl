@@ -530,6 +530,7 @@ public static class HardwareControl
 
     public static void InitCPUPowerAsync()
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         if (_cpuPowerInitStarted) return;
         _cpuPowerInitStarted = true;
 
@@ -833,6 +834,8 @@ public static class HardwareControl
 
     public static void ReadSensors(bool log = false)
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
+
         gpuUse = -1;
 
         if (Program.acpi is null) return;
@@ -852,6 +855,7 @@ public static class HardwareControl
     // Lightweight sensor read used by the overlay timer - skips battery health, WMI and design capacity
     public static void ReadSensorsOverlay()
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         if (Program.acpi is null) return;
 
         if (readFans)
@@ -1018,6 +1022,8 @@ public static class HardwareControl
 
     public static void RecreateGpuControlWithDelay(int delay = 5)
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
+
         // Re-enabling the discrete GPU takes a bit of time,
         // so a simple workaround is to refresh again after that happens
         Task.Run(async () =>
@@ -1029,6 +1035,8 @@ public static class HardwareControl
 
     public static async Task RecreateGpuControlWithRetry(int retries, int delay)
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
+
         for (int i = 0; i < retries; i++)
         {
             RecreateGpuControl();
@@ -1039,6 +1047,7 @@ public static class HardwareControl
 
     public static void RecreateGpuControl()
     {
+        if (AppConfig.IsUnsupportedHardwareMode()) return;
         if (AppConfig.NoGpu()) return;
         try
         {

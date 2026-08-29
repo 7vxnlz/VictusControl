@@ -1,4 +1,4 @@
-﻿using GHelper.Mode;
+using GHelper.Mode;
 
 namespace GHelper.Fan
 {
@@ -136,6 +136,7 @@ namespace GHelper.Fan
 
         public void StartCalibration()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             measuredMax = new int[] { 0, 0, 0 };
             timer.Enabled = true;
@@ -152,6 +153,12 @@ namespace GHelper.Fan
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode())
+            {
+                timer.Enabled = false;
+                return;
+            }
+
             int fan;
             bool same = true;
 

@@ -48,15 +48,19 @@ namespace GHelper.Input
         public InputDispatcher()
         {
 
-            byte[] result = Program.acpi.DeviceInit();
-            Debug.WriteLine($"Init: {BitConverter.ToString(result)}");
+            if (!AppConfig.IsUnsupportedHardwareMode())
+            {
+                byte[] result = Program.acpi.DeviceInit();
+                Debug.WriteLine($"Init: {BitConverter.ToString(result)}");
 
-            Program.acpi.SubscribeToEvents(WatcherEventArrived);
-            //Task.Run(Program.acpi.RunListener);
+                Program.acpi.SubscribeToEvents(WatcherEventArrived);
+                //Task.Run(Program.acpi.RunListener);
+
+                MKeyControl.ApplyAll();
+            }
 
             hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(KeyPressed);
 
-            MKeyControl.ApplyAll();
             RegisterKeys();
 
             timer.Elapsed += Timer_Elapsed;
@@ -65,6 +69,7 @@ namespace GHelper.Input
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (GetBacklight() == 0) return;
 
             TimeSpan iddle = NativeMethods.GetIdleTime();
@@ -95,6 +100,7 @@ namespace GHelper.Input
         public void Init()
         {
             if (listener is not null) listener.Dispose();
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
 
             Program.acpi.DeviceInit();
             MKeyControl.ApplyAll();
@@ -750,6 +756,7 @@ namespace GHelper.Input
 
         static void MuteLEDInit()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.IsVivoZenbook()) return;
             if (Program.acpi.IsSupported(AsusACPI.MicMuteLed)) Program.acpi.DeviceSet(AsusACPI.MicMuteLed, Audio.IsMicMuted() ? 1 : 0, "MicmuteLedInit");
             if (Program.acpi.IsSupported(AsusACPI.SoundMuteLed)) Program.acpi.DeviceSet(AsusACPI.SoundMuteLed, Audio.IsMuted() ? 1 : 0, "SoundLedInit");
@@ -1100,6 +1107,7 @@ namespace GHelper.Input
 
         public static void AutoKeyboard()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.HasTabletMode()) TabletMode();
             if (lidClose)
             {
@@ -1133,6 +1141,7 @@ namespace GHelper.Input
 
         public static void SetBacklightAuto()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (lidClose || tentMode) return;
             Aura.ApplyBrightness(GetBacklight(), "Auto");
             backlightActivity = true;
@@ -1140,6 +1149,7 @@ namespace GHelper.Input
 
         public static void StartupBacklight()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Aura.DirectBrightness(GetBacklight(), "Startup");
         }
 
@@ -1350,6 +1360,7 @@ namespace GHelper.Input
 
         public static void InitScreenpad()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.IsDUO()) return;
             int brightness = AppConfig.Get("screenpad");
             if (brightness != -1) ApplyScreenpadAction(brightness);
@@ -1362,6 +1373,7 @@ namespace GHelper.Input
 
         public static void InitStatusLed()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.IsAutoStatusLed()) SetStatusLED(true);
         }
 

@@ -1,4 +1,4 @@
-﻿using GHelper.Helpers;
+using GHelper.Helpers;
 using Microsoft.Win32;
 using System.Diagnostics;
 
@@ -43,6 +43,7 @@ namespace GHelper.Battery
 
         public static void AutoBattery(bool init = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (chargeFull && !init) SetBatteryLimitFull();
             else SetBatteryChargeLimit();
         }

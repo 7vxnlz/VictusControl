@@ -9,7 +9,8 @@ public static class AppConfig
 {
     private static bool unsupportedHardwareMode;
 
-    public static bool IsUnsupportedHardwareMode() => unsupportedHardwareMode;
+    public static bool IsUnsupportedHardwareMode() =>
+        unsupportedHardwareMode || Environment.GetCommandLineArgs().Any(arg => string.Equals(arg, "--unsupported-hardware", StringComparison.OrdinalIgnoreCase));
 
     public static void SetUnsupportedHardwareMode(bool enabled) => unsupportedHardwareMode = enabled;
 

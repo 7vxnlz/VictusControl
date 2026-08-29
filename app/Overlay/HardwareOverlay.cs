@@ -1045,6 +1045,8 @@ namespace GHelper.Overlay
 
         public void StartOverlay()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
+
             _active = true;
             _lastFgPid = 0;
             _gameOnly = AppConfig.IsOverlayGameOnly();
@@ -1134,6 +1136,7 @@ namespace GHelper.Overlay
 
         public void ResumeForDisplayOn()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!_active && AppConfig.IsOverlay()) StartOverlay();
         }
     }
