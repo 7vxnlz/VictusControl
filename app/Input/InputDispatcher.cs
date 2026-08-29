@@ -122,6 +122,7 @@ namespace GHelper.Input
 
         public static void InitFNLock()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!IsHardwareFnLock()) return;
             AsusHid.InitInput();
             HardwareFnLock(AppConfig.Is("fn_lock"));
@@ -304,6 +305,7 @@ namespace GHelper.Input
 
         static void SetBrightness(bool up, bool hotkey = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int brightness = -1;
 
             if (isTUF) brightness = ScreenBrightness.Get();
@@ -732,6 +734,7 @@ namespace GHelper.Input
 
         static void MuteLED()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Thread.Sleep(500);
             Program.acpi.DeviceSet(AsusACPI.SoundMuteLed, Audio.IsMuted() ? 1 : 0, "SoundLed");
         }
@@ -749,6 +752,7 @@ namespace GHelper.Input
 
         static void ToggleMic()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             bool muteStatus = Audio.ToggleMicMute();
             Program.toast.RunToast(muteStatus ? Properties.Strings.Muted : Properties.Strings.Unmuted, muteStatus ? ToastIcon.MicrophoneMute : ToastIcon.Microphone);
             if (AppConfig.IsVivoZenbook()) Program.acpi.DeviceSet(AsusACPI.MicMuteLed, muteStatus ? 1 : 0, "MicmuteLed");
@@ -792,6 +796,7 @@ namespace GHelper.Input
 
         static void SleepEvent()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (Math.Abs(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastSleep) < 1000) return;
             lastSleep = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             Program.acpi.DeviceSet(AsusACPI.UniversalControl, AsusACPI.KB_Sleep, "Sleep");
@@ -808,6 +813,7 @@ namespace GHelper.Input
 
         public static bool IsHardwareFnLock()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return false;
             if (AppConfig.IsHardwareFnLock()) return true;
             if (_fnLock is null)
             {
@@ -820,12 +826,14 @@ namespace GHelper.Input
 
         public static void HardwareFnLock(bool fnLock)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Program.acpi.DeviceSet(AsusACPI.FnLock, fnLock ^ AppConfig.IsInvertedFNLock() ? 1 : 0, "FnLock");
             AsusHid.WriteInput([AsusHid.INPUT_ID, 0xD0, 0x4E, fnLock ? (byte)0x00 : (byte)0x01], "USB FnLock");
         }
 
         public static void ToggleFnLock()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             bool fnLock = !AppConfig.Is("fn_lock");
             AppConfig.Set("fn_lock", fnLock ? 1 : 0);
 
@@ -858,6 +866,7 @@ namespace GHelper.Input
 
         public static void TabletMode()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (AppConfig.Is("disable_tablet")) return;
 
             bool touchpadState = GetTouchpadState();
@@ -872,6 +881,7 @@ namespace GHelper.Input
 
         static int GetTentState()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return -1;
             var tentState = Program.acpi.DeviceGet(AsusACPI.TentState);
             // TentState is sticky on some convertibles (e.g. ProArt PX13); cross-check TabletState.
             if (tentState > 0 && Program.acpi.DeviceGet(AsusACPI.TabletState) == AsusACPI.Tablet_Notebook) tentState = 0;
@@ -881,6 +891,7 @@ namespace GHelper.Input
 
         public static void TentMode()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var tentState = GetTentState();
             if (tentState < 0) return;
             tentMode = tentState > 0;
@@ -1236,6 +1247,7 @@ namespace GHelper.Input
 
         public static void ToggleCamera()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int cameraShutter = Program.acpi.DeviceGet(AsusACPI.CameraShutter);
             Logger.WriteLine("Camera Shutter status: " + cameraShutter);
 
@@ -1267,6 +1279,7 @@ namespace GHelper.Input
 
         private static void SetCamera(int status, bool toast = true)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             string asusPath = GetAsusPath();
 
             var cameraStatus = AppConfig.Get("camera_status");
@@ -1295,6 +1308,7 @@ namespace GHelper.Input
 
         private static void InitCamera()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var cameraStatus = AppConfig.Get("camera_status");
             if (cameraStatus >= 0) SetCamera(cameraStatus, false);
         }
@@ -1303,6 +1317,7 @@ namespace GHelper.Input
         private static int screenpadBrightnessToSet;
         public static void ApplyScreenpadAction(int brightness, bool instant = true)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             var delay = AppConfig.Get("screenpad_delay", 1500);
 
             //Action
@@ -1333,6 +1348,7 @@ namespace GHelper.Input
 
         public static void SetScreenpad(int delta)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             int brightness = AppConfig.Get("screenpad", 100);
 
             if (delta == 100)

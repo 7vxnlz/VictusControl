@@ -1,4 +1,4 @@
-﻿using GHelper.Gpu;
+using GHelper.Gpu;
 using GHelper.Helpers;
 using GHelper.Input;
 using GHelper.Peripherals;
@@ -406,11 +406,13 @@ namespace GHelper.USB
 
         public static void SleepBrightness()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (!AppConfig.IsSleepBacklight() || !AppConfig.Is("keyboard_sleep")) ApplyBrightness(0, "Sleep");
         }
 
         public static void ApplyBrightness(int brightness, string log = "Backlight")
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (brightness == 0) backlight = false;
 
             DirectBrightness(brightness, log);
@@ -425,6 +427,7 @@ namespace GHelper.USB
 
         public static void DirectBrightness(int brightness, string log)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (isACPI) Program.acpi.TUFKeyboardBrightness(brightness, log);
             if (AppConfig.IsAlly()) AsusHid.SetFeatureAura([AsusHid.AURA_ID, 0xBA, 0xC5, 0xC4, (byte)brightness]);
             else AsusHid.WriteInput([AsusHid.INPUT_ID, 0xBA, 0xC5, 0xC4, (byte)brightness], log);
@@ -490,6 +493,7 @@ namespace GHelper.USB
         public static void ApplyPower()
         {
 
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             bool backlightBattery = AppConfig.IsBacklightZones() && (SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Online);
 
             AuraPower flags = new()
@@ -644,6 +648,7 @@ namespace GHelper.USB
 
         public static void ApplyDirect(Color[] color, bool init = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             if (color is { Length: > 0 })
             {
                 PeripheralsProvider.StreamMouseColor(color.Length > 3 ? color[3] : color[0]);
@@ -764,6 +769,7 @@ namespace GHelper.USB
 
         public static void ApplyDirect(Color color, bool init = false)
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             PeripheralsProvider.StreamMouseColor(color);
             PeripheralsProvider.StreamKeyboardColor(color);
 
@@ -838,6 +844,7 @@ namespace GHelper.USB
 
         public static void ApplyAura()
         {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
             Mode = (AuraMode)AppConfig.Get("aura_mode");
             Speed = (AuraSpeed)AppConfig.Get("aura_speed");
             SetColor(AppConfig.Get("aura_color"));
@@ -1165,6 +1172,7 @@ namespace GHelper.USB
 
             public static void ApplyHeatmap(bool init = false)
             {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
                 float cpuTemp = (float)HardwareControl.GetCPUTemp();
                 Color color = colorFreeze;
 
@@ -1178,6 +1186,7 @@ namespace GHelper.USB
 
             public static void ApplyBattery()
             {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
                 float battery = (float)HardwareControl.GetBatteryChargePercentage();
                 Color color = colorLow;
 
@@ -1211,6 +1220,7 @@ namespace GHelper.USB
 
             public static void ApplyAmbient(bool init = false)
             {
+            if (AppConfig.IsUnsupportedHardwareMode()) return;
                 if (!backlight || sessionLock) return;
                 if (AmbientData.IsMoveSize()) return;
 
