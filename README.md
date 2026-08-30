@@ -71,6 +71,12 @@ dotnet run --project app\VictusX.csproj -- --hp-victus
 
 The `--hp-wmi-readonly-test` flag is only for controlled developer testing. Do not use it unless you are intentionally testing the guarded HP WMI invocation path and understand the current limitations.
 
+HP WMI real invocation tests are developer-only and may require running VictusX from an elevated Administrator terminal. The normal safe command remains:
+
+```bash
+dotnet run --project app\VictusX.csproj -- --hp-victus
+```
+
 ## Development roadmap
 
 - HP WMI/CIM investigation

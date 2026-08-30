@@ -62,14 +62,27 @@ public static class HpVictusCapabilityProbe
             "SystemDesignData",
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions);
+        bool hpVictusMode = global::AppConfig.IsHpVictusHardwareMode();
+        bool hpWmiReadOnlyTestMode = global::AppConfig.IsHpWmiReadOnlyTestMode();
+        bool hpWmiInvocationRequiresElevation = true;
         bool systemDesignDataInvocationAllowed =
-            global::AppConfig.IsHpVictusHardwareMode() &&
-            global::AppConfig.IsHpWmiReadOnlyTestMode();
+            hpVictusMode &&
+            hpWmiReadOnlyTestMode &&
+            accessDeniedDiagnostics.ProcessElevated;
+        string hpWmiInvocationBlockedReason = GetHpWmiInvocationBlockedReason(
+            hpVictusMode,
+            hpWmiReadOnlyTestMode,
+            accessDeniedDiagnostics.ProcessElevated);
+        string hpWmiRecommendedNextStep = GetHpWmiRecommendedNextStep(
+            hpVictusMode,
+            hpWmiReadOnlyTestMode,
+            accessDeniedDiagnostics.ProcessElevated);
         var systemDesignDataInvocation = TryInvokeSystemDesignData(
             invocationClient,
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions,
-            systemDesignDataInvocationAllowed);
+            hpWmiReadOnlyTestMode,
+            accessDeniedDiagnostics.ProcessElevated);
 
         return new HpVictusCapabilitySnapshot(
             manufacturer,
@@ -111,6 +124,9 @@ public static class HpVictusCapabilityProbe
             cimReadiness.CimHpBIntMAvailable,
             cimReadiness.CimHpBIntMMethodMetadataReadable,
             cimReadiness.CimErrors,
+            hpWmiInvocationRequiresElevation,
+            hpWmiInvocationBlockedReason,
+            hpWmiRecommendedNextStep,
             errors.ToArray());
     }
 
@@ -156,6 +172,9 @@ public static class HpVictusCapabilityProbe
             snapshot.CimHpBIntMAvailable,
             snapshot.CimHpBIntMMethodMetadataReadable,
             snapshot.CimErrors,
+            snapshot.HpWmiInvocationRequiresElevation,
+            snapshot.HpWmiInvocationBlockedReason,
+            snapshot.HpWmiRecommendedNextStep,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -208,7 +227,8 @@ public static class HpVictusCapabilityProbe
         HpWmiInvocationClient invocationClient,
         HpWmiReadOnlySnapshot hpWmiSnapshot,
         IEnumerable<HpBiosWmiCommandDefinition> definitions,
-        bool invocationAllowed)
+        bool hpWmiReadOnlyTestModeEnabled,
+        bool processElevated)
     {
         HpBiosWmiCommandDefinition? definition = definitions.FirstOrDefault(candidate =>
             string.Equals(candidate.Name, "SystemDesignData", StringComparison.OrdinalIgnoreCase));
@@ -222,8 +242,55 @@ public static class HpVictusCapabilityProbe
             new HpWmiInvocationRequest(
                 definition,
                 global::AppConfig.IsHpVictusHardwareMode(),
-                invocationAllowed),
+                hpWmiReadOnlyTestModeEnabled,
+                processElevated),
             hpWmiSnapshot);
+    }
+
+    private static string GetHpWmiInvocationBlockedReason(
+        bool hpVictusMode,
+        bool hpWmiReadOnlyTestMode,
+        bool processElevated)
+    {
+        if (!hpVictusMode)
+        {
+            return "--hp-victus mode is required for HP BIOS WMI invocation";
+        }
+
+        if (!hpWmiReadOnlyTestMode)
+        {
+            return "Real HP WMI invocation skipped: missing explicit --hp-wmi-readonly-test flag";
+        }
+
+        if (!processElevated)
+        {
+            return "Real HP WMI invocation skipped: process is not elevated";
+        }
+
+        return "Real HP WMI invocation is allowed only for commands marked SafeReadOnlyInvocation";
+    }
+
+    private static string GetHpWmiRecommendedNextStep(
+        bool hpVictusMode,
+        bool hpWmiReadOnlyTestMode,
+        bool processElevated)
+    {
+        if (!hpVictusMode)
+        {
+            return "Use --hp-victus for safe HP identity and WMI availability probing.";
+        }
+
+        if (!hpWmiReadOnlyTestMode)
+        {
+            return "Continue using --hp-victus for safe non-invoking probes; use --hp-wmi-readonly-test only for controlled developer testing.";
+        }
+
+        if (!processElevated)
+        {
+            return "If explicitly approved, rerun the controlled read-only test from an elevated Administrator terminal.";
+        }
+
+        return "Proceed only with the single approved SystemDesignData read-only invocation test; keep all hardware writes forbidden.";
     }
 
     private static bool IsHpManufacturer(string manufacturer, string productVendor) =>
@@ -272,6 +339,9 @@ public static class HpVictusCapabilityProbe
         bool CimHpBIntMAvailable,
         bool CimHpBIntMMethodMetadataReadable,
         string[] CimErrors,
+        bool HpWmiInvocationRequiresElevation,
+        string HpWmiInvocationBlockedReason,
+        string HpWmiRecommendedNextStep,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);

@@ -23,7 +23,7 @@ Real HP BIOS WMI invocation now requires both flags:
 
 ## 5. Meaning for future HP WMI work
 
-Future HP WMI work must treat method availability as separate from invocation permission. The interface exists, but real command execution may require additional permission, service, driver, or namespace setup.
+Future HP WMI work must treat method availability as separate from invocation permission. The legacy `System.Management` path can read metadata, and the CIM path can also read class and method metadata. However, CIM instance metadata also returned `Access denied`, which points toward elevation, WMI provider permissions, or HP service/driver gating rather than a missing WMI surface.
 
 ## 6. Next investigation options
 

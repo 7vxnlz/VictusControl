@@ -75,6 +75,13 @@ public sealed class HpWmiInvocationClient
             return HpWmiInvocationResult.Rejected(request.CommandDefinition, reason);
         }
 
+        if (!request.ProcessElevated)
+        {
+            const string reason = "skipped because process is not elevated; run controlled HP WMI read-only tests as Administrator";
+            _log?.Invoke($"HP WMI invocation sandbox skipped '{request.CommandDefinition.Name}': {reason}");
+            return HpWmiInvocationResult.Rejected(request.CommandDefinition, reason);
+        }
+
         if (!string.Equals(request.CommandDefinition.Name, SystemDesignDataCommandName, StringComparison.OrdinalIgnoreCase))
         {
             const string reason = "only SystemDesignData is approved for real HP BIOS WMI invocation";
