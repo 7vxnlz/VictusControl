@@ -60,15 +60,15 @@ public static class HpBiosWmiCommandCatalog
             "Blocked ambiguous fan V2 level command candidate. References also associate 0x37 with write-like power-limit behavior."),
 
         new(
-            "FanMaxState",
+            "FanMaxGet",
             HpBiosWmiCommandFamily.Fan,
             0x26,
             "hpqBIOSInt4",
             4,
             4,
             HpBiosWmiCommandAccess.ReadOnly,
-            HpBiosWmiCommandSafety.ReadIntent,
-            "Read-intent max fan state command candidate. Max fan writes remain forbidden."),
+            HpBiosWmiCommandSafety.SafeReadOnlyInvocation,
+            "Prepared read-only max fan status command candidate. Reports max-fan latch state only; max fan writes remain forbidden."),
 
         new(
             "Temperature",
