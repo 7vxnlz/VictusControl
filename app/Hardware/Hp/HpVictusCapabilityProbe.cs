@@ -42,6 +42,10 @@ public static class HpVictusCapabilityProbe
             errors.Add("HP WMI read-only client: " + error);
         }
 
+        var invocationSandboxStatus = new HpWmiInvocationClient().ValidateCatalog(
+            hpWmiSnapshot,
+            HpBiosWmiCommandCatalog.Definitions);
+
         return new HpVictusCapabilitySnapshot(
             manufacturer,
             model,
@@ -58,6 +62,10 @@ public static class HpVictusCapabilityProbe
             hpWmiSnapshot.HpqBIntMMethodNames,
             hpWmiSnapshot.HpqBDataInMethodNames,
             hpWmiSnapshot.Errors,
+            invocationSandboxStatus.InvocationSandboxAvailable,
+            invocationSandboxStatus.SafeReadOnlyCommandCount,
+            invocationSandboxStatus.RejectedCommandCount,
+            invocationSandboxStatus.Errors,
             errors.ToArray());
     }
 
@@ -79,6 +87,10 @@ public static class HpVictusCapabilityProbe
             snapshot.HpqBIntMMethodNames,
             snapshot.HpqBDataInMethodNames,
             snapshot.HpWmiReadOnlyClientErrors,
+            snapshot.InvocationSandboxAvailable,
+            snapshot.SafeReadOnlyCommandCount,
+            snapshot.RejectedCommandCount,
+            snapshot.InvocationSandboxErrors,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -149,6 +161,10 @@ public static class HpVictusCapabilityProbe
         string[] HpqBIntMMethodNames,
         string[] HpqBDataInMethodNames,
         string[] HpWmiReadOnlyClientErrors,
+        bool InvocationSandboxAvailable,
+        int SafeReadOnlyCommandCount,
+        int RejectedCommandCount,
+        string[] InvocationSandboxErrors,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);

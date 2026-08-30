@@ -12,6 +12,7 @@ public enum HpBiosWmiCommandSafety
     Unknown,
     MetadataOnly,
     ReadIntent,
+    SafeReadOnlyInvocation,
     Forbidden
 }
 

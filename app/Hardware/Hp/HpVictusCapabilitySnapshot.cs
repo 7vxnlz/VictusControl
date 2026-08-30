@@ -23,6 +23,10 @@ public sealed record HpVictusCapabilitySnapshot(
     string[] HpqBIntMMethodNames,
     string[] HpqBDataInMethodNames,
     string[] HpWmiReadOnlyClientErrors,
+    bool InvocationSandboxAvailable,
+    int SafeReadOnlyCommandCount,
+    int RejectedCommandCount,
+    string[] InvocationSandboxErrors,
     string[] Errors)
 {
     public bool IsHpVictus => IsHpManufacturer && IsVictusModel;
@@ -31,6 +35,6 @@ public sealed record HpVictusCapabilitySnapshot(
     {
         string errors = Errors.Length == 0 ? "none" : string.Join(" | ", Errors);
 
-        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, Errors={errors}";
+        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, Errors={errors}";
     }
 }
