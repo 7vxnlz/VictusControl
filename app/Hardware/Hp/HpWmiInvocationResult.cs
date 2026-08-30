@@ -6,16 +6,24 @@ public sealed record HpWmiInvocationResult(
     string CommandName,
     string MethodName,
     string Status,
+    int? ReturnedByteCount,
+    int? ReturnCode,
     string[] Errors)
 {
     public static HpWmiInvocationResult Rejected(HpBiosWmiCommandDefinition definition, string reason) =>
-        new(false, false, definition.Name, definition.MethodName, "Rejected", [reason]);
+        new(false, false, definition.Name, definition.MethodName, "Rejected", null, null, [reason]);
 
     public static HpWmiInvocationResult Rejected(string commandName, string reason) =>
-        new(false, false, commandName, string.Empty, "Rejected", [reason]);
+        new(false, false, commandName, string.Empty, "Rejected", null, null, [reason]);
 
     public static HpWmiInvocationResult DryRunReady(HpBiosWmiCommandDefinition definition) =>
-        new(true, false, definition.Name, definition.MethodName, "DryRunReady", []);
+        new(true, false, definition.Name, definition.MethodName, "DryRunReady", null, null, []);
+
+    public static HpWmiInvocationResult SuccessfulInvocation(HpBiosWmiCommandDefinition definition, int returnedByteCount, int? returnCode) =>
+        new(true, true, definition.Name, definition.MethodName, "Invoked", returnedByteCount, returnCode, []);
+
+    public static HpWmiInvocationResult Failed(HpBiosWmiCommandDefinition definition, string reason, int? returnCode = null) =>
+        new(false, true, definition.Name, definition.MethodName, "Failed", null, returnCode, [reason]);
 }
 
 public sealed record HpWmiInvocationSandboxStatus(

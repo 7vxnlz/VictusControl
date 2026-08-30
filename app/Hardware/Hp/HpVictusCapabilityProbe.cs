@@ -42,12 +42,16 @@ public static class HpVictusCapabilityProbe
             errors.Add("HP WMI read-only client: " + error);
         }
 
-        var invocationClient = new HpWmiInvocationClient();
+        var invocationClient = new HpWmiInvocationClient(global::Logger.WriteLine);
         var invocationSandboxStatus = invocationClient.ValidateCatalog(
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions);
         var systemDesignDataDryRun = invocationClient.DryRun(
             "SystemDesignData",
+            hpWmiSnapshot,
+            HpBiosWmiCommandCatalog.Definitions);
+        var systemDesignDataInvocation = TryInvokeSystemDesignData(
+            invocationClient,
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions);
 
@@ -74,6 +78,10 @@ public static class HpVictusCapabilityProbe
             systemDesignDataDryRun.Status,
             systemDesignDataDryRun.Success && !systemDesignDataDryRun.Invoked,
             systemDesignDataDryRun.Errors,
+            systemDesignDataInvocation.Invoked,
+            systemDesignDataInvocation.Success,
+            systemDesignDataInvocation.ReturnedByteCount ?? 0,
+            FirstNonEmpty(systemDesignDataInvocation.Errors),
             errors.ToArray());
     }
 
@@ -102,6 +110,10 @@ public static class HpVictusCapabilityProbe
             snapshot.SystemDesignDataDryRunStatus,
             snapshot.SystemDesignDataDryRunReady,
             snapshot.SystemDesignDataDryRunErrors,
+            snapshot.SystemDesignDataInvocationAttempted,
+            snapshot.SystemDesignDataInvocationSucceeded,
+            snapshot.SystemDesignDataReturnedByteCount,
+            snapshot.SystemDesignDataInvocationError,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -150,6 +162,24 @@ public static class HpVictusCapabilityProbe
         return string.Empty;
     }
 
+    private static HpWmiInvocationResult TryInvokeSystemDesignData(
+        HpWmiInvocationClient invocationClient,
+        HpWmiReadOnlySnapshot hpWmiSnapshot,
+        IEnumerable<HpBiosWmiCommandDefinition> definitions)
+    {
+        HpBiosWmiCommandDefinition? definition = definitions.FirstOrDefault(candidate =>
+            string.Equals(candidate.Name, "SystemDesignData", StringComparison.OrdinalIgnoreCase));
+
+        if (definition is null)
+        {
+            return HpWmiInvocationResult.Rejected("SystemDesignData", "command definition not found");
+        }
+
+        return invocationClient.TryInvoke(
+            new HpWmiInvocationRequest(definition, global::AppConfig.IsHpVictusHardwareMode()),
+            hpWmiSnapshot);
+    }
+
     private static bool IsHpManufacturer(string manufacturer, string productVendor) =>
         ContainsAny(manufacturer, "HP", "Hewlett-Packard") || ContainsAny(productVendor, "HP", "Hewlett-Packard");
 
@@ -179,6 +209,10 @@ public static class HpVictusCapabilityProbe
         string SystemDesignDataDryRunStatus,
         bool SystemDesignDataDryRunReady,
         string[] SystemDesignDataDryRunErrors,
+        bool SystemDesignDataInvocationAttempted,
+        bool SystemDesignDataInvocationSucceeded,
+        int SystemDesignDataReturnedByteCount,
+        string SystemDesignDataInvocationError,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);
