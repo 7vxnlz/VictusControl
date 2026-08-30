@@ -12,8 +12,8 @@ public static class HpBiosWmiCommandCatalog
             0,
             128,
             HpBiosWmiCommandAccess.ReadOnly,
-            HpBiosWmiCommandSafety.ReadIntent,
-            "Read-intent system design data command candidate. Do not invoke until a later explicit read-only command milestone."),
+            HpBiosWmiCommandSafety.SafeReadOnlyInvocation,
+            "Approved for a future single-shot read-only invocation test. Do not invoke outside an explicit --hp-victus invocation milestone."),
 
         new(
             "FanCount",
