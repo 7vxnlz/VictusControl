@@ -9,8 +9,10 @@ public sealed class HpWmiInvocationClient
     private const string HpWmiScopePath = @"\\.\root\wmi";
     private const string BiosMethodClassName = "hpqBIntM";
     private const string BiosDataClassName = "hpqBDataIn";
+    private const string BiosDataInputFieldName = "hpqBData";
     private const string BiosMethodInstance = @"ACPI\PNP0C14\0_0";
     private const string SystemDesignDataCommandName = "SystemDesignData";
+    private const string FanGetCountCommandName = "FanGetCount";
     private const uint DefaultBiosCommand = 0x20008;
 
     private static readonly byte[] BiosSign = [0x53, 0x45, 0x43, 0x55];
@@ -82,9 +84,9 @@ public sealed class HpWmiInvocationClient
             return HpWmiInvocationResult.Rejected(request.CommandDefinition, reason);
         }
 
-        if (!string.Equals(request.CommandDefinition.Name, SystemDesignDataCommandName, StringComparison.OrdinalIgnoreCase))
+        if (!IsApprovedInvocationCommand(request.CommandDefinition.Name))
         {
-            const string reason = "only SystemDesignData is approved for real HP BIOS WMI invocation";
+            const string reason = "only SystemDesignData and FanGetCount are approved for real HP BIOS WMI invocation";
             _log?.Invoke($"HP WMI invocation sandbox rejected '{request.CommandDefinition.Name}': {reason}");
             return HpWmiInvocationResult.Rejected(request.CommandDefinition, reason);
         }
@@ -100,7 +102,7 @@ public sealed class HpWmiInvocationClient
         }
 
         LogBeforeInvocation(request.CommandDefinition);
-        HpWmiInvocationResult result = InvokeSystemDesignData(request.CommandDefinition);
+        HpWmiInvocationResult result = InvokeSafeReadOnlyCommand(request.CommandDefinition);
         LogAfterInvocation(result);
 
         return result;
@@ -189,7 +191,11 @@ public sealed class HpWmiInvocationClient
         return null;
     }
 
-    private HpWmiInvocationResult InvokeSystemDesignData(HpBiosWmiCommandDefinition definition)
+    private static bool IsApprovedInvocationCommand(string commandName) =>
+        string.Equals(commandName, SystemDesignDataCommandName, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(commandName, FanGetCountCommandName, StringComparison.OrdinalIgnoreCase);
+
+    private HpWmiInvocationResult InvokeSafeReadOnlyCommand(HpBiosWmiCommandDefinition definition)
     {
         try
         {
@@ -212,7 +218,11 @@ public sealed class HpWmiInvocationClient
             inputData["Sign"] = BiosSign;
             inputData["Command"] = DefaultBiosCommand;
             inputData["CommandType"] = definition.CommandId;
-            inputData["Size"] = (uint)0;
+            inputData["Size"] = (uint)definition.ExpectedInputSize;
+            if (definition.ExpectedInputSize > 0)
+            {
+                inputData[BiosDataInputFieldName] = new byte[definition.ExpectedInputSize];
+            }
 
             using var inParams = biosInstance.GetMethodParameters(definition.MethodName);
             inParams["InData"] = inputData;

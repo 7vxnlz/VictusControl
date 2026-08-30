@@ -38,6 +38,14 @@ public sealed record HpVictusCapabilitySnapshot(
     bool SystemDesignDataDecodeSucceeded,
     string[] SystemDesignDataDecodeErrors,
     HpSystemDesignDataSnapshot? SystemDesignDataDecoded,
+    bool FanGetCountInvocationAllowed,
+    bool FanGetCountInvocationAttempted,
+    bool FanGetCountInvocationSucceeded,
+    int FanGetCountReturnedByteCount,
+    string FanGetCountInvocationError,
+    bool FanGetCountDecodeSucceeded,
+    string[] FanGetCountDecodeErrors,
+    HpFanGetCountSnapshot? FanGetCountDecoded,
     bool ProcessElevated,
     string WindowsIdentitySummary,
     bool WmiNamespaceReadable,
@@ -61,6 +69,6 @@ public sealed record HpVictusCapabilitySnapshot(
     {
         string errors = Errors.Length == 0 ? "none" : string.Join(" | ", Errors);
 
-        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, SystemDesignDataDryRunStatus={SystemDesignDataDryRunStatus}, SystemDesignDataDryRunReady={SystemDesignDataDryRunReady}, SystemDesignDataInvocationAllowed={SystemDesignDataInvocationAllowed}, SystemDesignDataInvocationAttempted={SystemDesignDataInvocationAttempted}, SystemDesignDataInvocationSucceeded={SystemDesignDataInvocationSucceeded}, SystemDesignDataReturnedByteCount={SystemDesignDataReturnedByteCount}, SystemDesignDataDecodeSucceeded={SystemDesignDataDecodeSucceeded}, ProcessElevated={ProcessElevated}, WmiNamespaceReadable={WmiNamespaceReadable}, HpBIntMClassReadable={HpBIntMClassReadable}, HpBIntMMethodMetadataReadable={HpBIntMMethodMetadataReadable}, HpRelatedServices={HpRelatedServices.Length}, CimAvailable={CimAvailable}, CimRootWmiReachable={CimRootWmiReachable}, CimHpBIntMAvailable={CimHpBIntMAvailable}, CimHpBIntMMethodMetadataReadable={CimHpBIntMMethodMetadataReadable}, HpWmiInvocationRequiresElevation={HpWmiInvocationRequiresElevation}, HpWmiInvocationBlockedReason='{HpWmiInvocationBlockedReason}', Errors={errors}";
+        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, SystemDesignDataDryRunStatus={SystemDesignDataDryRunStatus}, SystemDesignDataDryRunReady={SystemDesignDataDryRunReady}, SystemDesignDataInvocationAllowed={SystemDesignDataInvocationAllowed}, SystemDesignDataInvocationAttempted={SystemDesignDataInvocationAttempted}, SystemDesignDataInvocationSucceeded={SystemDesignDataInvocationSucceeded}, SystemDesignDataReturnedByteCount={SystemDesignDataReturnedByteCount}, SystemDesignDataDecodeSucceeded={SystemDesignDataDecodeSucceeded}, FanGetCountInvocationAllowed={FanGetCountInvocationAllowed}, FanGetCountInvocationAttempted={FanGetCountInvocationAttempted}, FanGetCountInvocationSucceeded={FanGetCountInvocationSucceeded}, FanGetCountReturnedByteCount={FanGetCountReturnedByteCount}, FanGetCountDecodeSucceeded={FanGetCountDecodeSucceeded}, ProcessElevated={ProcessElevated}, WmiNamespaceReadable={WmiNamespaceReadable}, HpBIntMClassReadable={HpBIntMClassReadable}, HpBIntMMethodMetadataReadable={HpBIntMMethodMetadataReadable}, HpRelatedServices={HpRelatedServices.Length}, CimAvailable={CimAvailable}, CimRootWmiReachable={CimRootWmiReachable}, CimHpBIntMAvailable={CimHpBIntMAvailable}, CimHpBIntMMethodMetadataReadable={CimHpBIntMMethodMetadataReadable}, HpWmiInvocationRequiresElevation={HpWmiInvocationRequiresElevation}, HpWmiInvocationBlockedReason='{HpWmiInvocationBlockedReason}', Errors={errors}";
     }
 }

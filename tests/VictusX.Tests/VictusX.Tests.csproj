@@ -11,6 +11,7 @@
     <Compile Include="..\..\app\Hardware\Hp\HpBiosWmiCommandCatalog.cs" Link="Hardware\Hp\HpBiosWmiCommandCatalog.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpBiosWmiCommandDefinition.cs" Link="Hardware\Hp\HpBiosWmiCommandDefinition.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountDecoder.cs" Link="Hardware\Hp\HpFanGetCountDecoder.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountReportDecoder.cs" Link="Hardware\Hp\HpFanGetCountReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataDecoder.cs" Link="Hardware\Hp\HpSystemDesignDataDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataReportDecoder.cs" Link="Hardware\Hp\HpSystemDesignDataReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataSnapshot.cs" Link="Hardware\Hp\HpSystemDesignDataSnapshot.cs" />
