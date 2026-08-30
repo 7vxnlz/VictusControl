@@ -16,15 +16,15 @@ public static class HpBiosWmiCommandCatalog
             "Approved for a future single-shot read-only invocation test. Do not invoke outside an explicit --hp-victus invocation milestone."),
 
         new(
-            "FanCount",
+            "FanGetCount",
             HpBiosWmiCommandFamily.Fan,
             0x10,
             "hpqBIOSInt4",
             4,
             4,
             HpBiosWmiCommandAccess.ReadOnly,
-            HpBiosWmiCommandSafety.ReadIntent,
-            "Read-intent fan count command candidate. Does not imply fan control support."),
+            HpBiosWmiCommandSafety.SafeReadOnlyInvocation,
+            "Prepared read-only fan status command candidate. Reports fan count and protection/status bits only; does not imply fan control support."),
 
         new(
             "FanLevel",
@@ -47,6 +47,17 @@ public static class HpBiosWmiCommandCatalog
             HpBiosWmiCommandAccess.ReadOnly,
             HpBiosWmiCommandSafety.ReadIntent,
             "Read-intent direct fan RPM command candidate where firmware supports it."),
+
+        new(
+            "FanLevelV2Ambiguous",
+            HpBiosWmiCommandFamily.Fan,
+            0x37,
+            "hpqBIOSInt128",
+            4,
+            128,
+            HpBiosWmiCommandAccess.Unknown,
+            HpBiosWmiCommandSafety.Forbidden,
+            "Blocked ambiguous fan V2 level command candidate. References also associate 0x37 with write-like power-limit behavior."),
 
         new(
             "FanMaxState",
@@ -179,6 +190,17 @@ public static class HpBiosWmiCommandCatalog
             HpBiosWmiCommandAccess.WriteCapable,
             HpBiosWmiCommandSafety.Forbidden,
             "Forbidden fan/performance mode write command."),
+
+        new(
+            "FanMaxWrite",
+            HpBiosWmiCommandFamily.Fan,
+            0x27,
+            "hpqBIOSInt0",
+            1,
+            0,
+            HpBiosWmiCommandAccess.WriteCapable,
+            HpBiosWmiCommandSafety.Forbidden,
+            "Forbidden max fan write command."),
 
         new(
             "PowerLimitWrite",
