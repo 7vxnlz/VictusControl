@@ -235,8 +235,8 @@ public sealed class HpWmiInvocationClient
                 return HpWmiInvocationResult.Failed(definition, $"HP BIOS WMI returned code {returnCode.Value}", returnCode);
             }
 
-            int returnedByteCount = (outData["Data"] as byte[])?.Length ?? 0;
-            return HpWmiInvocationResult.SuccessfulInvocation(definition, returnedByteCount, returnCode);
+            byte[] returnedBytes = outData["Data"] as byte[] ?? [];
+            return HpWmiInvocationResult.SuccessfulInvocation(definition, returnedBytes, returnCode);
         }
         catch (Exception ex) when (ex is ManagementException or UnauthorizedAccessException or COMException or InvalidOperationException)
         {

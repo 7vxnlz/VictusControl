@@ -83,6 +83,11 @@ public static class HpVictusCapabilityProbe
             HpBiosWmiCommandCatalog.Definitions,
             hpWmiReadOnlyTestMode,
             accessDeniedDiagnostics.ProcessElevated);
+        HpSystemDesignDataReportDecodeResult systemDesignDataDecode = HpSystemDesignDataReportDecoder.TryDecode(
+            systemDesignDataInvocation.CommandName,
+            systemDesignDataInvocation.Success,
+            systemDesignDataInvocation.Invoked,
+            systemDesignDataInvocation.ReturnedBytes);
 
         return new HpVictusCapabilitySnapshot(
             manufacturer,
@@ -112,6 +117,9 @@ public static class HpVictusCapabilityProbe
             systemDesignDataInvocation.Success,
             systemDesignDataInvocation.ReturnedByteCount ?? 0,
             FirstNonEmpty(systemDesignDataInvocation.Errors),
+            systemDesignDataDecode.Succeeded,
+            systemDesignDataDecode.Errors,
+            systemDesignDataDecode.Decoded,
             accessDeniedDiagnostics.ProcessElevated,
             accessDeniedDiagnostics.WindowsIdentitySummary,
             accessDeniedDiagnostics.WmiNamespaceReadable,
@@ -160,6 +168,9 @@ public static class HpVictusCapabilityProbe
             snapshot.SystemDesignDataInvocationSucceeded,
             snapshot.SystemDesignDataReturnedByteCount,
             snapshot.SystemDesignDataInvocationError,
+            snapshot.SystemDesignDataDecodeSucceeded,
+            snapshot.SystemDesignDataDecodeErrors,
+            snapshot.SystemDesignDataDecoded,
             snapshot.ProcessElevated,
             snapshot.WindowsIdentitySummary,
             snapshot.WmiNamespaceReadable,
@@ -327,6 +338,9 @@ public static class HpVictusCapabilityProbe
         bool SystemDesignDataInvocationSucceeded,
         int SystemDesignDataReturnedByteCount,
         string SystemDesignDataInvocationError,
+        bool SystemDesignDataDecodeSucceeded,
+        string[] SystemDesignDataDecodeErrors,
+        HpSystemDesignDataSnapshot? SystemDesignDataDecoded,
         bool ProcessElevated,
         string WindowsIdentitySummary,
         bool WmiNamespaceReadable,

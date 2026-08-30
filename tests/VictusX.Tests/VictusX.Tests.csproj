@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataDecoder.cs" Link="Hardware\Hp\HpSystemDesignDataDecoder.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataReportDecoder.cs" Link="Hardware\Hp\HpSystemDesignDataReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataSnapshot.cs" Link="Hardware\Hp\HpSystemDesignDataSnapshot.cs" />
   </ItemGroup>
 
