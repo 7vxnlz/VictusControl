@@ -36,13 +36,11 @@ public static class HpVictusCapabilityProbe
         string productName = computerProduct.GetValueOrDefault("Name") ?? string.Empty;
         string biosVersion = bios.GetValueOrDefault("SMBIOSBIOSVersion") ?? string.Empty;
 
-        var rootWmiAvailability = CheckNamespace(HpWmiScopePath, errors);
-        var hpqBIntMAvailability = rootWmiAvailability == HpVictusProbeAvailability.Available
-            ? CheckClass(HpWmiScopePath, "hpqBIntM", errors)
-            : HpVictusProbeAvailability.Unknown;
-        var hpqBDataInAvailability = rootWmiAvailability == HpVictusProbeAvailability.Available
-            ? CheckClass(HpWmiScopePath, "hpqBDataIn", errors)
-            : HpVictusProbeAvailability.Unknown;
+        var hpWmiSnapshot = new HpWmiReadOnlyClient().Probe();
+        foreach (string error in hpWmiSnapshot.Errors)
+        {
+            errors.Add("HP WMI read-only client: " + error);
+        }
 
         return new HpVictusCapabilitySnapshot(
             manufacturer,
@@ -54,9 +52,12 @@ public static class HpVictusCapabilityProbe
             biosVersion,
             IsHpManufacturer(manufacturer, productVendor),
             IsVictusModel(model, productName, systemSku),
-            rootWmiAvailability,
-            hpqBIntMAvailability,
-            hpqBDataInAvailability,
+            hpWmiSnapshot.RootWmiAvailability,
+            hpWmiSnapshot.HpqBIntMAvailability,
+            hpWmiSnapshot.HpqBDataInAvailability,
+            hpWmiSnapshot.HpqBIntMMethodNames,
+            hpWmiSnapshot.HpqBDataInMethodNames,
+            hpWmiSnapshot.Errors,
             errors.ToArray());
     }
 
@@ -75,6 +76,9 @@ public static class HpVictusCapabilityProbe
             snapshot.RootWmiAvailability.ToString(),
             snapshot.HpqBIntMAvailability.ToString(),
             snapshot.HpqBDataInAvailability.ToString(),
+            snapshot.HpqBIntMMethodNames,
+            snapshot.HpqBDataInMethodNames,
+            snapshot.HpWmiReadOnlyClientErrors,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -113,47 +117,6 @@ public static class HpVictusCapabilityProbe
         return values;
     }
 
-    private static HpVictusProbeAvailability CheckNamespace(string scopePath, List<string> errors)
-    {
-        try
-        {
-            var scope = new ManagementScope(scopePath);
-            scope.Connect();
-            return scope.IsConnected ? HpVictusProbeAvailability.Available : HpVictusProbeAvailability.Unavailable;
-        }
-        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidNamespace)
-        {
-            return HpVictusProbeAvailability.Unavailable;
-        }
-        catch (Exception ex) when (ex is ManagementException or UnauthorizedAccessException or COMException)
-        {
-            errors.Add($"{scopePath}: {ex.GetType().Name}: {ex.Message}");
-            return HpVictusProbeAvailability.Unknown;
-        }
-    }
-
-    private static HpVictusProbeAvailability CheckClass(string scopePath, string className, List<string> errors)
-    {
-        try
-        {
-            var scope = new ManagementScope(scopePath);
-            scope.Connect();
-
-            using var managementClass = new ManagementClass(scope, new ManagementPath(className), null);
-            managementClass.Get();
-            return HpVictusProbeAvailability.Available;
-        }
-        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.NotFound)
-        {
-            return HpVictusProbeAvailability.Unavailable;
-        }
-        catch (Exception ex) when (ex is ManagementException or UnauthorizedAccessException or COMException)
-        {
-            errors.Add($"{className}: {ex.GetType().Name}: {ex.Message}");
-            return HpVictusProbeAvailability.Unknown;
-        }
-    }
-
     private static string FirstNonEmpty(params string?[] values)
     {
         foreach (string? value in values)
@@ -183,6 +146,9 @@ public static class HpVictusCapabilityProbe
         string RootWmiAvailability,
         string HpqBIntMAvailability,
         string HpqBDataInAvailability,
+        string[] HpqBIntMMethodNames,
+        string[] HpqBDataInMethodNames,
+        string[] HpWmiReadOnlyClientErrors,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);
