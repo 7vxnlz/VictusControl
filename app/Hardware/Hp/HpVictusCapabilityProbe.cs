@@ -42,6 +42,12 @@ public static class HpVictusCapabilityProbe
             errors.Add("HP WMI read-only client: " + error);
         }
 
+        var accessDeniedDiagnostics = HpWmiAccessDeniedDiagnostics.Probe();
+        foreach (string error in accessDeniedDiagnostics.AccessDeniedInvestigationErrors)
+        {
+            errors.Add("HP WMI access denied diagnostics: " + error);
+        }
+
         var invocationClient = new HpWmiInvocationClient(global::Logger.WriteLine);
         var invocationSandboxStatus = invocationClient.ValidateCatalog(
             hpWmiSnapshot,
@@ -87,6 +93,13 @@ public static class HpVictusCapabilityProbe
             systemDesignDataInvocation.Success,
             systemDesignDataInvocation.ReturnedByteCount ?? 0,
             FirstNonEmpty(systemDesignDataInvocation.Errors),
+            accessDeniedDiagnostics.ProcessElevated,
+            accessDeniedDiagnostics.WindowsIdentitySummary,
+            accessDeniedDiagnostics.WmiNamespaceReadable,
+            accessDeniedDiagnostics.HpBIntMClassReadable,
+            accessDeniedDiagnostics.HpBIntMMethodMetadataReadable,
+            accessDeniedDiagnostics.HpRelatedServices,
+            accessDeniedDiagnostics.AccessDeniedInvestigationErrors,
             errors.ToArray());
     }
 
@@ -120,6 +133,13 @@ public static class HpVictusCapabilityProbe
             snapshot.SystemDesignDataInvocationSucceeded,
             snapshot.SystemDesignDataReturnedByteCount,
             snapshot.SystemDesignDataInvocationError,
+            snapshot.ProcessElevated,
+            snapshot.WindowsIdentitySummary,
+            snapshot.WmiNamespaceReadable,
+            snapshot.HpBIntMClassReadable,
+            snapshot.HpBIntMMethodMetadataReadable,
+            snapshot.HpRelatedServices,
+            snapshot.AccessDeniedInvestigationErrors,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -224,6 +244,13 @@ public static class HpVictusCapabilityProbe
         bool SystemDesignDataInvocationSucceeded,
         int SystemDesignDataReturnedByteCount,
         string SystemDesignDataInvocationError,
+        bool ProcessElevated,
+        string WindowsIdentitySummary,
+        bool WmiNamespaceReadable,
+        bool HpBIntMClassReadable,
+        bool HpBIntMMethodMetadataReadable,
+        HpRelatedServiceSnapshot[] HpRelatedServices,
+        string[] AccessDeniedInvestigationErrors,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);
