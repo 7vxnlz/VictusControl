@@ -42,6 +42,11 @@ public sealed record HpVictusCapabilitySnapshot(
     bool HpBIntMMethodMetadataReadable,
     HpRelatedServiceSnapshot[] HpRelatedServices,
     string[] AccessDeniedInvestigationErrors,
+    bool CimAvailable,
+    bool CimRootWmiReachable,
+    bool CimHpBIntMAvailable,
+    bool CimHpBIntMMethodMetadataReadable,
+    string[] CimErrors,
     string[] Errors)
 {
     public bool IsHpVictus => IsHpManufacturer && IsVictusModel;
@@ -50,6 +55,6 @@ public sealed record HpVictusCapabilitySnapshot(
     {
         string errors = Errors.Length == 0 ? "none" : string.Join(" | ", Errors);
 
-        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, SystemDesignDataDryRunStatus={SystemDesignDataDryRunStatus}, SystemDesignDataDryRunReady={SystemDesignDataDryRunReady}, SystemDesignDataInvocationAllowed={SystemDesignDataInvocationAllowed}, SystemDesignDataInvocationAttempted={SystemDesignDataInvocationAttempted}, SystemDesignDataInvocationSucceeded={SystemDesignDataInvocationSucceeded}, SystemDesignDataReturnedByteCount={SystemDesignDataReturnedByteCount}, ProcessElevated={ProcessElevated}, WmiNamespaceReadable={WmiNamespaceReadable}, HpBIntMClassReadable={HpBIntMClassReadable}, HpBIntMMethodMetadataReadable={HpBIntMMethodMetadataReadable}, HpRelatedServices={HpRelatedServices.Length}, Errors={errors}";
+        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, SystemDesignDataDryRunStatus={SystemDesignDataDryRunStatus}, SystemDesignDataDryRunReady={SystemDesignDataDryRunReady}, SystemDesignDataInvocationAllowed={SystemDesignDataInvocationAllowed}, SystemDesignDataInvocationAttempted={SystemDesignDataInvocationAttempted}, SystemDesignDataInvocationSucceeded={SystemDesignDataInvocationSucceeded}, SystemDesignDataReturnedByteCount={SystemDesignDataReturnedByteCount}, ProcessElevated={ProcessElevated}, WmiNamespaceReadable={WmiNamespaceReadable}, HpBIntMClassReadable={HpBIntMClassReadable}, HpBIntMMethodMetadataReadable={HpBIntMMethodMetadataReadable}, HpRelatedServices={HpRelatedServices.Length}, CimAvailable={CimAvailable}, CimRootWmiReachable={CimRootWmiReachable}, CimHpBIntMAvailable={CimHpBIntMAvailable}, CimHpBIntMMethodMetadataReadable={CimHpBIntMMethodMetadataReadable}, Errors={errors}";
     }
 }

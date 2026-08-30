@@ -48,6 +48,12 @@ public static class HpVictusCapabilityProbe
             errors.Add("HP WMI access denied diagnostics: " + error);
         }
 
+        var cimReadiness = HpCimReadinessProbe.Probe();
+        foreach (string error in cimReadiness.CimErrors)
+        {
+            errors.Add("HP CIM readiness probe: " + error);
+        }
+
         var invocationClient = new HpWmiInvocationClient(global::Logger.WriteLine);
         var invocationSandboxStatus = invocationClient.ValidateCatalog(
             hpWmiSnapshot,
@@ -100,6 +106,11 @@ public static class HpVictusCapabilityProbe
             accessDeniedDiagnostics.HpBIntMMethodMetadataReadable,
             accessDeniedDiagnostics.HpRelatedServices,
             accessDeniedDiagnostics.AccessDeniedInvestigationErrors,
+            cimReadiness.CimAvailable,
+            cimReadiness.CimRootWmiReachable,
+            cimReadiness.CimHpBIntMAvailable,
+            cimReadiness.CimHpBIntMMethodMetadataReadable,
+            cimReadiness.CimErrors,
             errors.ToArray());
     }
 
@@ -140,6 +151,11 @@ public static class HpVictusCapabilityProbe
             snapshot.HpBIntMMethodMetadataReadable,
             snapshot.HpRelatedServices,
             snapshot.AccessDeniedInvestigationErrors,
+            snapshot.CimAvailable,
+            snapshot.CimRootWmiReachable,
+            snapshot.CimHpBIntMAvailable,
+            snapshot.CimHpBIntMMethodMetadataReadable,
+            snapshot.CimErrors,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -251,6 +267,11 @@ public static class HpVictusCapabilityProbe
         bool HpBIntMMethodMetadataReadable,
         HpRelatedServiceSnapshot[] HpRelatedServices,
         string[] AccessDeniedInvestigationErrors,
+        bool CimAvailable,
+        bool CimRootWmiReachable,
+        bool CimHpBIntMAvailable,
+        bool CimHpBIntMMethodMetadataReadable,
+        string[] CimErrors,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);
