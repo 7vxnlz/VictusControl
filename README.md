@@ -1,0 +1,100 @@
+# VictusX
+
+A G-Helper-based control utility being adapted for HP Victus laptops.
+
+> [!WARNING]
+> **Project status: Experimental / early development.**
+> VictusX is not production-ready HP hardware-control software. Current development is focused on safe detection, diagnostics, and hardware-abstraction work.
+
+## What is VictusX?
+
+VictusX is a Windows utility project based on [G-Helper](https://github.com/seerge/g-helper), currently being adapted for HP Victus laptops.
+
+The current work is about replacing ASUS-specific hardware-control paths with HP Victus-safe abstractions. HP detection and safe WMI probing are implemented, but real HP hardware control is not ready yet.
+
+Target development hardware:
+
+- HP Victus Gaming Laptop 16-s0035nt / 7Z5Z2EA
+
+## Current status
+
+Implemented:
+
+- G-Helper source imported as the project base
+- VictusX project shell
+- HP Victus startup mode
+- Safe unsupported hardware mode
+- HP capability report
+- HP WMI availability probe
+- HP WMI invocation sandbox
+- `SystemDesignData` read-only invocation test path
+- Access denied diagnostics
+
+Not implemented yet:
+
+- Fan control
+- Performance mode control
+- Battery charge limit control
+- RGB / keyboard lighting control
+- GPU mode control
+- Production HP hardware control
+
+## Safety model
+
+VictusX is being developed conservatively.
+
+- Default ASUS/G-Helper behavior is preserved.
+- HP work is behind explicit developer flags.
+- `--hp-victus` enables the HP Victus placeholder/safe probing path.
+- Real HP WMI read-only invocation requires both:
+
+```bash
+--hp-victus
+--hp-wmi-readonly-test
+```
+
+No fan writes, EC writes, BIOS setting writes, thermal writes, power writes, RGB writes, keyboard-lighting writes, battery writes, or production HP control paths are implemented yet.
+
+## Usage for current development builds
+
+Build the solution:
+
+```bash
+dotnet build VictusX.sln
+```
+
+Run the current safe HP Victus probing mode:
+
+```bash
+dotnet run --project app\VictusX.csproj -- --hp-victus
+```
+
+The `--hp-wmi-readonly-test` flag is only for controlled developer testing. Do not use it unless you are intentionally testing the guarded HP WMI invocation path and understand the current limitations.
+
+## Development roadmap
+
+- HP WMI/CIM investigation
+- HP command catalog validation
+- Read-only telemetry
+- Safe HP hardware-controller implementation
+- UI cleanup and rebranding
+- Packaging and release work later
+
+## Credits
+
+VictusX builds on the excellent work of:
+
+- [G-Helper](https://github.com/seerge/g-helper) by seerge, used as the original application base
+- [ghelper-omen](https://github.com/ib-3/ghelper-omen), used as an HP/Omen research reference
+- [OmenCore](https://github.com/theantipopau/omencore), used as an HP/Omen research reference
+- [OmenSuperHub](https://github.com/breadeding/OmenSuperHub), used as an HP/Omen research reference
+- [OmenXHub](https://github.com/MasonDye/OmenXHub), used as an HP/Omen research reference
+- [ECC](https://github.com/affaan-m/ECC), used as a hardware-control research reference
+
+VictusX is independent and is not affiliated with, authorized by, or endorsed by HP Inc., ASUS, or the original G-Helper project.
+
+## Disclaimer
+
+This is experimental software. Use at your own risk.
+
+Hardware-control development can affect system behavior if implemented incorrectly. VictusX currently avoids production HP hardware-control writes while the HP Victus support layer is being investigated.
