@@ -44,10 +44,10 @@ public static class AppConfig
     static AppConfig()
     {
         string configName = "config.json";
-        string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GHelper");
+        string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VictusX");
         string startupConfig = Path.Combine(Application.StartupPath.Trim('\\'), configName);
 
-        fallbackConfigFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "GHelper", configName);
+        fallbackConfigFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "VictusX", configName);
 
         configFile = File.Exists(startupConfig) ? startupConfig
         : ProcessHelper.IsRunningAsSystem() && File.Exists(fallbackConfigFile) ? fallbackConfigFile
@@ -835,5 +835,6 @@ public static class AppConfig
 
 
 }
+
 
 

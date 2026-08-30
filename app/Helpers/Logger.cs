@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GHelper.Helpers;
 
 public static class Logger
 {
-    public static string appPath = Environment.GetFolderPath(ProcessHelper.IsRunningAsSystem() ? Environment.SpecialFolder.CommonApplicationData : Environment.SpecialFolder.ApplicationData) + "\\GHelper";
+    public static string appPath = Environment.GetFolderPath(ProcessHelper.IsRunningAsSystem() ? Environment.SpecialFolder.CommonApplicationData : Environment.SpecialFolder.ApplicationData) + "\\VictusX";
     public static string logFile = appPath + "\\log.txt";
 
     private static readonly Random _random = new Random();
@@ -42,3 +42,4 @@ public static class Logger
     }
 
 }
+
