@@ -129,7 +129,7 @@ namespace GHelper
 
             hardwareOverlay = new HardwareOverlay();
 
-            ProcessHelper.CheckAlreadyRunning();
+            ProcessHelper.CheckAlreadyRunning(settingsForm);
             ProcessHelper.SetPriority();
 
             CleanupLegacyFiles();

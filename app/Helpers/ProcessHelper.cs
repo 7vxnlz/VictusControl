@@ -18,7 +18,7 @@ namespace GHelper.Helpers
 
         public static bool IsRunningAsSystem() => _isSystem.Value;
 
-        public static void CheckAlreadyRunning()
+        public static void CheckAlreadyRunning(Control? exitMarshalControl = null)
         {
             var sec = new EventWaitHandleSecurity();
             sec.AddAccessRule(new EventWaitHandleAccessRule(
@@ -98,7 +98,25 @@ namespace GHelper.Helpers
             }
 
             if (exitEvent != null)
-                ThreadPool.RegisterWaitForSingleObject(exitEvent, (_, _) => Application.Exit(), null, Timeout.Infinite, true);
+                ThreadPool.RegisterWaitForSingleObject(exitEvent, (_, _) => RequestApplicationExit(exitMarshalControl), null, Timeout.Infinite, true);
+        }
+
+        private static void RequestApplicationExit(Control? marshalControl)
+        {
+            try
+            {
+                if (marshalControl is not null && !marshalControl.IsDisposed && marshalControl.IsHandleCreated)
+                {
+                    marshalControl.BeginInvoke((MethodInvoker)Application.Exit);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine("Exit marshal failed: " + ex.Message);
+            }
+
+            Application.Exit();
         }
 
         public static bool IsUserAdministrator()
