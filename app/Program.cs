@@ -110,7 +110,9 @@ namespace GHelper
             if (hpVictusMode)
             {
                 var hpSnapshot = HpVictusCapabilityProbe.Probe();
+                string hpReportPath = HpVictusCapabilityProbe.WriteReport(hpSnapshot);
                 Logger.WriteLine("HP Victus capability probe: " + hpSnapshot.ToLogString());
+                Logger.WriteLine("HP Victus capability report: " + hpReportPath);
             }
 
             settingsForm = new SettingsForm();
@@ -645,6 +647,7 @@ namespace GHelper
 
     }
 }
+
 
 
 

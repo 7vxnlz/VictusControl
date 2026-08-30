@@ -1,5 +1,6 @@
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 
 namespace GHelper.Hardware.Hp;
 
@@ -7,17 +8,29 @@ public static class HpVictusCapabilityProbe
 {
     private const string CimV2ScopePath = @"\\.\root\cimv2";
     private const string HpWmiScopePath = @"\\.\root\wmi";
+    private const string ReportFileName = "hp-capability-report.json";
+
+    private static readonly JsonSerializerOptions ReportJsonOptions = new()
+    {
+        WriteIndented = true
+    };
+
+    public static string ReportPath => Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "VictusX",
+        ReportFileName);
 
     public static HpVictusCapabilitySnapshot Probe()
     {
         var errors = new List<string>();
 
-        var computerSystem = QueryFirst(CimV2ScopePath, "SELECT Manufacturer, Model, SystemSKUNumber FROM Win32_ComputerSystem", errors, "Win32_ComputerSystem");
+        var computerSystem = QueryFirst(CimV2ScopePath, "SELECT Manufacturer, Model, SystemFamily, SystemSKUNumber FROM Win32_ComputerSystem", errors, "Win32_ComputerSystem");
         var computerProduct = QueryFirst(CimV2ScopePath, "SELECT Vendor, Name FROM Win32_ComputerSystemProduct", errors, "Win32_ComputerSystemProduct");
         var bios = QueryFirst(CimV2ScopePath, "SELECT SMBIOSBIOSVersion FROM Win32_BIOS", errors, "Win32_BIOS");
 
         string manufacturer = FirstNonEmpty(computerSystem.GetValueOrDefault("Manufacturer"), computerProduct.GetValueOrDefault("Vendor"));
         string model = FirstNonEmpty(computerSystem.GetValueOrDefault("Model"), computerProduct.GetValueOrDefault("Name"));
+        string systemFamily = computerSystem.GetValueOrDefault("SystemFamily") ?? string.Empty;
         string systemSku = computerSystem.GetValueOrDefault("SystemSKUNumber") ?? string.Empty;
         string productVendor = computerProduct.GetValueOrDefault("Vendor") ?? string.Empty;
         string productName = computerProduct.GetValueOrDefault("Name") ?? string.Empty;
@@ -34,6 +47,7 @@ public static class HpVictusCapabilityProbe
         return new HpVictusCapabilitySnapshot(
             manufacturer,
             model,
+            systemFamily,
             systemSku,
             productVendor,
             productName,
@@ -44,6 +58,29 @@ public static class HpVictusCapabilityProbe
             hpqBIntMAvailability,
             hpqBDataInAvailability,
             errors.ToArray());
+    }
+
+    public static string WriteReport(HpVictusCapabilitySnapshot snapshot)
+    {
+        string reportDirectory = Path.GetDirectoryName(ReportPath) ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        Directory.CreateDirectory(reportDirectory);
+
+        var report = new HpVictusCapabilityReport(
+            DateTimeOffset.Now,
+            snapshot.Manufacturer,
+            snapshot.Model,
+            snapshot.SystemFamily,
+            snapshot.SystemSku,
+            snapshot.BiosVersion,
+            snapshot.RootWmiAvailability.ToString(),
+            snapshot.HpqBIntMAvailability.ToString(),
+            snapshot.HpqBDataInAvailability.ToString(),
+            snapshot.IsHpManufacturer,
+            snapshot.IsVictusModel,
+            snapshot.Errors);
+
+        File.WriteAllText(ReportPath, JsonSerializer.Serialize(report, ReportJsonOptions));
+        return ReportPath;
     }
 
     private static Dictionary<string, string> QueryFirst(string scopePath, string query, List<string> errors, string sourceName)
@@ -135,5 +172,18 @@ public static class HpVictusCapabilityProbe
 
     private static bool ContainsAny(string value, params string[] candidates) =>
         !string.IsNullOrWhiteSpace(value) && candidates.Any(candidate => value.Contains(candidate, StringComparison.OrdinalIgnoreCase));
-}
 
+    private sealed record HpVictusCapabilityReport(
+        DateTimeOffset Timestamp,
+        string Manufacturer,
+        string Model,
+        string SystemFamily,
+        string Sku,
+        string BiosVersion,
+        string RootWmiAvailability,
+        string HpqBIntMAvailability,
+        string HpqBDataInAvailability,
+        bool LooksLikeHp,
+        bool LooksLikeVictus,
+        string[] ProbeErrors);
+}

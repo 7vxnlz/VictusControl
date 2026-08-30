@@ -10,6 +10,7 @@ public enum HpVictusProbeAvailability
 public sealed record HpVictusCapabilitySnapshot(
     string Manufacturer,
     string Model,
+    string SystemFamily,
     string SystemSku,
     string ProductVendor,
     string ProductName,
@@ -27,6 +28,6 @@ public sealed record HpVictusCapabilitySnapshot(
     {
         string errors = Errors.Length == 0 ? "none" : string.Join(" | ", Errors);
 
-        return $"Manufacturer='{Manufacturer}', Model='{Model}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, Errors={errors}";
+        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, Errors={errors}";
     }
 }
