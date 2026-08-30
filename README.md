@@ -77,6 +77,16 @@ HP WMI real invocation tests are developer-only and may require running VictusX 
 dotnet run --project app\VictusX.csproj -- --hp-victus
 ```
 
+### Developer-only elevated HP WMI test
+
+The guarded HP WMI read-only invocation path is for controlled developer testing only. It may require running from an elevated Administrator terminal, and it is documented separately in [docs/elevated-hp-wmi-readonly-test-guide.md](docs/elevated-hp-wmi-readonly-test-guide.md).
+
+Do not use the elevated test path for normal development runs. The normal recommended command remains:
+
+```bash
+dotnet run --project app\VictusX.csproj -- --hp-victus
+```
+
 ## Development roadmap
 
 - HP WMI/CIM investigation
