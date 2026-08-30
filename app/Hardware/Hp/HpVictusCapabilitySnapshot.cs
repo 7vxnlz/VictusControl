@@ -30,6 +30,7 @@ public sealed record HpVictusCapabilitySnapshot(
     string SystemDesignDataDryRunStatus,
     bool SystemDesignDataDryRunReady,
     string[] SystemDesignDataDryRunErrors,
+    bool SystemDesignDataInvocationAllowed,
     bool SystemDesignDataInvocationAttempted,
     bool SystemDesignDataInvocationSucceeded,
     int SystemDesignDataReturnedByteCount,
@@ -42,6 +43,6 @@ public sealed record HpVictusCapabilitySnapshot(
     {
         string errors = Errors.Length == 0 ? "none" : string.Join(" | ", Errors);
 
-        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, SystemDesignDataDryRunStatus={SystemDesignDataDryRunStatus}, SystemDesignDataDryRunReady={SystemDesignDataDryRunReady}, SystemDesignDataInvocationAttempted={SystemDesignDataInvocationAttempted}, SystemDesignDataInvocationSucceeded={SystemDesignDataInvocationSucceeded}, SystemDesignDataReturnedByteCount={SystemDesignDataReturnedByteCount}, Errors={errors}";
+        return $"Manufacturer='{Manufacturer}', Model='{Model}', Family='{SystemFamily}', SKU='{SystemSku}', ProductVendor='{ProductVendor}', ProductName='{ProductName}', BIOS='{BiosVersion}', IsHp={IsHpManufacturer}, IsVictus={IsVictusModel}, RootWmi={RootWmiAvailability}, hpqBIntM={HpqBIntMAvailability}, hpqBDataIn={HpqBDataInAvailability}, hpqBIntMMethods={HpqBIntMMethodNames.Length}, hpqBDataInMethods={HpqBDataInMethodNames.Length}, InvocationSandboxAvailable={InvocationSandboxAvailable}, SafeReadOnlyCommands={SafeReadOnlyCommandCount}, RejectedCommands={RejectedCommandCount}, SystemDesignDataDryRunStatus={SystemDesignDataDryRunStatus}, SystemDesignDataDryRunReady={SystemDesignDataDryRunReady}, SystemDesignDataInvocationAllowed={SystemDesignDataInvocationAllowed}, SystemDesignDataInvocationAttempted={SystemDesignDataInvocationAttempted}, SystemDesignDataInvocationSucceeded={SystemDesignDataInvocationSucceeded}, SystemDesignDataReturnedByteCount={SystemDesignDataReturnedByteCount}, Errors={errors}";
     }
 }

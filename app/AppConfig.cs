@@ -9,9 +9,11 @@ public static class AppConfig
 {
     private const string UnsupportedHardwareFlag = "--unsupported-hardware";
     private const string HpVictusHardwareFlag = "--hp-victus";
+    private const string HpWmiReadOnlyTestFlag = "--hp-wmi-readonly-test";
 
     private static bool unsupportedHardwareMode;
     private static bool hpVictusHardwareMode;
+    private static bool hpWmiReadOnlyTestMode;
 
     public static bool IsUnsupportedHardwareMode() =>
         unsupportedHardwareMode ||
@@ -24,6 +26,11 @@ public static class AppConfig
         hpVictusHardwareMode || Environment.GetCommandLineArgs().Any(arg => string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase));
 
     public static void SetHpVictusHardwareMode(bool enabled) => hpVictusHardwareMode = enabled;
+
+    public static bool IsHpWmiReadOnlyTestMode() =>
+        hpWmiReadOnlyTestMode || Environment.GetCommandLineArgs().Any(arg => string.Equals(arg, HpWmiReadOnlyTestFlag, StringComparison.OrdinalIgnoreCase));
+
+    public static void SetHpWmiReadOnlyTestMode(bool enabled) => hpWmiReadOnlyTestMode = enabled;
 
     private static string configFile;
     private static string fallbackConfigFile;

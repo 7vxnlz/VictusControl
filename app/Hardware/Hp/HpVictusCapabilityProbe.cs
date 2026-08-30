@@ -50,10 +50,14 @@ public static class HpVictusCapabilityProbe
             "SystemDesignData",
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions);
+        bool systemDesignDataInvocationAllowed =
+            global::AppConfig.IsHpVictusHardwareMode() &&
+            global::AppConfig.IsHpWmiReadOnlyTestMode();
         var systemDesignDataInvocation = TryInvokeSystemDesignData(
             invocationClient,
             hpWmiSnapshot,
-            HpBiosWmiCommandCatalog.Definitions);
+            HpBiosWmiCommandCatalog.Definitions,
+            systemDesignDataInvocationAllowed);
 
         return new HpVictusCapabilitySnapshot(
             manufacturer,
@@ -78,6 +82,7 @@ public static class HpVictusCapabilityProbe
             systemDesignDataDryRun.Status,
             systemDesignDataDryRun.Success && !systemDesignDataDryRun.Invoked,
             systemDesignDataDryRun.Errors,
+            systemDesignDataInvocationAllowed,
             systemDesignDataInvocation.Invoked,
             systemDesignDataInvocation.Success,
             systemDesignDataInvocation.ReturnedByteCount ?? 0,
@@ -110,6 +115,7 @@ public static class HpVictusCapabilityProbe
             snapshot.SystemDesignDataDryRunStatus,
             snapshot.SystemDesignDataDryRunReady,
             snapshot.SystemDesignDataDryRunErrors,
+            snapshot.SystemDesignDataInvocationAllowed,
             snapshot.SystemDesignDataInvocationAttempted,
             snapshot.SystemDesignDataInvocationSucceeded,
             snapshot.SystemDesignDataReturnedByteCount,
@@ -165,7 +171,8 @@ public static class HpVictusCapabilityProbe
     private static HpWmiInvocationResult TryInvokeSystemDesignData(
         HpWmiInvocationClient invocationClient,
         HpWmiReadOnlySnapshot hpWmiSnapshot,
-        IEnumerable<HpBiosWmiCommandDefinition> definitions)
+        IEnumerable<HpBiosWmiCommandDefinition> definitions,
+        bool invocationAllowed)
     {
         HpBiosWmiCommandDefinition? definition = definitions.FirstOrDefault(candidate =>
             string.Equals(candidate.Name, "SystemDesignData", StringComparison.OrdinalIgnoreCase));
@@ -176,7 +183,10 @@ public static class HpVictusCapabilityProbe
         }
 
         return invocationClient.TryInvoke(
-            new HpWmiInvocationRequest(definition, global::AppConfig.IsHpVictusHardwareMode()),
+            new HpWmiInvocationRequest(
+                definition,
+                global::AppConfig.IsHpVictusHardwareMode(),
+                invocationAllowed),
             hpWmiSnapshot);
     }
 
@@ -209,6 +219,7 @@ public static class HpVictusCapabilityProbe
         string SystemDesignDataDryRunStatus,
         bool SystemDesignDataDryRunReady,
         string[] SystemDesignDataDryRunErrors,
+        bool SystemDesignDataInvocationAllowed,
         bool SystemDesignDataInvocationAttempted,
         bool SystemDesignDataInvocationSucceeded,
         int SystemDesignDataReturnedByteCount,

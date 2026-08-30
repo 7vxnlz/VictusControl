@@ -24,9 +24,11 @@ namespace GHelper
         public static NotifyIcon trayIcon;
         private const string UnsupportedHardwareFlag = "--unsupported-hardware";
         private const string HpVictusHardwareFlag = "--hp-victus";
+        private const string HpWmiReadOnlyTestFlag = "--hp-wmi-readonly-test";
         public static IHardwareController acpi;
         private static bool unsupportedHardwareMode;
         private static bool hpVictusMode;
+        private static bool hpWmiReadOnlyTestMode;
 
         public static SettingsForm settingsForm;
 
@@ -75,12 +77,15 @@ namespace GHelper
 
             bool explicitUnsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
             hpVictusMode = args.Any(arg => string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase));
+            hpWmiReadOnlyTestMode = args.Any(arg => string.Equals(arg, HpWmiReadOnlyTestFlag, StringComparison.OrdinalIgnoreCase));
             unsupportedHardwareMode = explicitUnsupportedHardwareMode || hpVictusMode;
             AppConfig.SetHpVictusHardwareMode(hpVictusMode);
+            AppConfig.SetHpWmiReadOnlyTestMode(hpWmiReadOnlyTestMode);
             AppConfig.SetUnsupportedHardwareMode(unsupportedHardwareMode);
             string action = args.FirstOrDefault(arg =>
                 !string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase)) ?? "";
+                !string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(arg, HpWmiReadOnlyTestFlag, StringComparison.OrdinalIgnoreCase)) ?? "";
 
             if (action == "charge")
             {
