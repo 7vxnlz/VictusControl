@@ -42,7 +42,12 @@ public static class HpVictusCapabilityProbe
             errors.Add("HP WMI read-only client: " + error);
         }
 
-        var invocationSandboxStatus = new HpWmiInvocationClient().ValidateCatalog(
+        var invocationClient = new HpWmiInvocationClient();
+        var invocationSandboxStatus = invocationClient.ValidateCatalog(
+            hpWmiSnapshot,
+            HpBiosWmiCommandCatalog.Definitions);
+        var systemDesignDataDryRun = invocationClient.DryRun(
+            "SystemDesignData",
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions);
 
@@ -66,6 +71,9 @@ public static class HpVictusCapabilityProbe
             invocationSandboxStatus.SafeReadOnlyCommandCount,
             invocationSandboxStatus.RejectedCommandCount,
             invocationSandboxStatus.Errors,
+            systemDesignDataDryRun.Status,
+            systemDesignDataDryRun.Success && !systemDesignDataDryRun.Invoked,
+            systemDesignDataDryRun.Errors,
             errors.ToArray());
     }
 
@@ -91,6 +99,9 @@ public static class HpVictusCapabilityProbe
             snapshot.SafeReadOnlyCommandCount,
             snapshot.RejectedCommandCount,
             snapshot.InvocationSandboxErrors,
+            snapshot.SystemDesignDataDryRunStatus,
+            snapshot.SystemDesignDataDryRunReady,
+            snapshot.SystemDesignDataDryRunErrors,
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
@@ -165,6 +176,9 @@ public static class HpVictusCapabilityProbe
         int SafeReadOnlyCommandCount,
         int RejectedCommandCount,
         string[] InvocationSandboxErrors,
+        string SystemDesignDataDryRunStatus,
+        bool SystemDesignDataDryRunReady,
+        string[] SystemDesignDataDryRunErrors,
         bool LooksLikeHp,
         bool LooksLikeVictus,
         string[] ProbeErrors);

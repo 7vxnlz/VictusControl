@@ -63,6 +63,40 @@ public sealed class HpWmiInvocationClient
             "HP BIOS WMI invocation is intentionally disabled in this milestone.");
     }
 
+    public HpWmiInvocationResult DryRun(
+        string commandName,
+        HpWmiReadOnlySnapshot wmiSnapshot,
+        IEnumerable<HpBiosWmiCommandDefinition> definitions)
+    {
+        HpBiosWmiCommandDefinition? definition = definitions.FirstOrDefault(candidate =>
+            string.Equals(candidate.Name, commandName, StringComparison.OrdinalIgnoreCase));
+
+        if (definition is null)
+        {
+            const string reason = "command definition not found";
+            _log?.Invoke($"HP WMI invocation sandbox rejected '{commandName}': {reason}");
+            return HpWmiInvocationResult.Rejected(commandName, reason);
+        }
+
+        return DryRun(new HpWmiInvocationRequest(definition), wmiSnapshot);
+    }
+
+    public HpWmiInvocationResult DryRun(HpWmiInvocationRequest request, HpWmiReadOnlySnapshot wmiSnapshot)
+    {
+        bool sandboxAvailable = IsRequiredWmiSurfaceAvailable(wmiSnapshot);
+        var exposedMethods = new HashSet<string>(wmiSnapshot.HpqBIntMMethodNames, StringComparer.OrdinalIgnoreCase);
+        string? rejectionReason = GetRejectionReason(request.CommandDefinition, sandboxAvailable, exposedMethods);
+
+        if (rejectionReason is not null)
+        {
+            _log?.Invoke($"HP WMI invocation sandbox dry-run rejected '{request.CommandDefinition.Name}': {rejectionReason}");
+            return HpWmiInvocationResult.Rejected(request.CommandDefinition, rejectionReason);
+        }
+
+        _log?.Invoke($"HP WMI invocation sandbox dry-run ready for '{request.CommandDefinition.Name}'. No HP BIOS WMI method was invoked.");
+        return HpWmiInvocationResult.DryRunReady(request.CommandDefinition);
+    }
+
     private static bool IsRequiredWmiSurfaceAvailable(HpWmiReadOnlySnapshot wmiSnapshot) =>
         wmiSnapshot.RootWmiAvailability == HpVictusProbeAvailability.Available &&
         wmiSnapshot.HpqBIntMAvailability == HpVictusProbeAvailability.Available &&
