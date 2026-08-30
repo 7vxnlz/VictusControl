@@ -89,8 +89,8 @@ public static class HpBiosWmiCommandCatalog
             0,
             4,
             HpBiosWmiCommandAccess.Unknown,
-            HpBiosWmiCommandSafety.ReadIntent,
-            "Read-intent GPU mode command candidate. The same command ID is also used by write-capable flows in references, so it must stay gated."),
+            HpBiosWmiCommandSafety.Unknown,
+            "Ambiguous GPU mode command candidate. References use the same command ID around read and write flows, so this must stay blocked until separately verified."),
 
         new(
             "KeyboardType",
