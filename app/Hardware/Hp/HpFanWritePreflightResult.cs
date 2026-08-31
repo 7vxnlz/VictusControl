@@ -6,12 +6,19 @@ public enum HpFanWriteAbortReason
     CommandNotSetFanMax,
     MissingRequiredRuntimeFlag,
     AdministratorRequired,
+    InteractiveHumanConfirmationRequired,
+    ApprovedDeviceBaselineRequired,
+    HealthyReadOnlyBaselineRequired,
+    StableAcPowerRequired,
+    IndependentThermalObservationRequired,
     PreWriteReadbackRequired,
     CurrentMaxFanStateUnknown,
     BaselineMaxFanMustBeDisabled,
     WriteTargetStateRequired,
+    InitialWriteMustEnableMaxFan,
     PostWriteReadbackRequired,
     RestorePlanRequired,
+    SingleWriteAttemptRequired,
     UnexpectedExecutionRequest
 }
 

@@ -13,8 +13,8 @@ public sealed record HpFanMaxWriteExperimentPlan
 
     public HpFanMaxTargetState? TargetState { get; init; }
     public HpFanMaxTargetState? RestoreTargetState { get; init; }
-    public bool RequiresReadbackBeforeWrite { get; init; } = true;
-    public bool RequiresReadbackAfterWrite { get; init; } = true;
-    public bool RequiresVerifiedRestore { get; init; } = true;
-    public bool IsWriteExecutionAllowed { get; init; } = false;
+    public bool RequiresReadbackBeforeWrite => true;
+    public bool RequiresReadbackAfterWrite => true;
+    public bool RequiresVerifiedRestore => true;
+    public bool IsWriteExecutionAllowed => false;
 }

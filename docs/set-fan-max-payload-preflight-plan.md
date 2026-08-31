@@ -10,9 +10,10 @@ This is a pure-data safety design. It does not authorize or execute a hardware w
 
 - The requested command must be exactly `SetFanMax` / `0x27`.
 - All future explicit write flags must be present and the process must be elevated as Administrator.
+- An interactive human confirmation, approved device/firmware baseline, healthy full read-only baseline, stable AC power, and independent thermal observation are required.
 - A successful immediate `FanMaxGet` pre-read is required. Its state must be known and disabled for this single enable-then-restore experiment.
 - The only experiment target is enable max fan. Its required restore target is restore/disable max fan.
-- A post-write `FanMaxGet` readback plan and a verified synchronous restore plan are mandatory.
+- A post-write `FanMaxGet` readback plan, a restore `FanMaxGet` readback plan, and a verified synchronous restore plan are mandatory.
 
 ## Future Flags
 
@@ -23,7 +24,7 @@ This is a pure-data safety design. It does not authorize or execute a hardware w
 
 ## Abort Conditions
 
-Abort before any future write for another command, a missing flag, no elevation, no pre-read, unknown or enabled baseline max-fan state, no target, no post-read plan, or no restore plan. After a future attempt, abort without retry or fallback if the call errors, readback does not match, the UI closes, cancellation occurs, or restoration cannot be verified.
+Abort before any future write for another command, a missing flag, no elevation, no human confirmation, unapproved or unhealthy baseline, unsuitable power or thermal observation, no pre-read, unknown or enabled baseline max-fan state, no target, no post-read plan, no restore plan, or more than one requested write. After a future attempt, abort without retry or fallback if the call errors, readback does not match, the UI closes, cancellation occurs, or restoration cannot be verified.
 
 ## Why No Write Is Executed Yet
 
