@@ -17,7 +17,6 @@ using GHelper.UI;
 using GHelper.USB;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Timers;
 
 namespace GHelper
@@ -32,7 +31,7 @@ namespace GHelper
         Label? hpReadOnlyTelemetrySource;
         Label? hpReadOnlyTelemetryHealth;
         Label? hpReadOnlyTelemetryWarning;
-        HpCachedDiagnosticReport? hpCachedDiagnosticReport;
+        HpDiagnosticReportLoadResult? hpCachedDiagnosticReport;
 
         public GPUModeControl gpuControl;
         public AllyControl allyControl;
@@ -491,10 +490,10 @@ namespace GHelper
 
         private void ReloadHpCachedDiagnosticReport()
         {
-            hpCachedDiagnosticReport = HpCachedDiagnosticReport.TryLoad(HpVictusCapabilityProbe.ReportPath, out string sourceDescription);
+            hpCachedDiagnosticReport = HpDiagnosticReportLoader.Load(HpVictusCapabilityProbe.ReportPath);
             if (hpReadOnlyTelemetrySource is not null)
             {
-                hpReadOnlyTelemetrySource.Text = sourceDescription;
+                hpReadOnlyTelemetrySource.Text = hpCachedDiagnosticReport.SourceDescription;
             }
         }
 
@@ -539,7 +538,7 @@ namespace GHelper
         private HpDiagnosticDashboardInput CreateHpDiagnosticDashboardInput()
         {
             HpVictusCapabilitySnapshot? snapshot = Program.hpVictusCapabilitySnapshot;
-            HpCachedDiagnosticReport? report = hpCachedDiagnosticReport;
+            HpDiagnosticReportLoadResult? report = hpCachedDiagnosticReport;
             return new HpDiagnosticDashboardInput
             {
                 IsHpVictusDetected = snapshot?.IsHpVictus ?? report?.GetHpVictusDetected(),
@@ -616,14 +615,14 @@ namespace GHelper
             };
         }
 
-        private static string GetSnapshotOrReportValue(string? snapshotValue, HpCachedDiagnosticReport? report, string reportPath)
+        private static string GetSnapshotOrReportValue(string? snapshotValue, HpDiagnosticReportLoadResult? report, string reportPath)
         {
             return !string.IsNullOrWhiteSpace(snapshotValue)
                 ? snapshotValue
                 : report?.GetValue(reportPath) ?? "Not available";
         }
 
-        private static string GetSnapshotOrReportAvailability(HpVictusProbeAvailability? snapshotValue, HpCachedDiagnosticReport? report, string reportPath)
+        private static string GetSnapshotOrReportAvailability(HpVictusProbeAvailability? snapshotValue, HpDiagnosticReportLoadResult? report, string reportPath)
         {
             if (snapshotValue.HasValue)
             {
@@ -635,12 +634,12 @@ namespace GHelper
                 : "Not available";
         }
 
-        private static string FormatDecodedStatus(bool hasDecodedSnapshot, HpCachedDiagnosticReport? report, string decodeSucceededPath)
+        private static string FormatDecodedStatus(bool hasDecodedSnapshot, HpDiagnosticReportLoadResult? report, string decodeSucceededPath)
         {
             return hasDecodedSnapshot || report?.GetBool(decodeSucceededPath) == true ? "Succeeded" : "Not available";
         }
 
-        private static string FormatDeclaredSupport(HpVictusCapabilitySnapshot? snapshot, HpCachedDiagnosticReport? report)
+        private static string FormatDeclaredSupport(HpVictusCapabilitySnapshot? snapshot, HpDiagnosticReportLoadResult? report)
         {
             bool hasDecodedSystemDesignData = snapshot?.SystemDesignDataInvocationSucceeded == true && snapshot.SystemDesignDataDecodeSucceeded;
             return hasDecodedSystemDesignData
@@ -660,7 +659,7 @@ namespace GHelper
                     : "Not available";
         }
 
-        private static string FormatMaxFanState(HpVictusCapabilitySnapshot? snapshot, HpCachedDiagnosticReport? report)
+        private static string FormatMaxFanState(HpVictusCapabilitySnapshot? snapshot, HpDiagnosticReportLoadResult? report)
         {
             bool hasDecodedFanMaxState = snapshot?.FanMaxGetInvocationSucceeded == true && snapshot.FanMaxGetDecodeSucceeded;
             return hasDecodedFanMaxState
@@ -680,7 +679,7 @@ namespace GHelper
                     : "Not available";
         }
 
-        private static string GetSnapshotOrDecodedReportValue<T>(bool hasDecodedSnapshot, T? snapshotValue, HpCachedDiagnosticReport? report, string decodeSucceededPath, string valuePath) where T : struct
+        private static string GetSnapshotOrDecodedReportValue<T>(bool hasDecodedSnapshot, T? snapshotValue, HpDiagnosticReportLoadResult? report, string decodeSucceededPath, string valuePath) where T : struct
         {
             if (hasDecodedSnapshot && snapshotValue.HasValue)
             {
@@ -690,85 +689,6 @@ namespace GHelper
             return report?.GetBool(decodeSucceededPath) == true
                 ? report.GetValue(valuePath) ?? "Not available"
                 : "Not available";
-        }
-
-        private sealed class HpCachedDiagnosticReport
-        {
-            private readonly Dictionary<string, string> values;
-
-            private HpCachedDiagnosticReport(Dictionary<string, string> values)
-            {
-                this.values = values;
-            }
-
-            public static HpCachedDiagnosticReport? TryLoad(string reportPath, out string sourceDescription)
-            {
-                if (!File.Exists(reportPath))
-                {
-                    sourceDescription = "Cached report: Not available";
-                    return null;
-                }
-
-                try
-                {
-                    using JsonDocument document = JsonDocument.Parse(File.ReadAllText(reportPath));
-                    var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                    AddValues(values, string.Empty, document.RootElement);
-                    sourceDescription = "Cached report: Loaded. Reload reads this file only and does not invoke WMI.";
-                    return new HpCachedDiagnosticReport(values);
-                }
-                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
-                {
-                    sourceDescription = "Cached report: Not available";
-                    return null;
-                }
-            }
-
-            public string? GetValue(string path) => values.GetValueOrDefault(path);
-
-            public bool? GetBool(string path)
-            {
-                return bool.TryParse(GetValue(path), out bool value) ? value : null;
-            }
-
-            public bool? GetHpVictusDetected()
-            {
-                bool? looksLikeHp = GetBool("LooksLikeHp");
-                bool? looksLikeVictus = GetBool("LooksLikeVictus");
-                return looksLikeHp.HasValue && looksLikeVictus.HasValue ? looksLikeHp.Value && looksLikeVictus.Value : null;
-            }
-
-            private static void AddValues(Dictionary<string, string> values, string path, JsonElement element)
-            {
-                switch (element.ValueKind)
-                {
-                    case JsonValueKind.Object:
-                        foreach (JsonProperty property in element.EnumerateObject())
-                        {
-                            string propertyPath = string.IsNullOrEmpty(path) ? property.Name : path + "." + property.Name;
-                            AddValues(values, propertyPath, property.Value);
-                        }
-                        break;
-                    case JsonValueKind.Array:
-                        values[path] = string.Join(" | ", element.EnumerateArray().Select(GetElementText).Where(value => !string.IsNullOrWhiteSpace(value)));
-                        break;
-                    case JsonValueKind.String:
-                        values[path] = element.GetString() ?? string.Empty;
-                        break;
-                    case JsonValueKind.Number:
-                    case JsonValueKind.True:
-                    case JsonValueKind.False:
-                        values[path] = element.GetRawText();
-                        break;
-                }
-            }
-
-            private static string GetElementText(JsonElement element) => element.ValueKind switch
-            {
-                JsonValueKind.String => element.GetString() ?? string.Empty,
-                JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False => element.GetRawText(),
-                _ => string.Empty
-            };
         }
 
         private void ButtonArmoury_Click(object? sender, EventArgs e)

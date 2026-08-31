@@ -13,6 +13,7 @@
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticReportExporter.cs" Link="Hardware\Hp\HpDiagnosticReportExporter.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticDashboardModel.cs" Link="Hardware\Hp\HpDiagnosticDashboardModel.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticDashboardFormatter.cs" Link="Hardware\Hp\HpDiagnosticDashboardFormatter.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticReportLoader.cs" Link="Hardware\Hp\HpDiagnosticReportLoader.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountDecoder.cs" Link="Hardware\Hp\HpFanGetCountDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountReportDecoder.cs" Link="Hardware\Hp\HpFanGetCountReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelDecoder.cs" Link="Hardware\Hp\HpFanGetLevelDecoder.cs" />
