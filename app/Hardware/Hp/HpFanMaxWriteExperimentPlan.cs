@@ -13,6 +13,9 @@ public sealed record HpFanMaxWriteExperimentPlan
 
     public HpFanMaxTargetState? TargetState { get; init; }
     public HpFanMaxTargetState? RestoreTargetState { get; init; }
+    public HpFanMaxValidatedInputLength? DeviceValidatedInputLength { get; init; }
+    public HpFanMaxPayloadDescription? EnablePayloadDescription { get; init; }
+    public HpFanMaxPayloadDescription? RestorePayloadDescription { get; init; }
     public bool RequiresReadbackBeforeWrite => true;
     public bool RequiresReadbackAfterWrite => true;
     public bool RequiresVerifiedRestore => true;

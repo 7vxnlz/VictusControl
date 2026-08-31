@@ -25,7 +25,7 @@ The operation selector and state byte agree, but the input length does not: four
 
 ## Current Model And Decision
 
-The previous pure model incorrectly presented four bytes as a single reference expectation. It now records both observed input variants, the common method/command metadata, and `DeviceValidatedInputLength=null`. The enable and restore state-byte descriptions still match every inspected reference.
+The previous pure model incorrectly presented four bytes as a single reference expectation. The stricter model now leaves `DeviceValidatedInputLength` unset by default, accepts only an explicitly selected one-byte or four-byte device-validated shape, and creates matching enable/restore metadata only for that shape. The state-byte descriptions still match every inspected reference.
 
 `SetFanMax` must remain docs-only. Do not add a guarded dry-run runtime path: even a dry run that selects or validates a real WMI method risks becoming an invocation path without device-specific proof. What remains unproven is this device's accepted input length, return behavior, latch persistence, disable/restore behavior, and manual recovery procedure.
 

@@ -43,6 +43,9 @@ public sealed class HpFanWriteSafetyScaffoldingTests
         Assert.Equal(0x27u, HpFanMaxWriteExperimentPlan.CommandId);
         Assert.Null(plan.TargetState);
         Assert.Null(plan.RestoreTargetState);
+        Assert.Null(plan.DeviceValidatedInputLength);
+        Assert.Null(plan.EnablePayloadDescription);
+        Assert.Null(plan.RestorePayloadDescription);
         Assert.True(plan.RequiresReadbackBeforeWrite);
         Assert.True(plan.RequiresReadbackAfterWrite);
         Assert.True(plan.RequiresVerifiedRestore);
@@ -52,31 +55,47 @@ public sealed class HpFanWriteSafetyScaffoldingTests
     [Theory]
     [InlineData(HpFanMaxTargetState.EnableMaxFan, 1)]
     [InlineData(HpFanMaxTargetState.RestoreDisableMaxFan, 0)]
-    public void PayloadDescription_DescribesOnlyTheTwoApprovedFutureStates(
+    public void OneBytePayloadDescription_ContainsOnlyStateByteMetadata(
         HpFanMaxTargetState targetState,
-        byte expectedFirstByteValue)
+        byte expectedStateByteValue)
     {
-        HpFanMaxPayloadDescription description = HpFanMaxPayloadDescription.Describe(targetState);
+        HpFanMaxPayloadDescription description = HpFanMaxPayloadDescription.Describe(
+            targetState,
+            HpFanMaxValidatedInputLength.OneByte);
 
         Assert.Equal(targetState, description.TargetState);
-        Assert.Equal(expectedFirstByteValue, description.FirstByteValue);
+        Assert.Equal(expectedStateByteValue, description.StateByteValue);
+        Assert.Equal(HpFanMaxValidatedInputLength.OneByte, description.DeviceValidatedInputLength);
+        Assert.Equal(0, description.ZeroFilledTrailingByteCount);
         Assert.Equal("hpqBIOSInt0", HpFanMaxPayloadDescription.ReferenceMethodName);
         Assert.Equal(0x20008u, HpFanMaxPayloadDescription.ReferenceCommandValue);
         Assert.Equal(0x27u, HpFanMaxPayloadDescription.ReferenceCommandType);
         Assert.Equal(0, HpFanMaxPayloadDescription.ReferenceExpectedOutputSize);
-        Assert.Null(description.DeviceValidatedInputLength);
-        Assert.Collection(
-            description.ObservedReferenceInputShapes,
-            fourByteShape =>
-            {
-                Assert.Equal(4, fourByteShape.InputLength);
-                Assert.Equal(3, fourByteShape.ZeroFilledTrailingByteCount);
-            },
-            oneByteShape =>
-            {
-                Assert.Equal(1, oneByteShape.InputLength);
-                Assert.Equal(0, oneByteShape.ZeroFilledTrailingByteCount);
-            });
+    }
+
+    [Theory]
+    [InlineData(HpFanMaxTargetState.EnableMaxFan, 1)]
+    [InlineData(HpFanMaxTargetState.RestoreDisableMaxFan, 0)]
+    public void FourBytePayloadDescription_ContainsStateByteAndZeroTailMetadata(
+        HpFanMaxTargetState targetState,
+        byte expectedStateByteValue)
+    {
+        HpFanMaxPayloadDescription description = HpFanMaxPayloadDescription.Describe(
+            targetState,
+            HpFanMaxValidatedInputLength.FourBytes);
+
+        Assert.Equal(targetState, description.TargetState);
+        Assert.Equal(expectedStateByteValue, description.StateByteValue);
+        Assert.Equal(HpFanMaxValidatedInputLength.FourBytes, description.DeviceValidatedInputLength);
+        Assert.Equal(3, description.ZeroFilledTrailingByteCount);
+    }
+
+    [Fact]
+    public void PayloadDescription_InvalidInputLength_IsRejected()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => HpFanMaxPayloadDescription.Describe(
+            HpFanMaxTargetState.EnableMaxFan,
+            (HpFanMaxValidatedInputLength)2));
     }
 
     [Fact]
@@ -95,10 +114,63 @@ public sealed class HpFanWriteSafetyScaffoldingTests
         Assert.Contains(HpFanWriteAbortReason.IndependentThermalObservationRequired, result.AbortReasons);
         Assert.Contains(HpFanWriteAbortReason.PreWriteReadbackRequired, result.AbortReasons);
         Assert.Contains(HpFanWriteAbortReason.CurrentMaxFanStateUnknown, result.AbortReasons);
+        Assert.Contains(HpFanWriteAbortReason.DeviceValidatedInputLengthRequired, result.AbortReasons);
+        Assert.Contains(HpFanWriteAbortReason.EnablePayloadDescriptionRequired, result.AbortReasons);
+        Assert.Contains(HpFanWriteAbortReason.RestorePayloadDescriptionRequired, result.AbortReasons);
         Assert.Contains(HpFanWriteAbortReason.WriteTargetStateRequired, result.AbortReasons);
         Assert.Contains(HpFanWriteAbortReason.PostWriteReadbackRequired, result.AbortReasons);
         Assert.Contains(HpFanWriteAbortReason.RestorePlanRequired, result.AbortReasons);
         Assert.Contains(HpFanWriteAbortReason.SingleWriteAttemptRequired, result.AbortReasons);
+    }
+
+    [Fact]
+    public void Preflight_UnsetDeviceValidatedInputLength_IsBlocked()
+    {
+        HpFanMaxWritePreflightRequest request = ApprovedRequest();
+
+        HpFanWritePreflightResult result = HpFanMaxWritePreflightEvaluator.Evaluate(request with
+        {
+            Plan = request.Plan with
+            {
+                DeviceValidatedInputLength = null,
+                EnablePayloadDescription = null,
+                RestorePayloadDescription = null
+            }
+        });
+
+        Assert.False(result.IsAllowed);
+        Assert.Contains(HpFanWriteAbortReason.DeviceValidatedInputLengthRequired, result.AbortReasons);
+    }
+
+    [Fact]
+    public void Preflight_InvalidDeviceValidatedInputLength_IsBlocked()
+    {
+        HpFanMaxWritePreflightRequest request = ApprovedRequest();
+
+        HpFanWritePreflightResult result = HpFanMaxWritePreflightEvaluator.Evaluate(request with
+        {
+            Plan = request.Plan with
+            {
+                DeviceValidatedInputLength = (HpFanMaxValidatedInputLength)2
+            }
+        });
+
+        Assert.False(result.IsAllowed);
+        Assert.Contains(HpFanWriteAbortReason.DeviceValidatedInputLengthInvalid, result.AbortReasons);
+    }
+
+    [Fact]
+    public void Preflight_MissingRestorePayloadDescription_IsBlocked()
+    {
+        HpFanMaxWritePreflightRequest request = ApprovedRequest();
+
+        HpFanWritePreflightResult result = HpFanMaxWritePreflightEvaluator.Evaluate(request with
+        {
+            Plan = request.Plan with { RestorePayloadDescription = null }
+        });
+
+        Assert.False(result.IsAllowed);
+        Assert.Contains(HpFanWriteAbortReason.RestorePayloadDescriptionRequired, result.AbortReasons);
     }
 
     [Fact]
@@ -145,7 +217,11 @@ public sealed class HpFanWriteSafetyScaffoldingTests
         {
             Plan = new HpFanMaxWriteExperimentPlan
             {
-                TargetState = HpFanMaxTargetState.EnableMaxFan
+                TargetState = HpFanMaxTargetState.EnableMaxFan,
+                DeviceValidatedInputLength = HpFanMaxValidatedInputLength.FourBytes,
+                EnablePayloadDescription = HpFanMaxPayloadDescription.Describe(
+                    HpFanMaxTargetState.EnableMaxFan,
+                    HpFanMaxValidatedInputLength.FourBytes)
             }
         });
 
@@ -185,7 +261,14 @@ public sealed class HpFanWriteSafetyScaffoldingTests
             Plan = new HpFanMaxWriteExperimentPlan
             {
                 TargetState = HpFanMaxTargetState.RestoreDisableMaxFan,
-                RestoreTargetState = HpFanMaxTargetState.RestoreDisableMaxFan
+                RestoreTargetState = HpFanMaxTargetState.RestoreDisableMaxFan,
+                DeviceValidatedInputLength = HpFanMaxValidatedInputLength.FourBytes,
+                EnablePayloadDescription = HpFanMaxPayloadDescription.Describe(
+                    HpFanMaxTargetState.EnableMaxFan,
+                    HpFanMaxValidatedInputLength.FourBytes),
+                RestorePayloadDescription = HpFanMaxPayloadDescription.Describe(
+                    HpFanMaxTargetState.RestoreDisableMaxFan,
+                    HpFanMaxValidatedInputLength.FourBytes)
             }
         });
 
@@ -217,6 +300,26 @@ public sealed class HpFanWriteSafetyScaffoldingTests
         Assert.False(request.Plan.IsWriteExecutionAllowed);
     }
 
+    [Fact]
+    public void SafetyScaffolding_ExposesNoWmiInvocationMethod()
+    {
+        Type[] safetyTypes =
+        [
+            typeof(HpFanMaxPayloadDescription),
+            typeof(HpFanMaxWriteExperimentPlan),
+            typeof(HpFanMaxWritePreflightEvaluator),
+            typeof(HpFanMaxWritePreflightRequest),
+            typeof(HpFanWriteSafetyPolicy)
+        ];
+
+        Assert.DoesNotContain(
+            safetyTypes.SelectMany(type => type.GetMethods()),
+            method => method.Name.Contains("Invoke", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(
+            safetyTypes.SelectMany(type => type.GetMethods()).SelectMany(method => method.GetParameters()),
+            parameter => parameter.ParameterType.Namespace?.Contains("Management", StringComparison.Ordinal) == true);
+    }
+
     private static HpFanMaxWritePreflightRequest ApprovedRequest() => new()
     {
         RequestedCommandName = HpFanMaxWriteExperimentPlan.CommandName,
@@ -236,7 +339,14 @@ public sealed class HpFanWriteSafetyScaffoldingTests
         Plan = new HpFanMaxWriteExperimentPlan
         {
             TargetState = HpFanMaxTargetState.EnableMaxFan,
-            RestoreTargetState = HpFanMaxTargetState.RestoreDisableMaxFan
+            RestoreTargetState = HpFanMaxTargetState.RestoreDisableMaxFan,
+            DeviceValidatedInputLength = HpFanMaxValidatedInputLength.FourBytes,
+            EnablePayloadDescription = HpFanMaxPayloadDescription.Describe(
+                HpFanMaxTargetState.EnableMaxFan,
+                HpFanMaxValidatedInputLength.FourBytes),
+            RestorePayloadDescription = HpFanMaxPayloadDescription.Describe(
+                HpFanMaxTargetState.RestoreDisableMaxFan,
+                HpFanMaxValidatedInputLength.FourBytes)
         }
     };
 }

@@ -62,6 +62,35 @@ public static class HpFanMaxWritePreflightEvaluator
             abortReasons.Add(HpFanWriteAbortReason.BaselineMaxFanMustBeDisabled);
         }
 
+        HpFanMaxValidatedInputLength? validatedInputLength = request.Plan.DeviceValidatedInputLength;
+        bool inputLengthIsValid = validatedInputLength is not null &&
+            HpFanMaxPayloadDescription.IsSupportedInputLength(validatedInputLength.Value);
+
+        if (validatedInputLength is null)
+        {
+            abortReasons.Add(HpFanWriteAbortReason.DeviceValidatedInputLengthRequired);
+        }
+        else if (!inputLengthIsValid)
+        {
+            abortReasons.Add(HpFanWriteAbortReason.DeviceValidatedInputLengthInvalid);
+        }
+
+        if (!inputLengthIsValid || !MatchesPayloadDescription(
+                request.Plan.EnablePayloadDescription,
+                HpFanMaxTargetState.EnableMaxFan,
+                validatedInputLength!.Value))
+        {
+            abortReasons.Add(HpFanWriteAbortReason.EnablePayloadDescriptionRequired);
+        }
+
+        if (!inputLengthIsValid || !MatchesPayloadDescription(
+                request.Plan.RestorePayloadDescription,
+                HpFanMaxTargetState.RestoreDisableMaxFan,
+                validatedInputLength!.Value))
+        {
+            abortReasons.Add(HpFanWriteAbortReason.RestorePayloadDescriptionRequired);
+        }
+
         if (request.Plan.TargetState is null)
         {
             abortReasons.Add(HpFanWriteAbortReason.WriteTargetStateRequired);
@@ -94,4 +123,14 @@ public static class HpFanMaxWritePreflightEvaluator
             AbortReasons = abortReasons
         };
     }
+
+    private static bool MatchesPayloadDescription(
+        HpFanMaxPayloadDescription? description,
+        HpFanMaxTargetState expectedTargetState,
+        HpFanMaxValidatedInputLength expectedInputLength) =>
+        description is not null &&
+        description.TargetState == expectedTargetState &&
+        description.DeviceValidatedInputLength == expectedInputLength &&
+        description.StateByteValue == (expectedTargetState == HpFanMaxTargetState.EnableMaxFan ? 1 : 0) &&
+        description.ZeroFilledTrailingByteCount == (int)expectedInputLength - 1;
 }
