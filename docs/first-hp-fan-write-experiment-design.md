@@ -2,6 +2,8 @@
 
 This is a safety design only. It does not authorize code, WMI invocation, or a hardware write.
 
+`HpFanWriteSafetyPolicy`, `HpFanWritePreflightResult`, and `HpFanMaxWriteExperimentPlan` now preserve these requirements as type-only, default-blocked scaffolding. They are not connected to runtime execution and do not represent a payload or invocation path.
+
 ## Candidate Comparison
 
 | Command | Future first-experiment suitability | Reason |
