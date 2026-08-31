@@ -16,7 +16,10 @@
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelReportDecoder.cs" Link="Hardware\Hp\HpFanGetLevelReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxGetDecoder.cs" Link="Hardware\Hp\HpFanMaxGetDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxGetReportDecoder.cs" Link="Hardware\Hp\HpFanMaxGetReportDecoder.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxPayloadDescription.cs" Link="Hardware\Hp\HpFanMaxPayloadDescription.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxWriteExperimentPlan.cs" Link="Hardware\Hp\HpFanMaxWriteExperimentPlan.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxWritePreflightEvaluator.cs" Link="Hardware\Hp\HpFanMaxWritePreflightEvaluator.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxWritePreflightRequest.cs" Link="Hardware\Hp\HpFanMaxWritePreflightRequest.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanWritePreflightResult.cs" Link="Hardware\Hp\HpFanWritePreflightResult.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanWriteSafetyPolicy.cs" Link="Hardware\Hp\HpFanWriteSafetyPolicy.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpSystemDesignDataDecoder.cs" Link="Hardware\Hp\HpSystemDesignDataDecoder.cs" />

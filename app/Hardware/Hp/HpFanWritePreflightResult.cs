@@ -3,12 +3,15 @@ namespace GHelper.Hardware.Hp;
 public enum HpFanWriteAbortReason
 {
     BlockedByDefault,
+    CommandNotSetFanMax,
     MissingRequiredRuntimeFlag,
     AdministratorRequired,
     PreWriteReadbackRequired,
+    CurrentMaxFanStateUnknown,
+    BaselineMaxFanMustBeDisabled,
     WriteTargetStateRequired,
     PostWriteReadbackRequired,
-    VerifiedRestoreRequired,
+    RestorePlanRequired,
     UnexpectedExecutionRequest
 }
 
