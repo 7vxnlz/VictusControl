@@ -6,6 +6,8 @@ A G-Helper-based control utility being adapted for HP Victus laptops.
 > **Project status: Experimental / early development.**
 > VictusX is not production-ready HP hardware-control software. Current development is focused on safe detection, diagnostics, and hardware-abstraction work.
 
+SetFanMax write work is design-only; no fan writes are implemented.
+
 ## What is VictusX?
 
 VictusX is a Windows utility project based on [G-Helper](https://github.com/seerge/g-helper), currently being adapted for HP Victus laptops.

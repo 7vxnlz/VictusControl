@@ -17,6 +17,10 @@ The report uses pure data and the existing validation simulator. It does not bui
 
 This Victus still lacks device-specific proof selecting exactly one SetFanMax input length (`1` or `4`), plus matching restore/disable behavior and a validated recovery procedure. Reference agreement on the state byte is not device validation.
 
+## Interpreting The Current Blocked State
+
+The current expected report has write implemented/allowed `false`, dry-run evaluated `true`, validated length `null`, and blockers for device-length and human recovery confirmation. This is a healthy fail-closed result: it records what is missing without selecting a payload shape or creating a write path.
+
 ## Why Fan UI Must Wait
 
 A fan UI would imply an available, repeatable control operation. No such operation is implemented or authorized, and there is no proven payload shape or restore guarantee for this device. UI fan control must wait until a separate safety review explicitly approves an implementation after the missing evidence is resolved.
