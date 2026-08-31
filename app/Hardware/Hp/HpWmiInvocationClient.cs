@@ -14,7 +14,6 @@ public sealed class HpWmiInvocationClient
     private const string SystemDesignDataCommandName = "SystemDesignData";
     private const string FanGetCountCommandName = "FanGetCount";
     private const string FanMaxGetCommandName = "FanMaxGet";
-    private const string FanGetLevelCommandName = "FanGetLevel";
     private const uint DefaultBiosCommand = 0x20008;
 
     private static readonly byte[] BiosSign = [0x53, 0x45, 0x43, 0x55];
@@ -88,7 +87,7 @@ public sealed class HpWmiInvocationClient
 
         if (!IsApprovedInvocationCommand(request.CommandDefinition.Name))
         {
-            const string reason = "only SystemDesignData, FanGetCount, FanMaxGet, and FanGetLevel are approved for real HP BIOS WMI invocation";
+            const string reason = "only SystemDesignData, FanGetCount, and FanMaxGet are approved for real HP BIOS WMI invocation";
             _log?.Invoke($"HP WMI invocation sandbox rejected '{request.CommandDefinition.Name}': {reason}");
             return HpWmiInvocationResult.Rejected(request.CommandDefinition, reason);
         }
@@ -196,8 +195,7 @@ public sealed class HpWmiInvocationClient
     private static bool IsApprovedInvocationCommand(string commandName) =>
         string.Equals(commandName, SystemDesignDataCommandName, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(commandName, FanGetCountCommandName, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(commandName, FanMaxGetCommandName, StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(commandName, FanGetLevelCommandName, StringComparison.OrdinalIgnoreCase);
+        string.Equals(commandName, FanMaxGetCommandName, StringComparison.OrdinalIgnoreCase);
 
     private HpWmiInvocationResult InvokeSafeReadOnlyCommand(HpBiosWmiCommandDefinition definition)
     {

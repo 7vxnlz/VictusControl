@@ -116,7 +116,7 @@ namespace GHelper.Helpers
                 Logger.WriteLine("Exit marshal failed: " + ex.Message);
             }
 
-            Application.Exit();
+            Logger.WriteLine("Exit request ignored because the WinForms UI thread is no longer available.");
         }
 
         public static bool IsUserAdministrator()

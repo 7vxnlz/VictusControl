@@ -223,7 +223,7 @@ namespace GHelper
                 PeripheralsProvider.RegisterForDeviceEvents();
             }
 
-            if (Environment.CurrentDirectory.Trim('\\') == Application.StartupPath.Trim('\\') || action.Length > 0)
+            if (hpVictusMode || Environment.CurrentDirectory.Trim('\\') == Application.StartupPath.Trim('\\') || action.Length > 0)
             {
                 SettingsToggle(false);
             }

@@ -27,15 +27,15 @@ public static class HpBiosWmiCommandCatalog
             "Prepared read-only fan status command candidate. Reports fan count and protection/status bits only; does not imply fan control support."),
 
         new(
-            "FanGetLevel",
+            "FanLevel",
             HpBiosWmiCommandFamily.Fan,
             0x2D,
             "hpqBIOSInt128",
             4,
             128,
             HpBiosWmiCommandAccess.ReadOnly,
-            HpBiosWmiCommandSafety.SafeReadOnlyInvocation,
-            "Prepared read-only fan status command candidate. Preserves raw fan level bytes only; manual fan writes remain forbidden."),
+            HpBiosWmiCommandSafety.ReadIntent,
+            "Read-intent fan level command candidate. Manual fan writes remain forbidden."),
 
         new(
             "FanRpm",
