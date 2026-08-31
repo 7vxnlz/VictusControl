@@ -24,6 +24,8 @@ These prerequisites prove read-only diagnostics and safety scaffolding only.
 - A safe, reviewed, locally executable manual recovery path.
 - Explicit human confirmation of the evidence, recovery plan, and implementation-only scope.
 
+Recovery and restore evidence must satisfy [the SetFanMax recovery and restore proof plan](set-fan-max-recovery-restore-proof-plan.md). Until then, the gate remains **NO-GO**.
+
 ## 4. GO Conditions
 
 Every condition below must be true and supported by attached evidence:
