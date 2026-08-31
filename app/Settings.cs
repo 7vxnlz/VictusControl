@@ -30,6 +30,7 @@ namespace GHelper
         Panel? hpReadOnlyTelemetryPanel;
         TableLayoutPanel? hpReadOnlyTelemetryDetails;
         Label? hpReadOnlyTelemetrySource;
+        Label? hpReadOnlyTelemetryWarning;
         HpCachedDiagnosticReport? hpCachedDiagnosticReport;
 
         public GPUModeControl gpuControl;
@@ -350,6 +351,16 @@ namespace GHelper
                 Padding = new Padding(10, 0, 10, 5)
             };
 
+            hpReadOnlyTelemetryWarning = new Label
+            {
+                AutoSize = true,
+                BorderStyle = BorderStyle.FixedSingle,
+                Dock = DockStyle.Top,
+                ForeColor = colorTurbo,
+                Padding = new Padding(10, 5, 10, 5),
+                Text = "READ-ONLY: Fan control is not implemented. SetFanMax is NO-GO / design-only."
+            };
+
             var details = new TableLayoutPanel
             {
                 AutoSize = true,
@@ -358,7 +369,7 @@ namespace GHelper
                 Dock = DockStyle.Top,
                 Padding = new Padding(10, 0, 10, 5)
             };
-            details.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            details.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220F));
             details.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 
             var actions = new FlowLayoutPanel
@@ -371,8 +382,8 @@ namespace GHelper
                 WrapContents = true
             };
             actions.Controls.Add(CreateHpDiagnosticActionButton("Copy summary", ButtonHpDiagnosticCopy_Click));
-            actions.Controls.Add(CreateHpDiagnosticActionButton("Open report folder", ButtonHpDiagnosticOpenReportFolder_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Reload cached report", ButtonHpDiagnosticReload_Click));
+            actions.Controls.Add(CreateHpDiagnosticActionButton("Open report folder", ButtonHpDiagnosticOpenReportFolder_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Export diagnostic report", ButtonHpDiagnosticExport_Click));
 
             hpReadOnlyTelemetryDetails = details;
@@ -381,6 +392,7 @@ namespace GHelper
 
             panel.Controls.Add(actions);
             panel.Controls.Add(details);
+            panel.Controls.Add(hpReadOnlyTelemetryWarning);
             panel.Controls.Add(hpReadOnlyTelemetrySource);
             panel.Controls.Add(heading);
             Controls.Add(panel);
@@ -513,10 +525,10 @@ namespace GHelper
             AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Raw level data", "Raw values are not RPM or percent.");
 
             AddHpTelemetrySection(hpReadOnlyTelemetryDetails, "Safety / NO-GO status");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Fan control", "Not implemented");
+            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Fan control", "Blocked - not implemented");
             AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax", "NO-GO / design-only");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax write implemented", FormatKnownBool(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax write allowed", FormatKnownBool(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")));
+            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax write implemented", FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")));
+            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax write allowed", FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")));
             AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Blocked reason", GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"));
             AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Next required proof", GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof"));
             hpReadOnlyTelemetryDetails.ResumeLayout();
@@ -545,10 +557,10 @@ namespace GHelper
                 "Fan 1 raw level byte: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan1RawValue"),
                 "Fan 2 raw level byte: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"),
                 "Raw values are not RPM or percent.",
-                "Fan control is not implemented.",
+                "Fan control: Blocked - not implemented.",
                 "SetFanMax is NO-GO / design-only.",
-                "SetFanMax write implemented: " + FormatKnownBool(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
-                "SetFanMax write allowed: " + FormatKnownBool(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
+                "SetFanMax write implemented: " + FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
+                "SetFanMax write allowed: " + FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
                 "SetFanMax blocked reason: " + GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"),
                 "SetFanMax next required proof: " + GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof"));
         }
@@ -560,9 +572,12 @@ namespace GHelper
             var label = new Label
             {
                 AutoSize = true,
+                BackColor = Color.FromArgb(32, foreMain),
+                Dock = DockStyle.Fill,
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
                 ForeColor = foreMain,
-                Margin = new Padding(0, 8, 0, 2),
+                Margin = new Padding(0, 7, 0, 2),
+                Padding = new Padding(6, 3, 6, 3),
                 Text = title
             };
             details.Controls.Add(label, 0, row);
@@ -577,17 +592,36 @@ namespace GHelper
             {
                 AutoSize = true,
                 ForeColor = foreMain,
-                Margin = new Padding(0, 3, 12, 3),
+                Margin = new Padding(6, 2, 12, 2),
                 Text = label + ":"
             }, 0, row);
             details.Controls.Add(new Label
             {
                 AutoSize = true,
-                ForeColor = foreMain,
-                Margin = new Padding(0, 3, 0, 3),
+                ForeColor = GetHpDiagnosticValueColor(value),
+                Margin = new Padding(0, 2, 0, 2),
                 MaximumSize = new Size(560, 0),
                 Text = value
             }, 1, row);
+        }
+
+        private Color GetHpDiagnosticValueColor(string value)
+        {
+            if (value.StartsWith("Ready", StringComparison.OrdinalIgnoreCase) ||
+                value.StartsWith("Succeeded", StringComparison.OrdinalIgnoreCase) ||
+                value.StartsWith("Enabled", StringComparison.OrdinalIgnoreCase) ||
+                value.StartsWith("Declared", StringComparison.OrdinalIgnoreCase))
+            {
+                return colorEco;
+            }
+
+            if (value.StartsWith("Blocked", StringComparison.OrdinalIgnoreCase) ||
+                value.StartsWith("NO-GO", StringComparison.OrdinalIgnoreCase))
+            {
+                return colorTurbo;
+            }
+
+            return foreMain;
         }
 
         private static string FormatAvailability(bool? value) => value switch
@@ -627,6 +661,20 @@ namespace GHelper
         {
             true => "Yes",
             false => "No",
+            _ => "Not available"
+        };
+
+        private static string FormatWriteImplementationStatus(bool? value) => value switch
+        {
+            true => "Implemented",
+            false => "Not implemented",
+            _ => "Not available"
+        };
+
+        private static string FormatWriteAllowedStatus(bool? value) => value switch
+        {
+            true => "Allowed",
+            false => "Blocked",
             _ => "Not available"
         };
 
