@@ -176,7 +176,7 @@ namespace GHelper
 
             trayIcon = new NotifyIcon
             {
-                Text = "G-Helper",
+                Text = hpVictusMode ? "VictusX" : "G-Helper",
                 Icon = Properties.Resources.standard,
                 Visible = true
             };
