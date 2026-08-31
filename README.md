@@ -4,21 +4,21 @@ A G-Helper-based control utility being adapted for HP Victus laptops.
 
 > [!WARNING]
 > **Project status: Experimental / early development.**
-> VictusX is not production-ready HP hardware-control software. Current development is focused on safe detection, diagnostics, and hardware-abstraction work.
+> VictusX is not production-ready HP hardware-control software. Current development is focused on HP Victus detection, diagnostics, and guarded read-only telemetry.
 
-SetFanMax write work is design-only; no fan writes are implemented.
+SetFanMax write work is design-only and currently **NO-GO**. Fan control, fan writes, and fan-control UI are not implemented.
 
 ## What is VictusX?
 
 VictusX is a Windows utility project based on [G-Helper](https://github.com/seerge/g-helper), currently being adapted for HP Victus laptops.
 
-The current work is about replacing ASUS-specific hardware-control paths with HP Victus-safe abstractions. HP detection and safe WMI probing are implemented, but real HP hardware control is not ready yet.
+The current work is about replacing ASUS-specific hardware-control paths with HP Victus-safe abstractions. HP detection and guarded read-only WMI diagnostics are implemented, but real HP hardware control is not ready yet.
 
 Target development hardware:
 
 - HP Victus Gaming Laptop 16-s0035nt / 7Z5Z2EA
 
-## Current status
+## Current Experimental Status
 
 Implemented:
 
@@ -29,18 +29,29 @@ Implemented:
 - HP capability report
 - HP WMI availability probe
 - HP WMI invocation sandbox
-- `SystemDesignData` read-only invocation test path
-- Consolidated HP read-only telemetry milestones for `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and raw-only `FanGetLevel`
+- HP Victus detection
+- HP WMI/CIM readiness diagnostics
+- `SystemDesignData` read-only decode
+- `FanGetCount` read-only decode
+- `FanMaxGet` read-only decode
+- `FanGetLevel` raw-only decode
 - Access denied diagnostics
 
 Not implemented yet:
 
 - Fan control
+- Fan writes
+- Fan-control UI
 - Performance mode control
 - Battery charge limit control
 - RGB / keyboard lighting control
 - GPU mode control
 - Production HP hardware control
+
+Deferred or design-only:
+
+- `FanGetRpm` and `GetFanType` are deferred pending stronger device-specific evidence.
+- `SetFanMax` is NO-GO/design-only; no SetFanMax execution path exists.
 
 ## Safety model
 
@@ -48,7 +59,8 @@ VictusX is being developed conservatively.
 
 - Default ASUS/G-Helper behavior is preserved.
 - HP work is behind explicit developer flags.
-- `--hp-victus` enables the HP Victus placeholder/safe probing path.
+- Normal `--hp-victus` mode is non-invoking for explicit HP WMI telemetry commands.
+- Explicit HP WMI read-only tests require developer flags and an elevated Administrator process.
 - Real HP WMI read-only invocation requires both:
 
 ```bash
@@ -56,7 +68,7 @@ VictusX is being developed conservatively.
 --hp-wmi-readonly-test
 ```
 
-No fan writes, EC writes, BIOS setting writes, thermal writes, power writes, RGB writes, keyboard-lighting writes, battery writes, or production HP control paths are implemented yet.
+No fan writes, EC writes, BIOS setting writes, thermal writes, power writes, RGB writes, keyboard-lighting writes, battery writes, or production HP control paths are implemented.
 
 Current HP read-only telemetry notes are consolidated in [docs/hp-readonly-telemetry-status.md](docs/hp-readonly-telemetry-status.md). These are diagnostics milestones only and do not indicate hardware control support.
 
