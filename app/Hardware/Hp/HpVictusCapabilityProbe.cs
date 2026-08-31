@@ -423,7 +423,7 @@ public static class HpVictusCapabilityProbe
             return "If explicitly approved, rerun the controlled read-only test from an elevated Administrator terminal.";
         }
 
-        return "Proceed only with approved read-only invocation tests for SystemDesignData, FanGetCount, and FanMaxGet; keep all hardware writes forbidden.";
+        return "Proceed only with approved read-only invocation tests for SystemDesignData, FanGetCount, FanMaxGet, and FanGetLevel; keep all hardware writes forbidden.";
     }
 
     private static bool IsHpManufacturer(string manufacturer, string productVendor) =>

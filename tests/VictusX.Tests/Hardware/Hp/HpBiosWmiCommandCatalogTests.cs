@@ -37,6 +37,22 @@ public sealed class HpBiosWmiCommandCatalogTests
         Assert.Equal(HpBiosWmiCommandSafety.SafeReadOnlyInvocation, command.Safety);
     }
 
+    [Fact]
+    public void FanGetLevel_IsPreparedAsSafeReadOnlyFanStatusCandidate()
+    {
+        HpBiosWmiCommandDefinition command = Assert.Single(
+            HpBiosWmiCommandCatalog.Definitions,
+            definition => definition.Name == "FanGetLevel");
+
+        Assert.Equal(HpBiosWmiCommandFamily.Fan, command.Family);
+        Assert.Equal(0x2Du, command.CommandId);
+        Assert.Equal("hpqBIOSInt128", command.MethodName);
+        Assert.Equal(4, command.ExpectedInputSize);
+        Assert.Equal(128, command.ExpectedOutputSize);
+        Assert.Equal(HpBiosWmiCommandAccess.ReadOnly, command.Access);
+        Assert.Equal(HpBiosWmiCommandSafety.SafeReadOnlyInvocation, command.Safety);
+    }
+
     [Theory]
     [InlineData("FanModeWrite", 0x1A)]
     [InlineData("FanLevelWrite", 0x2E)]
