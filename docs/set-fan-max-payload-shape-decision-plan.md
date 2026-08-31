@@ -61,4 +61,4 @@ No WMI write invocation, `SetFanMax` implementation, payload execution, `SetFanM
 
 Keep `DeviceValidatedInputLength` unset and the implementation gate at **NO-GO**. Obtain independently reviewable, model-and-BIOS-specific evidence that selects exactly one shape, then update the missing-proof tracker without adding runtime write code.
 
-Related: [reference fan write flow comparison](reference-fan-write-flow-comparison.md), [method/input validation](set-fan-max-method-input-validation.md), and [missing-proof tracker](set-fan-max-missing-proof-tracker.md).
+Related: [model/BIOS evidence matrix](set-fan-max-model-bios-evidence-matrix.md), [reference fan write flow comparison](reference-fan-write-flow-comparison.md), [method/input validation](set-fan-max-method-input-validation.md), and [missing-proof tracker](set-fan-max-missing-proof-tracker.md). The matrix does not select a payload length; `DeviceValidatedInputLength` remains unset.
