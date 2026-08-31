@@ -26,6 +26,8 @@ These prerequisites prove read-only diagnostics and safety scaffolding only.
 
 Recovery and restore evidence must satisfy [the SetFanMax recovery and restore proof plan](set-fan-max-recovery-restore-proof-plan.md). Until then, the gate remains **NO-GO**.
 
+The [final payload-length audit](set-fan-max-payload-length-final-audit.md) confirms that neither the one-byte nor four-byte reference evidence validates this exact device. `DeviceValidatedInputLength` therefore remains unset.
+
 ## 4. GO Conditions
 
 Every condition below must be true and supported by attached evidence:
