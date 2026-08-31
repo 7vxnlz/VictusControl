@@ -10,7 +10,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest reference note: Reference fan write flow comparison added; no write implementation.
 - Latest SetFanMax note: Payload-shape decision plan added; implementation remains NO-GO.
 - Latest approval note: DeviceValidatedInputLength manual approval design added; SetFanMax remains NO-GO.
-- Latest evidence note: HP temperature read-only investigation added; no telemetry/control implementation.
+- Latest evidence note: HP telemetry roadmap added after deferred GPU/temperature probes.
 - Branch: `main` tracking `origin/main`
 - Current objective: maintain safe handoff state and next-step checkpoint
 - Last completed work: added a short next-steps checkpoint; no app code changed

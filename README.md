@@ -72,6 +72,8 @@ No fan writes, EC writes, BIOS setting writes, thermal writes, power writes, RGB
 
 Current HP read-only telemetry notes are consolidated in [docs/hp-readonly-telemetry-status.md](docs/hp-readonly-telemetry-status.md). These are diagnostics milestones only and do not indicate hardware control support.
 
+The HP Diagnostic dashboard is read-only and report-backed; it does not refresh hardware or provide fan or performance control.
+
 ## Usage for current development builds
 
 Build the solution:
