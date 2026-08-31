@@ -151,6 +151,7 @@ public static class HpVictusCapabilityProbe
             fanGetLevelInvocation.Success,
             fanGetLevelInvocation.Invoked,
             fanGetLevelInvocation.ReturnedBytes);
+        HpFanMaxDryRunReport setFanMaxDryRun = HpFanMaxDryRunReport.CreateDefaultBlocked();
 
         return new HpVictusCapabilitySnapshot(
             manufacturer,
@@ -207,6 +208,7 @@ public static class HpVictusCapabilityProbe
             fanGetLevelDecode.Succeeded,
             fanGetLevelDecode.Errors,
             fanGetLevelDecode.Decoded,
+            setFanMaxDryRun,
             accessDeniedDiagnostics.ProcessElevated,
             accessDeniedDiagnostics.WindowsIdentitySummary,
             accessDeniedDiagnostics.WmiNamespaceReadable,
@@ -282,6 +284,12 @@ public static class HpVictusCapabilityProbe
             snapshot.FanGetLevelDecodeSucceeded,
             snapshot.FanGetLevelDecodeErrors,
             snapshot.FanGetLevelDecoded,
+            snapshot.SetFanMaxDryRun.SetFanMaxWriteImplemented,
+            snapshot.SetFanMaxDryRun.SetFanMaxWriteAllowed,
+            snapshot.SetFanMaxDryRun.SetFanMaxDryRunEvaluated,
+            snapshot.SetFanMaxDryRun.SetFanMaxDeviceValidatedInputLength,
+            snapshot.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons,
+            snapshot.SetFanMaxDryRun.SetFanMaxNextRequiredProof,
             snapshot.ProcessElevated,
             snapshot.WindowsIdentitySummary,
             snapshot.WmiNamespaceReadable,
@@ -548,6 +556,12 @@ public static class HpVictusCapabilityProbe
         bool FanGetLevelDecodeSucceeded,
         string[] FanGetLevelDecodeErrors,
         HpFanGetLevelSnapshot? FanGetLevelDecoded,
+        bool SetFanMaxWriteImplemented,
+        bool SetFanMaxWriteAllowed,
+        bool SetFanMaxDryRunEvaluated,
+        int? SetFanMaxDeviceValidatedInputLength,
+        string[] SetFanMaxDryRunBlockedReasons,
+        string SetFanMaxNextRequiredProof,
         bool ProcessElevated,
         string WindowsIdentitySummary,
         bool WmiNamespaceReadable,
