@@ -60,11 +60,11 @@ The reviewer name, date, device/BIOS identifiers, and evidence references must a
 A future implementation must require all of these together:
 
 - `--hp-victus`
-- `--hp-fan-write-experiment`
-- `--hp-wmi-write-manual-test`
-- `--hp-fan-write-acknowledge-risk`
+- `--hp-wmi-readonly-test`
+- `--hp-fan-write-test`
+- `--set-fan-max-experiment`
 
-Administrator elevation and a foreground interactive confirmation are also mandatory. Flags and elevation never override a failed gate.
+Administrator elevation and a foreground interactive confirmation are also mandatory. Flags and elevation never override a failed gate. The exact future contract is defined by [the guarded implementation specification](set-fan-max-guarded-implementation-spec.md); it remains documentation-only while this gate is **NO-GO**.
 
 ## 8. First Implementation Constraints
 
