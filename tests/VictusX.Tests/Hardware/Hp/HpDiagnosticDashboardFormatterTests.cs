@@ -16,6 +16,35 @@ public sealed class HpDiagnosticDashboardFormatterTests
     }
 
     [Fact]
+    public void ReportMetadata_FormatsSchemaAndTimestamp()
+    {
+        IReadOnlyList<HpDiagnosticDashboardSection> sections = HpDiagnosticDashboardFormatter.BuildSections(new()
+        {
+            ReportSchemaVersion = "1",
+            ReportGeneratedBy = "VictusX",
+            ReportMode = "HP read-only diagnostic",
+            ReportSource = "Startup capability snapshot",
+            ReportGeneratedAt = "2026-09-01T12:34:56+03:00"
+        });
+
+        HpDiagnosticDashboardSection metadata = Assert.Single(sections, section => section.Title == "Report metadata");
+        Assert.Contains(metadata.Rows, row => row.Label == "Schema version" && row.Value == "v1");
+        Assert.Contains(metadata.Rows, row => row.Label == "Last generated" && row.Value == "2026-09-01 12:34:56 +03:00");
+    }
+
+    [Fact]
+    public void OlderReportWithoutMetadata_UsesLegacyFallbackAndGuidance()
+    {
+        IReadOnlyList<HpDiagnosticDashboardSection> sections = HpDiagnosticDashboardFormatter.BuildSections(new());
+
+        HpDiagnosticDashboardSection metadata = Assert.Single(sections, section => section.Title == "Report metadata");
+        HpDiagnosticDashboardSection guidance = Assert.Single(sections, section => section.Title == "Missing-data guidance");
+        Assert.Contains(metadata.Rows, row => row.Label == "Schema version" && row.Value == HpDiagnosticDashboardFormatter.LegacyReportSchema);
+        Assert.Contains(guidance.Rows, row => row.Label == "Explicit probe data" && row.Value == HpDiagnosticStatusText.NormalHpModeDoesNotRunExplicitProbes);
+        Assert.Contains(guidance.Rows, row => row.Label == "Developer-only tests" && row.Value == HpDiagnosticStatusText.ExplicitTestsAreDeveloperOnly);
+    }
+
+    [Fact]
     public void FanSection_KeepsFanGetLevelValuesRawOnly()
     {
         IReadOnlyList<HpDiagnosticDashboardSection> sections = HpDiagnosticDashboardFormatter.BuildSections(new()
@@ -112,6 +141,17 @@ public sealed class HpDiagnosticDashboardFormatterTests
 
         Assert.Equal("Ready", summary.ReadOnlyTelemetryStatus);
         Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.FanReadOnlyStatus);
+    }
+
+    [Fact]
+    public void Summary_IncludesMissingExplicitProbeGuidanceAndNoControlWording()
+    {
+        string summary = HpDiagnosticDashboardFormatter.BuildSummary(new());
+
+        Assert.Contains("Schema version: " + HpDiagnosticDashboardFormatter.LegacyReportSchema, summary, StringComparison.Ordinal);
+        Assert.Contains(HpDiagnosticStatusText.NormalHpModeDoesNotRunExplicitProbes, summary, StringComparison.Ordinal);
+        Assert.Contains(HpDiagnosticStatusText.FanControlNotImplemented, summary, StringComparison.Ordinal);
+        Assert.Contains(HpDiagnosticStatusText.SetFanMaxNoGo, summary, StringComparison.Ordinal);
     }
 
     [Fact]

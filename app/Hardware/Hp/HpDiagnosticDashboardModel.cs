@@ -26,6 +26,11 @@ public sealed record HpDiagnosticDashboardHealthSummary(
 
 public sealed record HpDiagnosticDashboardInput
 {
+    public string? ReportSchemaVersion { get; init; }
+    public string? ReportGeneratedBy { get; init; }
+    public string? ReportMode { get; init; }
+    public string? ReportSource { get; init; }
+    public string? ReportGeneratedAt { get; init; }
     public bool? IsHpVictusDetected { get; init; }
     public string? Manufacturer { get; init; }
     public string? Model { get; init; }

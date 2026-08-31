@@ -6,6 +6,10 @@ namespace GHelper.Hardware.Hp;
 
 public static class HpVictusCapabilityProbe
 {
+    private const int CapabilityReportSchemaVersion = 1;
+    private const string CapabilityReportGeneratedBy = "VictusX";
+    private const string CapabilityReportMode = "HP read-only diagnostic";
+    private const string CapabilityReportSource = "Startup capability snapshot; explicit probe data is developer-only.";
     private const string CimV2ScopePath = @"\\.\root\cimv2";
     private const string HpWmiScopePath = @"\\.\root\wmi";
 
@@ -228,6 +232,11 @@ public static class HpVictusCapabilityProbe
         Directory.CreateDirectory(HpDiagnosticPaths.AppDataDirectory);
 
         var report = new HpVictusCapabilityReport(
+            CapabilityReportSchemaVersion,
+            CapabilityReportGeneratedBy,
+            CapabilityReportMode,
+            CapabilityReportSource,
+            DateTimeOffset.UtcNow,
             DateTimeOffset.Now,
             snapshot.Manufacturer,
             snapshot.Model,
@@ -500,6 +509,11 @@ public static class HpVictusCapabilityProbe
         !string.IsNullOrWhiteSpace(value) && candidates.Any(candidate => value.Contains(candidate, StringComparison.OrdinalIgnoreCase));
 
     private sealed record HpVictusCapabilityReport(
+        int ReportSchemaVersion,
+        string ReportGeneratedBy,
+        string ReportMode,
+        string ReportSource,
+        DateTimeOffset ReportGeneratedAtUtc,
         DateTimeOffset Timestamp,
         string Manufacturer,
         string Model,

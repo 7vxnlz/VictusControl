@@ -541,6 +541,11 @@ namespace GHelper
             HpDiagnosticReportLoadResult? report = hpCachedDiagnosticReport;
             return new HpDiagnosticDashboardInput
             {
+                ReportSchemaVersion = report?.GetValue("ReportSchemaVersion"),
+                ReportGeneratedBy = report?.GetValue("ReportGeneratedBy"),
+                ReportMode = report?.GetValue("ReportMode"),
+                ReportSource = report?.GetValue("ReportSource"),
+                ReportGeneratedAt = report?.GetValue("ReportGeneratedAtUtc") ?? report?.GetValue("Timestamp"),
                 IsHpVictusDetected = snapshot?.IsHpVictus ?? report?.GetHpVictusDetected(),
                 Manufacturer = GetSnapshotOrReportValue(snapshot?.Manufacturer, report, "Manufacturer"),
                 Model = GetSnapshotOrReportValue(snapshot?.Model, report, "Model"),
