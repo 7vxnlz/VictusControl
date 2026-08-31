@@ -25,6 +25,7 @@ namespace GHelper
         ContextMenuStrip contextMenuStrip = new CustomContextMenu();
         ToolStripMenuItem menuEco, menuStandard, menuUltimate, menuOptimized;
         DonateControl donateControl;
+        Panel? hpReadOnlyTelemetryPanel;
 
         public GPUModeControl gpuControl;
         public AllyControl allyControl;
@@ -99,7 +100,7 @@ namespace GHelper
             buttonMatrix.Text = "Matrix";
             buttonQuit.Text = Properties.Strings.Quit;
             buttonUpdates.Text = Properties.Strings.Updates;
-            buttonDonate.Text = Properties.Strings.Donate;
+            buttonDonate.Text = AppConfig.IsHpVictusHardwareMode() ? "Diagnostic" : Properties.Strings.Donate;
 
             buttonController.Text = Properties.Strings.Controller;
             labelAlly.Text = Properties.Strings.AllyController;
@@ -290,8 +291,18 @@ namespace GHelper
             labelVisual.Click += LabelVisual_Click;
             labelCharge.Click += LabelCharge_Click;
 
-            donateControl = new DonateControl(this, buttonDonate);
-            donateControl.Init();
+            if (AppConfig.IsHpVictusHardwareMode())
+            {
+                buttonDonate.AccessibleName = "Diagnostic";
+                buttonDonate.Badge = 0;
+                buttonDonate.Image = null;
+                buttonDonate.Click += ButtonHpDiagnostic_Click;
+            }
+            else
+            {
+                donateControl = new DonateControl(this, buttonDonate);
+                donateControl.Init();
+            }
 
             labelBacklight.ForeColor = colorStandard;
             labelBacklight.Click += LabelBacklight_Click;
@@ -353,7 +364,16 @@ namespace GHelper
             panel.Controls.Add(details);
             panel.Controls.Add(heading);
             Controls.Add(panel);
-            Controls.SetChildIndex(panel, 0);
+            hpReadOnlyTelemetryPanel = panel;
+            Controls.SetChildIndex(panel, Math.Min(Controls.GetChildIndex(panelFooter) + 1, Controls.Count - 1));
+        }
+
+        private void ButtonHpDiagnostic_Click(object? sender, EventArgs e)
+        {
+            if (hpReadOnlyTelemetryPanel is null) return;
+
+            hpReadOnlyTelemetryPanel.Visible = true;
+            hpReadOnlyTelemetryPanel.Focus();
         }
 
         private void AddHpTelemetryRow(TableLayoutPanel details, string label, string value)
