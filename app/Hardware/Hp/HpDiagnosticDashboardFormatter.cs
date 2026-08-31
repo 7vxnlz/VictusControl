@@ -7,6 +7,31 @@ public static class HpDiagnosticDashboardFormatter
     public const string FanControlStatus = "Blocked - not implemented";
     public const string SetFanMaxStatus = "NO-GO / design-only";
 
+    public static HpDiagnosticDashboardHealthSummary BuildHealthSummary(HpDiagnosticDashboardInput input)
+    {
+        return new HpDiagnosticDashboardHealthSummary(
+            input.IsHpVictusDetected == true ? "Ready" : NotAvailable,
+            ClassifyAvailability(
+                input.RootWmiReadiness,
+                input.HpqBIntMReadiness,
+                input.HpqBDataInReadiness,
+                input.CimRootWmiReadiness,
+                input.CimHpqBIntMReadiness,
+                input.CimMethodMetadataReadiness),
+            ClassifyAvailability(input.SystemDesignDataDecodeStatus, input.SoftwareFanControlSupport),
+            ClassifyAvailability(input.FanCount, input.MaxFanState, input.Fan1RawLevel, input.Fan2RawLevel),
+            SetFanMaxStatus);
+    }
+
+    public static string FormatHealthSummary(HpDiagnosticDashboardHealthSummary summary)
+    {
+        return "Health: Device " + summary.DeviceStatus +
+            " | WMI/CIM " + summary.WmiCimStatus +
+            " | Telemetry " + summary.ReadOnlyTelemetryStatus +
+            " | Fan read-only " + summary.FanReadOnlyStatus +
+            " | Fan control " + summary.FanControlStatus;
+    }
+
     public static IReadOnlyList<HpDiagnosticDashboardSection> BuildSections(HpDiagnosticDashboardInput input)
     {
         return
@@ -88,6 +113,19 @@ public static class HpDiagnosticDashboardFormatter
     {
         string displayValue = string.IsNullOrWhiteSpace(value) ? NotAvailable : value;
         return new HpDiagnosticDashboardRow(label, displayValue, GetStatus(displayValue));
+    }
+
+    private static string ClassifyAvailability(params string?[] values)
+    {
+        int availableCount = values.Count(value => !string.IsNullOrWhiteSpace(value) &&
+            !string.Equals(value, NotAvailable, StringComparison.OrdinalIgnoreCase));
+
+        return availableCount switch
+        {
+            0 => NotAvailable,
+            _ when availableCount == values.Length => "Ready",
+            _ => "Partial"
+        };
     }
 
     private static HpDiagnosticDashboardStatus GetStatus(string value)

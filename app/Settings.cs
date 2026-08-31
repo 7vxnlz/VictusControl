@@ -30,6 +30,7 @@ namespace GHelper
         Panel? hpReadOnlyTelemetryPanel;
         TableLayoutPanel? hpReadOnlyTelemetryDetails;
         Label? hpReadOnlyTelemetrySource;
+        Label? hpReadOnlyTelemetryHealth;
         Label? hpReadOnlyTelemetryWarning;
         HpCachedDiagnosticReport? hpCachedDiagnosticReport;
 
@@ -351,6 +352,16 @@ namespace GHelper
                 Padding = new Padding(10, 0, 10, 5)
             };
 
+            hpReadOnlyTelemetryHealth = new Label
+            {
+                AutoSize = true,
+                BorderStyle = BorderStyle.FixedSingle,
+                Dock = DockStyle.Top,
+                ForeColor = foreMain,
+                MaximumSize = new Size(760, 0),
+                Padding = new Padding(10, 5, 10, 5)
+            };
+
             hpReadOnlyTelemetryWarning = new Label
             {
                 AutoSize = true,
@@ -393,6 +404,7 @@ namespace GHelper
             panel.Controls.Add(actions);
             panel.Controls.Add(details);
             panel.Controls.Add(hpReadOnlyTelemetryWarning);
+            panel.Controls.Add(hpReadOnlyTelemetryHealth);
             panel.Controls.Add(hpReadOnlyTelemetrySource);
             panel.Controls.Add(heading);
             Controls.Add(panel);
@@ -495,7 +507,10 @@ namespace GHelper
             hpReadOnlyTelemetryDetails.RowStyles.Clear();
             hpReadOnlyTelemetryDetails.RowCount = 0;
 
-            foreach (HpDiagnosticDashboardSection section in HpDiagnosticDashboardFormatter.BuildSections(CreateHpDiagnosticDashboardInput()))
+            HpDiagnosticDashboardInput input = CreateHpDiagnosticDashboardInput();
+            UpdateHpDiagnosticHealthSummary(input);
+
+            foreach (HpDiagnosticDashboardSection section in HpDiagnosticDashboardFormatter.BuildSections(input))
             {
                 AddHpTelemetrySection(hpReadOnlyTelemetryDetails, section.Title);
                 foreach (HpDiagnosticDashboardRow row in section.Rows)
@@ -505,6 +520,14 @@ namespace GHelper
             }
 
             hpReadOnlyTelemetryDetails.ResumeLayout();
+        }
+
+        private void UpdateHpDiagnosticHealthSummary(HpDiagnosticDashboardInput input)
+        {
+            if (hpReadOnlyTelemetryHealth is null) return;
+
+            HpDiagnosticDashboardHealthSummary summary = HpDiagnosticDashboardFormatter.BuildHealthSummary(input);
+            hpReadOnlyTelemetryHealth.Text = HpDiagnosticDashboardFormatter.FormatHealthSummary(summary);
         }
 
         private string BuildHpDiagnosticSummary()

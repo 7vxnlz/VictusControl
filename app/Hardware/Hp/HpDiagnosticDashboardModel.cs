@@ -17,6 +17,13 @@ public sealed record HpDiagnosticDashboardSection(
     string Title,
     IReadOnlyList<HpDiagnosticDashboardRow> Rows);
 
+public sealed record HpDiagnosticDashboardHealthSummary(
+    string DeviceStatus,
+    string WmiCimStatus,
+    string ReadOnlyTelemetryStatus,
+    string FanReadOnlyStatus,
+    string FanControlStatus);
+
 public sealed record HpDiagnosticDashboardInput
 {
     public bool? IsHpVictusDetected { get; init; }

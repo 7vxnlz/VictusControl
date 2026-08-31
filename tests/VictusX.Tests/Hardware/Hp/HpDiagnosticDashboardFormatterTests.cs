@@ -45,6 +45,85 @@ public sealed class HpDiagnosticDashboardFormatterTests
     }
 
     [Fact]
+    public void HealthSummary_AllCachedDataAvailable_IsReadyExceptFanControlNoGo()
+    {
+        HpDiagnosticDashboardHealthSummary summary = HpDiagnosticDashboardFormatter.BuildHealthSummary(new()
+        {
+            IsHpVictusDetected = true,
+            RootWmiReadiness = "Ready",
+            HpqBIntMReadiness = "Ready",
+            HpqBDataInReadiness = "Ready",
+            CimRootWmiReadiness = "Ready",
+            CimHpqBIntMReadiness = "Ready",
+            CimMethodMetadataReadiness = "Ready",
+            SystemDesignDataDecodeStatus = "Succeeded",
+            SoftwareFanControlSupport = "Declared",
+            FanCount = "2",
+            MaxFanState = "Disabled",
+            Fan1RawLevel = "23",
+            Fan2RawLevel = "0"
+        });
+
+        Assert.Equal("Ready", summary.DeviceStatus);
+        Assert.Equal("Ready", summary.WmiCimStatus);
+        Assert.Equal("Ready", summary.ReadOnlyTelemetryStatus);
+        Assert.Equal("Ready", summary.FanReadOnlyStatus);
+        Assert.Equal(HpDiagnosticDashboardFormatter.SetFanMaxStatus, summary.FanControlStatus);
+    }
+
+    [Fact]
+    public void HealthSummary_MissingReport_IsNotAvailableAndNoGo()
+    {
+        HpDiagnosticDashboardHealthSummary summary = HpDiagnosticDashboardFormatter.BuildHealthSummary(new());
+
+        Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.DeviceStatus);
+        Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.WmiCimStatus);
+        Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.ReadOnlyTelemetryStatus);
+        Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.FanReadOnlyStatus);
+        Assert.Equal(HpDiagnosticDashboardFormatter.SetFanMaxStatus, summary.FanControlStatus);
+    }
+
+    [Fact]
+    public void HealthSummary_WmiUnavailable_IsNotAvailable()
+    {
+        HpDiagnosticDashboardHealthSummary summary = HpDiagnosticDashboardFormatter.BuildHealthSummary(new()
+        {
+            IsHpVictusDetected = true,
+            RootWmiReadiness = HpDiagnosticDashboardFormatter.NotAvailable,
+            HpqBIntMReadiness = HpDiagnosticDashboardFormatter.NotAvailable,
+            HpqBDataInReadiness = HpDiagnosticDashboardFormatter.NotAvailable,
+            CimRootWmiReadiness = HpDiagnosticDashboardFormatter.NotAvailable,
+            CimHpqBIntMReadiness = HpDiagnosticDashboardFormatter.NotAvailable,
+            CimMethodMetadataReadiness = HpDiagnosticDashboardFormatter.NotAvailable
+        });
+
+        Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.WmiCimStatus);
+    }
+
+    [Fact]
+    public void HealthSummary_MissingFanReadOnlyData_IsNotAvailable()
+    {
+        HpDiagnosticDashboardHealthSummary summary = HpDiagnosticDashboardFormatter.BuildHealthSummary(new()
+        {
+            IsHpVictusDetected = true,
+            SystemDesignDataDecodeStatus = "Succeeded",
+            SoftwareFanControlSupport = "Declared"
+        });
+
+        Assert.Equal("Ready", summary.ReadOnlyTelemetryStatus);
+        Assert.Equal(HpDiagnosticDashboardFormatter.NotAvailable, summary.FanReadOnlyStatus);
+    }
+
+    [Fact]
+    public void HealthSummary_KeepsSetFanMaxNoGoWording()
+    {
+        string text = HpDiagnosticDashboardFormatter.FormatHealthSummary(
+            HpDiagnosticDashboardFormatter.BuildHealthSummary(new()));
+
+        Assert.Contains("Fan control " + HpDiagnosticDashboardFormatter.SetFanMaxStatus, text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Formatter_HasNoWmiDependencyOrInvocationSurface()
     {
         Type[] types = [typeof(HpDiagnosticDashboardFormatter), typeof(HpDiagnosticDashboardInput)];
