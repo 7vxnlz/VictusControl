@@ -63,4 +63,4 @@ Only independently reviewable, device-specific evidence may set the value:
 
 Keep all write code absent. Seek a reviewable device-specific capture or field report that names the model, SKU, BIOS, command type `0x27`, exact input length, and matched restore outcome; then update the missing-proof tracker only.
 
-Related: [payload-shape decision plan](set-fan-max-payload-shape-decision-plan.md) and [reference fan write flow comparison](reference-fan-write-flow-comparison.md).
+Related: [payload-shape decision plan](set-fan-max-payload-shape-decision-plan.md), [reference fan write flow comparison](reference-fan-write-flow-comparison.md), and [omencore Victus 16-s0xxx deep dive](omencore-victus-16s-setfanmax-evidence-deep-dive.md). The deep dive does not validate either payload length; `DeviceValidatedInputLength` remains unset.
