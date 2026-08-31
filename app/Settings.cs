@@ -434,7 +434,14 @@ namespace GHelper
                 return;
             }
 
-            Process.Start(new ProcessStartInfo(reportDirectory) { UseShellExecute = true });
+            try
+            {
+                Process.Start(new ProcessStartInfo(reportDirectory) { UseShellExecute = true });
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "The HP capability report folder could not be opened.", "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void ButtonHpDiagnosticReload_Click(object? sender, EventArgs e)
@@ -511,13 +518,24 @@ namespace GHelper
                 "Model: " + GetSnapshotOrReportValue(snapshot?.Model, report, "Model"),
                 "SKU: " + GetSnapshotOrReportValue(snapshot?.SystemSku, report, "Sku"),
                 "BIOS version: " + GetSnapshotOrReportValue(snapshot?.BiosVersion, report, "BiosVersion"),
+                "root\\wmi readiness: " + GetSnapshotOrReportAvailability(snapshot?.RootWmiAvailability, report, "RootWmiAvailability"),
+                "hpqBIntM readiness: " + GetSnapshotOrReportAvailability(snapshot?.HpqBIntMAvailability, report, "HpqBIntMAvailability"),
+                "hpqBDataIn readiness: " + GetSnapshotOrReportAvailability(snapshot?.HpqBDataInAvailability, report, "HpqBDataInAvailability"),
+                "CIM root\\wmi readiness: " + FormatCimReadiness(snapshot?.CimRootWmiReachable ?? report?.GetBool("CimRootWmiReachable")),
+                "CIM hpqBIntM readiness: " + FormatCimReadiness(snapshot?.CimHpBIntMAvailable ?? report?.GetBool("CimHpBIntMAvailable")),
+                "SystemDesignData decoded: " + FormatDecodedStatus(snapshot?.SystemDesignDataInvocationSucceeded == true && snapshot.SystemDesignDataDecodeSucceeded, report, "SystemDesignDataDecodeSucceeded"),
+                "Software fan control declared by firmware: " + FormatDeclaredSupport(snapshot, report),
                 "Fan count: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetCountInvocationSucceeded == true && snapshot.FanGetCountDecodeSucceeded, snapshot?.FanGetCountDecoded?.FanCount, report, "FanGetCountDecodeSucceeded", "FanGetCountDecoded.FanCount"),
                 "Max fan state: " + FormatMaxFanState(snapshot, report),
                 "Fan 1 raw level byte: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan1RawValue"),
                 "Fan 2 raw level byte: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"),
                 "Raw values are not RPM or percent.",
                 "Fan control is not implemented.",
-                "SetFanMax is NO-GO / design-only.");
+                "SetFanMax is NO-GO / design-only.",
+                "SetFanMax write implemented: " + FormatKnownBool(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
+                "SetFanMax write allowed: " + FormatKnownBool(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
+                "SetFanMax blocked reason: " + GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"),
+                "SetFanMax next required proof: " + GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof"));
         }
 
         private void AddHpTelemetrySection(TableLayoutPanel details, string title)
