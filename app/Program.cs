@@ -31,6 +31,7 @@ namespace GHelper
         private static bool hpWmiReadOnlyTestMode;
 
         public static SettingsForm settingsForm;
+        public static HpVictusCapabilitySnapshot? hpVictusCapabilitySnapshot;
 
         public static ModeControl modeControl;
         public static GPUModeControl gpuControl;
@@ -120,6 +121,7 @@ namespace GHelper
                 {
                     var hpSnapshot = HpVictusCapabilityProbe.Probe();
                     string hpReportPath = HpVictusCapabilityProbe.WriteReport(hpSnapshot);
+                    hpVictusCapabilitySnapshot = hpSnapshot;
                     Logger.WriteLine("HP Victus capability probe: " + hpSnapshot.ToLogString());
                     Logger.WriteLine("HP Victus capability report: " + hpReportPath);
                 }

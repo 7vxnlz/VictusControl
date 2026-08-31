@@ -5,6 +5,7 @@ using GHelper.Battery;
 using GHelper.Display;
 using GHelper.Fan;
 using GHelper.Gpu;
+using GHelper.Hardware.Hp;
 using GHelper.Helpers;
 using GHelper.Input;
 using GHelper.Mode;
@@ -293,9 +294,131 @@ namespace GHelper
             labelBacklight.ForeColor = colorStandard;
             labelBacklight.Click += LabelBacklight_Click;
 
+            AddHpReadOnlyTelemetryPanel();
+
             panelPerformance.Focus();
             InitVisual();
         }
+
+        private void AddHpReadOnlyTelemetryPanel()
+        {
+            if (!AppConfig.IsHpVictusHardwareMode()) return;
+
+            HpVictusCapabilitySnapshot? snapshot = Program.hpVictusCapabilitySnapshot;
+            var panel = new Panel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                BackColor = formBack,
+                Dock = DockStyle.Top,
+                Padding = new Padding(11, 5, 11, 5),
+                AccessibleName = "HP read-only diagnostic"
+            };
+
+            var heading = new Label
+            {
+                AutoSize = true,
+                Dock = DockStyle.Top,
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                ForeColor = foreMain,
+                Padding = new Padding(10, 5, 10, 5),
+                Text = "HP Victus Read-only Diagnostic"
+            };
+
+            var details = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 2,
+                Dock = DockStyle.Top,
+                Padding = new Padding(10, 0, 10, 5)
+            };
+            details.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            details.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            AddHpTelemetryRow(details, "Read-only diagnostic", "No live telemetry invocation performed unless an explicit developer test was used.");
+            AddHpTelemetryRow(details, "HP/Victus detected", FormatAvailability(snapshot?.IsHpVictus));
+            AddHpTelemetryRow(details, "WMI/CIM readiness", FormatWmiReadiness(snapshot));
+            AddHpTelemetryRow(details, "Software fan control declared by firmware", FormatDeclaredSupport(snapshot));
+            AddHpTelemetryRow(details, "Fan count", FormatDecodedValue(snapshot?.FanGetCountInvocationSucceeded == true && snapshot.FanGetCountDecodeSucceeded, snapshot?.FanGetCountDecoded?.FanCount));
+            AddHpTelemetryRow(details, "Max fan state", FormatMaxFanState(snapshot));
+            AddHpTelemetryRow(details, "Fan 1 raw level byte", FormatDecodedValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue));
+            AddHpTelemetryRow(details, "Fan 2 raw level byte", FormatDecodedValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue));
+            AddHpTelemetryRow(details, "Raw level data", "Raw value, not RPM or percent");
+            AddHpTelemetryRow(details, "SetFanMax status", "NO-GO / design-only");
+            AddHpTelemetryRow(details, "Safety", "Fan control is not implemented");
+
+            panel.Controls.Add(details);
+            panel.Controls.Add(heading);
+            Controls.Add(panel);
+            Controls.SetChildIndex(panel, 0);
+        }
+
+        private void AddHpTelemetryRow(TableLayoutPanel details, string label, string value)
+        {
+            int row = details.RowCount++;
+            details.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            details.Controls.Add(new Label
+            {
+                AutoSize = true,
+                ForeColor = foreMain,
+                Margin = new Padding(0, 3, 12, 3),
+                Text = label + ":"
+            }, 0, row);
+            details.Controls.Add(new Label
+            {
+                AutoSize = true,
+                ForeColor = foreMain,
+                Margin = new Padding(0, 3, 0, 3),
+                MaximumSize = new Size(560, 0),
+                Text = value
+            }, 1, row);
+        }
+
+        private static string FormatAvailability(bool? value) => value switch
+        {
+            true => "Detected",
+            false => "Not available",
+            _ => "Not available"
+        };
+
+        private static string FormatWmiReadiness(HpVictusCapabilitySnapshot? snapshot)
+        {
+            if (snapshot is null) return "Not available";
+
+            return snapshot.RootWmiAvailability == HpVictusProbeAvailability.Available && snapshot.CimAvailable
+                ? "Ready"
+                : "Not available";
+        }
+
+        private static string FormatDeclaredSupport(HpVictusCapabilitySnapshot? snapshot)
+        {
+            bool hasDecodedSystemDesignData = snapshot?.SystemDesignDataInvocationSucceeded == true && snapshot.SystemDesignDataDecodeSucceeded;
+            return hasDecodedSystemDesignData
+                ? snapshot!.SystemDesignDataDecoded?.DeclaresSoftwareFanControlSupport switch
+                {
+                    true => "Declared",
+                    false => "Not declared",
+                    _ => "Not available"
+                }
+                : "Not available";
+        }
+
+        private static string FormatMaxFanState(HpVictusCapabilitySnapshot? snapshot)
+        {
+            bool hasDecodedFanMaxState = snapshot?.FanMaxGetInvocationSucceeded == true && snapshot.FanMaxGetDecodeSucceeded;
+            return hasDecodedFanMaxState
+                ? snapshot!.FanMaxGetDecoded?.IsMaxFanEnabled switch
+                {
+                    true => "Enabled",
+                    false => "Disabled",
+                    _ => "Not available"
+                }
+                : "Not available";
+        }
+
+        private static string FormatDecodedValue<T>(bool hasDecodedValue, T? value) where T : struct =>
+            hasDecodedValue && value.HasValue ? value.Value.ToString() ?? "Not available" : "Not available";
 
         private void ButtonArmoury_Click(object? sender, EventArgs e)
         {
