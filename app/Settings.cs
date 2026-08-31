@@ -210,8 +210,11 @@ namespace GHelper
 
             buttonMatrix.Click += ButtonMatrix_Click;
 
-            checkStartup.Checked = Startup.IsScheduled();
-            checkStartup.CheckedChanged += CheckStartup_CheckedChanged;
+            if (!AppConfig.IsHpVictusHardwareMode())
+            {
+                checkStartup.Checked = Startup.IsScheduled();
+                checkStartup.CheckedChanged += CheckStartup_CheckedChanged;
+            }
 
             labelVersion.Click += LabelVersion_Click;
             labelVersion.ForeColor = Color.FromArgb(128, Color.Gray);
@@ -291,8 +294,11 @@ namespace GHelper
             //This will auto position the window again when it resizes. Might mess with position if people drag the window somewhere else.
             this.Resize += SettingsForm_Resize;
 
-            VisualiseFnLock();
-            buttonFnLock.Click += ButtonFnLock_Click;
+            if (!AppConfig.IsHpVictusHardwareMode())
+            {
+                VisualiseFnLock();
+                buttonFnLock.Click += ButtonFnLock_Click;
+            }
 
             labelVisual.Click += LabelVisual_Click;
             labelCharge.Click += LabelCharge_Click;
@@ -315,8 +321,45 @@ namespace GHelper
 
             AddHpReadOnlyTelemetryPanel();
 
-            panelPerformance.Focus();
-            InitVisual();
+            if (AppConfig.IsHpVictusHardwareMode())
+            {
+                ConfigureHpReadOnlyShell();
+                hpReadOnlyTelemetryPanel?.Focus();
+            }
+            else
+            {
+                panelPerformance.Focus();
+                InitVisual();
+            }
+        }
+
+        private void ConfigureHpReadOnlyShell()
+        {
+            foreach (Control control in new Control[]
+            {
+                panelPerformance,
+                panelGPU,
+                panelScreen,
+                panelGamma,
+                panelMatrix,
+                panelAlly,
+                panelRearLight,
+                panelKeyboard,
+                panelPeripherals,
+                panelBattery,
+                panelStartup,
+                panelVersion
+            })
+            {
+                control.Visible = false;
+                control.TabStop = false;
+            }
+
+            buttonUpdates.Visible = false;
+            buttonUpdates.TabStop = false;
+            checkStartup.Visible = false;
+            checkStartup.TabStop = false;
+
         }
 
         private void AddHpReadOnlyTelemetryPanel()
@@ -413,9 +456,21 @@ namespace GHelper
 
         private void ButtonHpDiagnostic_Click(object? sender, EventArgs e)
         {
+            ShowHpReadOnlyDiagnostic();
+        }
+
+        private void ShowHpReadOnlyDiagnostic()
+        {
             if (hpReadOnlyTelemetryPanel is null) return;
 
             hpReadOnlyTelemetryPanel.Visible = true;
+            if (!Visible)
+            {
+                WindowState = FormWindowState.Normal;
+                Show();
+            }
+
+            ShowAll();
             hpReadOnlyTelemetryPanel.Focus();
         }
 
@@ -1102,7 +1157,7 @@ namespace GHelper
         private void SettingsForm_VisibleChanged(object? sender, EventArgs e)
         {
             sensorTimer.Enabled = this.Visible || sensorsAlways;
-            if (this.Visible)
+            if (this.Visible && !AppConfig.IsHpVictusHardwareMode())
             {
                 Task.Run((Action)RefreshPeripheralsBattery);
                 updateControl.CheckForUpdates();
@@ -1116,6 +1171,8 @@ namespace GHelper
 
         private void ButtonUpdates_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsHpVictusHardwareMode()) return;
+
             if (updatesForm == null || updatesForm.Text == "")
             {
                 updatesForm = new Updates();
@@ -1140,6 +1197,16 @@ namespace GHelper
 
         protected override void WndProc(ref Message m)
         {
+            if (AppConfig.IsHpVictusHardwareMode())
+            {
+                if (m.Msg == Program.WM_TASKBARCREATED && Program.trayIcon is not null)
+                {
+                    Program.trayIcon.Visible = true;
+                }
+
+                base.WndProc(ref m);
+                return;
+            }
 
             if (m.Msg == NativeMethods.WM_POWERBROADCAST && m.WParam == (IntPtr)NativeMethods.PBT_APMSUSPEND)
             {
@@ -1228,6 +1295,12 @@ namespace GHelper
 
         public void SetContextMenu()
         {
+            if (AppConfig.IsHpVictusHardwareMode())
+            {
+                SetHpReadOnlyContextMenu();
+                return;
+            }
+
             var currentMode = Modes.GetCurrent();
 
             foreach (ToolStripItem item in contextMenuStrip.Items.Cast<ToolStripItem>().ToList())
@@ -1333,6 +1406,32 @@ namespace GHelper
 
         }
 
+        private void SetHpReadOnlyContextMenu()
+        {
+            foreach (ToolStripItem item in contextMenuStrip.Items.Cast<ToolStripItem>().ToList())
+            {
+                if (item is ToolStripMenuItem menuItem) menuItem.Dispose();
+            }
+
+            contextMenuStrip.Items.Clear();
+            contextMenuStrip.ShowCheckMargin = false;
+            contextMenuStrip.ShowImageMargin = false;
+            contextMenuStrip.ImageScalingSize = new Size(16, 16);
+
+            var diagnostic = new ToolStripMenuItem("Diagnostic");
+            diagnostic.Click += (sender, args) => ShowHpReadOnlyDiagnostic();
+            contextMenuStrip.Items.Add(diagnostic);
+
+            var quit = new ToolStripMenuItem(Properties.Strings.Quit);
+            quit.Click += ButtonQuit_Click;
+            contextMenuStrip.Items.Add(quit);
+
+            contextMenuStrip.Renderer = new CustomMenuRenderer();
+            InitContextMenuTheme();
+
+            if (Program.trayIcon is not null) Program.trayIcon.ContextMenuStrip = contextMenuStrip;
+        }
+
         public void InitContextMenuTheme()
         {
             if (contextMenuStrip is not null)
@@ -1368,6 +1467,8 @@ namespace GHelper
 
         private void LabelVersion_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsHpVictusHardwareMode()) return;
+
             updateControl.Update();
         }
 
@@ -1939,6 +2040,13 @@ namespace GHelper
 
         private void ButtonQuit_Click(object? sender, EventArgs e)
         {
+            if (AppConfig.IsHpVictusHardwareMode())
+            {
+                if (Program.trayIcon is not null) Program.trayIcon.Visible = false;
+                Application.Exit();
+                return;
+            }
+
             AsusLampArray.Release();
             matrixControl.Dispose();
             Close();
@@ -2300,6 +2408,8 @@ namespace GHelper
 
         public void VisualiseGPUMode(int GPUMode = -1)
         {
+            if (AppConfig.IsHpVictusHardwareMode()) return;
+
             if (InvokeRequired) { Invoke(() => VisualiseGPUMode(GPUMode)); return; }
 
             if (toolTip.GetToolTip(pictureGPU) != (GPUModeControl.gpuError ?? ""))

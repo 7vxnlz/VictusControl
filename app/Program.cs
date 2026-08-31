@@ -50,6 +50,7 @@ namespace GHelper
         private static long lastTheme;
         private static System.Windows.Forms.Timer? trayRetryTimer;
         private static int exitCleanupStarted;
+        private static bool systemLifecycleHooksRegistered;
 
         public static InputDispatcher? inputDispatcher;
 
@@ -206,23 +207,25 @@ namespace GHelper
                 SetAutoModes(init: true);
             }
 
-            powerSettleTimer.Elapsed += OnPowerSettled;
+            if (!hpVictusMode)
+            {
+                powerSettleTimer.Elapsed += OnPowerSettled;
 
-            // Subscribing for system power change events
-            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+                // These hooks drive inherited ASUS controls and are intentionally absent from HP diagnostic-only mode.
+                SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+                SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+                SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+                SystemEvents.SessionEnding += SystemEvents_SessionEnding;
 
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            SystemEvents.SessionEnding += SystemEvents_SessionEnding;
+                clamshellControl.RegisterDisplayEvents();
+                clamshellControl.ToggleLidAction();
 
-            clamshellControl.RegisterDisplayEvents();
-            clamshellControl.ToggleLidAction();
-
-            // Subscribing for monitor power on events
-            unRegPowerNotify = NativeMethods.RegisterPowerSettingNotification(settingsForm.Handle, PowerSettingGuid.ConsoleDisplayState, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
-            unRegPowerNotifyLid = NativeMethods.RegisterPowerSettingNotification(settingsForm.Handle, PowerSettingGuid.LIDSWITCH_STATE_CHANGE, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
-            unRegPowerNotifyEnergy = NativeMethods.RegisterPowerSettingNotification(settingsForm.Handle, PowerSettingGuid.EnergySaverStatus, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
-            unRegSuspendResume = NativeMethods.RegisterSuspendResumeNotification(settingsForm.Handle, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
+                unRegPowerNotify = NativeMethods.RegisterPowerSettingNotification(settingsForm.Handle, PowerSettingGuid.ConsoleDisplayState, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
+                unRegPowerNotifyLid = NativeMethods.RegisterPowerSettingNotification(settingsForm.Handle, PowerSettingGuid.LIDSWITCH_STATE_CHANGE, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
+                unRegPowerNotifyEnergy = NativeMethods.RegisterPowerSettingNotification(settingsForm.Handle, PowerSettingGuid.EnergySaverStatus, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
+                unRegSuspendResume = NativeMethods.RegisterSuspendResumeNotification(settingsForm.Handle, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
+                systemLifecycleHooksRegistered = true;
+            }
 
 
             if (!unsupportedHardwareMode)
@@ -548,19 +551,29 @@ namespace GHelper
 
         static void TrayIcon_MouseMove(object? sender, MouseEventArgs e)
         {
+            if (AppConfig.IsHpVictusHardwareMode()) return;
+
             settingsForm.RefreshSensors();
         }
 
         private static void TrayRetryTimer_Tick(object? sender, EventArgs e)
         {
-            trayRetryTimer?.Stop();
-            trayRetryTimer?.Dispose();
+            System.Windows.Forms.Timer? retryTimer = trayRetryTimer;
             trayRetryTimer = null;
+            retryTimer?.Stop();
+            retryTimer?.Dispose();
 
             if (trayIcon is null) return;
 
-            trayIcon.Visible = false;
-            trayIcon.Visible = true;
+            try
+            {
+                trayIcon.Visible = false;
+                trayIcon.Visible = true;
+            }
+            catch (ObjectDisposedException)
+            {
+                // Exit cleanup won the race with the one-shot tray refresh.
+            }
         }
 
         static void OnExit(object sender, EventArgs e)
@@ -574,37 +587,41 @@ namespace GHelper
                 trayRetryTimer = null;
             });
             TryShutdownCleanup("single-instance exit listener", ProcessHelper.StopExitListener);
-            TryShutdownCleanup("system event handlers", () =>
+            if (systemLifecycleHooksRegistered)
             {
-                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
-                SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
-                SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
-                SystemEvents.SessionEnding -= SystemEvents_SessionEnding;
-            });
-            TryShutdownCleanup("power settle timer", () =>
-            {
-                powerSettleTimer.Stop();
-                powerSettleTimer.Elapsed -= OnPowerSettled;
-                powerSettleTimer.Dispose();
-            });
+                TryShutdownCleanup("system event handlers", () =>
+                {
+                    SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+                    SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+                    SystemEvents.SessionEnding -= SystemEvents_SessionEnding;
+                });
+                TryShutdownCleanup("power settle timer", () =>
+                {
+                    powerSettleTimer.Stop();
+                    powerSettleTimer.Elapsed -= OnPowerSettled;
+                    powerSettleTimer.Dispose();
+                });
+                TryShutdownCleanup("display events", clamshellControl.UnregisterDisplayEvents);
+                TryShutdownCleanup("power notifications", () =>
+                {
+                    NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotify);
+                    NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyLid);
+                    NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyEnergy);
+                    NativeMethods.UnregisterSuspendResumeNotification(unRegSuspendResume);
+                });
+            }
             TryShutdownCleanup("tray icon", () =>
             {
                 if (trayIcon is null) return;
                 trayIcon.Visible = false;
                 trayIcon.Dispose();
+                trayIcon = null!;
             });
             if (!unsupportedHardwareMode)
             {
                 TryShutdownCleanup("peripheral device events", PeripheralsProvider.UnregisterForDeviceEvents);
             }
-            TryShutdownCleanup("display events", clamshellControl.UnregisterDisplayEvents);
-            TryShutdownCleanup("power notifications", () =>
-            {
-                NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotify);
-                NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyLid);
-                NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyEnergy);
-                NativeMethods.UnregisterSuspendResumeNotification(unRegSuspendResume);
-            });
         }
 
         private static void TryShutdownCleanup(string name, Action cleanup)
