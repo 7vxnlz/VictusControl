@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Include="..\..\app\Hardware\Hp\HpBiosWmiCommandCatalog.cs" Link="Hardware\Hp\HpBiosWmiCommandCatalog.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpBiosWmiCommandDefinition.cs" Link="Hardware\Hp\HpBiosWmiCommandDefinition.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticReportExporter.cs" Link="Hardware\Hp\HpDiagnosticReportExporter.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountDecoder.cs" Link="Hardware\Hp\HpFanGetCountDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountReportDecoder.cs" Link="Hardware\Hp\HpFanGetCountReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelDecoder.cs" Link="Hardware\Hp\HpFanGetLevelDecoder.cs" />

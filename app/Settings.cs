@@ -368,11 +368,12 @@ namespace GHelper
                 Dock = DockStyle.Top,
                 FlowDirection = FlowDirection.LeftToRight,
                 Padding = new Padding(10, 0, 10, 5),
-                WrapContents = false
+                WrapContents = true
             };
             actions.Controls.Add(CreateHpDiagnosticActionButton("Copy summary", ButtonHpDiagnosticCopy_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Open report folder", ButtonHpDiagnosticOpenReportFolder_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Reload cached report", ButtonHpDiagnosticReload_Click));
+            actions.Controls.Add(CreateHpDiagnosticActionButton("Export diagnostic report", ButtonHpDiagnosticExport_Click));
 
             hpReadOnlyTelemetryDetails = details;
             ReloadHpCachedDiagnosticReport();
@@ -448,6 +449,20 @@ namespace GHelper
         {
             ReloadHpCachedDiagnosticReport();
             PopulateHpReadOnlyTelemetryPanel();
+        }
+
+        private void ButtonHpDiagnosticExport_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = HpDiagnosticReportExporter.Export(BuildHpDiagnosticSummary());
+                MessageBox.Show(this, "Read-only diagnostic report exported to:" + Environment.NewLine + filePath, "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                Logger.WriteLine("HP diagnostic export failed: " + ex.Message);
+                MessageBox.Show(this, "The read-only diagnostic report could not be exported.", "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void ReloadHpCachedDiagnosticReport()
