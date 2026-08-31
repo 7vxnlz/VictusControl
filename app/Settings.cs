@@ -490,79 +490,57 @@ namespace GHelper
         {
             if (hpReadOnlyTelemetryDetails is null) return;
 
-            HpVictusCapabilitySnapshot? snapshot = Program.hpVictusCapabilitySnapshot;
-            HpCachedDiagnosticReport? report = hpCachedDiagnosticReport;
             hpReadOnlyTelemetryDetails.SuspendLayout();
             hpReadOnlyTelemetryDetails.Controls.Clear();
             hpReadOnlyTelemetryDetails.RowStyles.Clear();
             hpReadOnlyTelemetryDetails.RowCount = 0;
 
-            AddHpTelemetrySection(hpReadOnlyTelemetryDetails, "Device");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Read-only diagnostic", "Cached report and startup snapshot only; no UI action invokes WMI.");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "HP/Victus detected", FormatAvailability(snapshot?.IsHpVictus ?? report?.GetHpVictusDetected()));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Manufacturer", GetSnapshotOrReportValue(snapshot?.Manufacturer, report, "Manufacturer"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Model", GetSnapshotOrReportValue(snapshot?.Model, report, "Model"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SKU", GetSnapshotOrReportValue(snapshot?.SystemSku, report, "Sku"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "BIOS version", GetSnapshotOrReportValue(snapshot?.BiosVersion, report, "BiosVersion"));
+            foreach (HpDiagnosticDashboardSection section in HpDiagnosticDashboardFormatter.BuildSections(CreateHpDiagnosticDashboardInput()))
+            {
+                AddHpTelemetrySection(hpReadOnlyTelemetryDetails, section.Title);
+                foreach (HpDiagnosticDashboardRow row in section.Rows)
+                {
+                    AddHpTelemetryRow(hpReadOnlyTelemetryDetails, row);
+                }
+            }
 
-            AddHpTelemetrySection(hpReadOnlyTelemetryDetails, "WMI/CIM readiness");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, @"root\wmi", GetSnapshotOrReportAvailability(snapshot?.RootWmiAvailability, report, "RootWmiAvailability"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "hpqBIntM", GetSnapshotOrReportAvailability(snapshot?.HpqBIntMAvailability, report, "HpqBIntMAvailability"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "hpqBDataIn", GetSnapshotOrReportAvailability(snapshot?.HpqBDataInAvailability, report, "HpqBDataInAvailability"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "CIM root\\wmi", FormatCimReadiness(snapshot?.CimRootWmiReachable ?? report?.GetBool("CimRootWmiReachable")));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "CIM hpqBIntM", FormatCimReadiness(snapshot?.CimHpBIntMAvailable ?? report?.GetBool("CimHpBIntMAvailable")));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "CIM method metadata", FormatCimReadiness(snapshot?.CimHpBIntMMethodMetadataReadable ?? report?.GetBool("CimHpBIntMMethodMetadataReadable")));
-
-            AddHpTelemetrySection(hpReadOnlyTelemetryDetails, "Read-only telemetry");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SystemDesignData decoded", FormatDecodedStatus(snapshot?.SystemDesignDataInvocationSucceeded == true && snapshot.SystemDesignDataDecodeSucceeded, report, "SystemDesignDataDecodeSucceeded"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Software fan control declared by firmware", FormatDeclaredSupport(snapshot, report));
-
-            AddHpTelemetrySection(hpReadOnlyTelemetryDetails, "Fan read-only status");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Fan count", GetSnapshotOrDecodedReportValue(snapshot?.FanGetCountInvocationSucceeded == true && snapshot.FanGetCountDecodeSucceeded, snapshot?.FanGetCountDecoded?.FanCount, report, "FanGetCountDecodeSucceeded", "FanGetCountDecoded.FanCount"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Max fan state", FormatMaxFanState(snapshot, report));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Fan 1 raw level byte", GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan1RawValue"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Fan 2 raw level byte", GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Raw level data", "Raw values are not RPM or percent.");
-
-            AddHpTelemetrySection(hpReadOnlyTelemetryDetails, "Safety / NO-GO status");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Fan control", "Blocked - not implemented");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax", "NO-GO / design-only");
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax write implemented", FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "SetFanMax write allowed", FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Blocked reason", GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"));
-            AddHpTelemetryRow(hpReadOnlyTelemetryDetails, "Next required proof", GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof"));
             hpReadOnlyTelemetryDetails.ResumeLayout();
         }
 
         private string BuildHpDiagnosticSummary()
         {
+            return "VictusX Read-only Diagnostic" + Environment.NewLine +
+                HpDiagnosticDashboardFormatter.BuildSummary(CreateHpDiagnosticDashboardInput());
+        }
+
+        private HpDiagnosticDashboardInput CreateHpDiagnosticDashboardInput()
+        {
             HpVictusCapabilitySnapshot? snapshot = Program.hpVictusCapabilitySnapshot;
             HpCachedDiagnosticReport? report = hpCachedDiagnosticReport;
-            return string.Join(Environment.NewLine,
-                "VictusX Read-only Diagnostic",
-                "Read-only diagnostic: cached report and startup snapshot only.",
-                "HP/Victus detected: " + FormatAvailability(snapshot?.IsHpVictus ?? report?.GetHpVictusDetected()),
-                "Model: " + GetSnapshotOrReportValue(snapshot?.Model, report, "Model"),
-                "SKU: " + GetSnapshotOrReportValue(snapshot?.SystemSku, report, "Sku"),
-                "BIOS version: " + GetSnapshotOrReportValue(snapshot?.BiosVersion, report, "BiosVersion"),
-                "root\\wmi readiness: " + GetSnapshotOrReportAvailability(snapshot?.RootWmiAvailability, report, "RootWmiAvailability"),
-                "hpqBIntM readiness: " + GetSnapshotOrReportAvailability(snapshot?.HpqBIntMAvailability, report, "HpqBIntMAvailability"),
-                "hpqBDataIn readiness: " + GetSnapshotOrReportAvailability(snapshot?.HpqBDataInAvailability, report, "HpqBDataInAvailability"),
-                "CIM root\\wmi readiness: " + FormatCimReadiness(snapshot?.CimRootWmiReachable ?? report?.GetBool("CimRootWmiReachable")),
-                "CIM hpqBIntM readiness: " + FormatCimReadiness(snapshot?.CimHpBIntMAvailable ?? report?.GetBool("CimHpBIntMAvailable")),
-                "SystemDesignData decoded: " + FormatDecodedStatus(snapshot?.SystemDesignDataInvocationSucceeded == true && snapshot.SystemDesignDataDecodeSucceeded, report, "SystemDesignDataDecodeSucceeded"),
-                "Software fan control declared by firmware: " + FormatDeclaredSupport(snapshot, report),
-                "Fan count: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetCountInvocationSucceeded == true && snapshot.FanGetCountDecodeSucceeded, snapshot?.FanGetCountDecoded?.FanCount, report, "FanGetCountDecodeSucceeded", "FanGetCountDecoded.FanCount"),
-                "Max fan state: " + FormatMaxFanState(snapshot, report),
-                "Fan 1 raw level byte: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan1RawValue"),
-                "Fan 2 raw level byte: " + GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"),
-                "Raw values are not RPM or percent.",
-                "Fan control: Blocked - not implemented.",
-                "SetFanMax is NO-GO / design-only.",
-                "SetFanMax write implemented: " + FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
-                "SetFanMax write allowed: " + FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
-                "SetFanMax blocked reason: " + GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"),
-                "SetFanMax next required proof: " + GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof"));
+            return new HpDiagnosticDashboardInput
+            {
+                IsHpVictusDetected = snapshot?.IsHpVictus ?? report?.GetHpVictusDetected(),
+                Manufacturer = GetSnapshotOrReportValue(snapshot?.Manufacturer, report, "Manufacturer"),
+                Model = GetSnapshotOrReportValue(snapshot?.Model, report, "Model"),
+                Sku = GetSnapshotOrReportValue(snapshot?.SystemSku, report, "Sku"),
+                BiosVersion = GetSnapshotOrReportValue(snapshot?.BiosVersion, report, "BiosVersion"),
+                RootWmiReadiness = GetSnapshotOrReportAvailability(snapshot?.RootWmiAvailability, report, "RootWmiAvailability"),
+                HpqBIntMReadiness = GetSnapshotOrReportAvailability(snapshot?.HpqBIntMAvailability, report, "HpqBIntMAvailability"),
+                HpqBDataInReadiness = GetSnapshotOrReportAvailability(snapshot?.HpqBDataInAvailability, report, "HpqBDataInAvailability"),
+                CimRootWmiReadiness = HpDiagnosticDashboardFormatter.FormatCimReadiness(snapshot?.CimRootWmiReachable ?? report?.GetBool("CimRootWmiReachable")),
+                CimHpqBIntMReadiness = HpDiagnosticDashboardFormatter.FormatCimReadiness(snapshot?.CimHpBIntMAvailable ?? report?.GetBool("CimHpBIntMAvailable")),
+                CimMethodMetadataReadiness = HpDiagnosticDashboardFormatter.FormatCimReadiness(snapshot?.CimHpBIntMMethodMetadataReadable ?? report?.GetBool("CimHpBIntMMethodMetadataReadable")),
+                SystemDesignDataDecodeStatus = FormatDecodedStatus(snapshot?.SystemDesignDataInvocationSucceeded == true && snapshot.SystemDesignDataDecodeSucceeded, report, "SystemDesignDataDecodeSucceeded"),
+                SoftwareFanControlSupport = FormatDeclaredSupport(snapshot, report),
+                FanCount = GetSnapshotOrDecodedReportValue(snapshot?.FanGetCountInvocationSucceeded == true && snapshot.FanGetCountDecodeSucceeded, snapshot?.FanGetCountDecoded?.FanCount, report, "FanGetCountDecodeSucceeded", "FanGetCountDecoded.FanCount"),
+                MaxFanState = FormatMaxFanState(snapshot, report),
+                Fan1RawLevel = GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan1RawValue"),
+                Fan2RawLevel = GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"),
+                SetFanMaxWriteImplemented = HpDiagnosticDashboardFormatter.FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
+                SetFanMaxWriteAllowed = HpDiagnosticDashboardFormatter.FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
+                SetFanMaxBlockedReason = GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"),
+                SetFanMaxNextRequiredProof = GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof")
+            };
         }
 
         private void AddHpTelemetrySection(TableLayoutPanel details, string title)
@@ -584,52 +562,36 @@ namespace GHelper
             details.SetColumnSpan(label, 2);
         }
 
-        private void AddHpTelemetryRow(TableLayoutPanel details, string label, string value)
+        private void AddHpTelemetryRow(TableLayoutPanel details, HpDiagnosticDashboardRow row)
         {
-            int row = details.RowCount++;
+            int layoutRow = details.RowCount++;
             details.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             details.Controls.Add(new Label
             {
                 AutoSize = true,
                 ForeColor = foreMain,
                 Margin = new Padding(6, 2, 12, 2),
-                Text = label + ":"
-            }, 0, row);
+                Text = row.Label + ":"
+            }, 0, layoutRow);
             details.Controls.Add(new Label
             {
                 AutoSize = true,
-                ForeColor = GetHpDiagnosticValueColor(value),
+                ForeColor = GetHpDiagnosticValueColor(row.Status),
                 Margin = new Padding(0, 2, 0, 2),
                 MaximumSize = new Size(560, 0),
-                Text = value
-            }, 1, row);
+                Text = row.Value
+            }, 1, layoutRow);
         }
 
-        private Color GetHpDiagnosticValueColor(string value)
+        private Color GetHpDiagnosticValueColor(HpDiagnosticDashboardStatus status)
         {
-            if (value.StartsWith("Ready", StringComparison.OrdinalIgnoreCase) ||
-                value.StartsWith("Succeeded", StringComparison.OrdinalIgnoreCase) ||
-                value.StartsWith("Enabled", StringComparison.OrdinalIgnoreCase) ||
-                value.StartsWith("Declared", StringComparison.OrdinalIgnoreCase))
+            return status switch
             {
-                return colorEco;
-            }
-
-            if (value.StartsWith("Blocked", StringComparison.OrdinalIgnoreCase) ||
-                value.StartsWith("NO-GO", StringComparison.OrdinalIgnoreCase))
-            {
-                return colorTurbo;
-            }
-
-            return foreMain;
+                HpDiagnosticDashboardStatus.Ready => colorEco,
+                HpDiagnosticDashboardStatus.Warning or HpDiagnosticDashboardStatus.Blocked => colorTurbo,
+                _ => foreMain
+            };
         }
-
-        private static string FormatAvailability(bool? value) => value switch
-        {
-            true => "Detected",
-            false => "Not available",
-            _ => "Not available"
-        };
 
         private static string GetSnapshotOrReportValue(string? snapshotValue, HpCachedDiagnosticReport? report, string reportPath)
         {
@@ -649,34 +611,6 @@ namespace GHelper
                 ? "Ready"
                 : "Not available";
         }
-
-        private static string FormatCimReadiness(bool? value) => value switch
-        {
-            true => "Ready",
-            false => "Not available",
-            _ => "Not available"
-        };
-
-        private static string FormatKnownBool(bool? value) => value switch
-        {
-            true => "Yes",
-            false => "No",
-            _ => "Not available"
-        };
-
-        private static string FormatWriteImplementationStatus(bool? value) => value switch
-        {
-            true => "Implemented",
-            false => "Not implemented",
-            _ => "Not available"
-        };
-
-        private static string FormatWriteAllowedStatus(bool? value) => value switch
-        {
-            true => "Allowed",
-            false => "Blocked",
-            _ => "Not available"
-        };
 
         private static string FormatDecodedStatus(bool hasDecodedSnapshot, HpCachedDiagnosticReport? report, string decodeSucceededPath)
         {
