@@ -28,6 +28,7 @@ Implemented:
 - HP WMI availability probe
 - HP WMI invocation sandbox
 - `SystemDesignData` read-only invocation test path
+- Consolidated HP read-only telemetry milestones for `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and raw-only `FanGetLevel`
 - Access denied diagnostics
 
 Not implemented yet:
@@ -54,6 +55,8 @@ VictusX is being developed conservatively.
 ```
 
 No fan writes, EC writes, BIOS setting writes, thermal writes, power writes, RGB writes, keyboard-lighting writes, battery writes, or production HP control paths are implemented yet.
+
+Current HP read-only telemetry notes are consolidated in [docs/hp-readonly-telemetry-status.md](docs/hp-readonly-telemetry-status.md). These are diagnostics milestones only and do not indicate hardware control support.
 
 ## Usage for current development builds
 
