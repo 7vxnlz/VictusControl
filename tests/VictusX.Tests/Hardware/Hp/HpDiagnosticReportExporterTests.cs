@@ -21,7 +21,7 @@ public sealed class HpDiagnosticReportExporterTests
         Assert.Equal(Path.Combine(outputDirectory, "hp-diagnostic-20260831-123456.md"), filePath);
         Assert.Contains("cached diagnostic data only", content, StringComparison.Ordinal);
         Assert.Contains("does not invoke WMI", content, StringComparison.Ordinal);
-        Assert.Contains("Fan control and fan writes are not implemented", content, StringComparison.Ordinal);
+        Assert.Contains(HpDiagnosticStatusText.FanControlNotImplemented, content, StringComparison.Ordinal);
         Assert.Contains("Model: Victus", content, StringComparison.Ordinal);
         Assert.Contains("SetFanMax is NO-GO / design-only.", content, StringComparison.Ordinal);
     }

@@ -8,17 +8,13 @@ public static class HpVictusCapabilityProbe
 {
     private const string CimV2ScopePath = @"\\.\root\cimv2";
     private const string HpWmiScopePath = @"\\.\root\wmi";
-    private const string ReportFileName = "hp-capability-report.json";
 
     private static readonly JsonSerializerOptions ReportJsonOptions = new()
     {
         WriteIndented = true
     };
 
-    public static string ReportPath => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "VictusX",
-        ReportFileName);
+    public static string ReportPath => HpDiagnosticPaths.CapabilityReportPath;
 
     public static HpVictusCapabilitySnapshot Probe()
     {
@@ -229,8 +225,7 @@ public static class HpVictusCapabilityProbe
 
     public static string WriteReport(HpVictusCapabilitySnapshot snapshot)
     {
-        string reportDirectory = Path.GetDirectoryName(ReportPath) ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        Directory.CreateDirectory(reportDirectory);
+        Directory.CreateDirectory(HpDiagnosticPaths.AppDataDirectory);
 
         var report = new HpVictusCapabilityReport(
             DateTimeOffset.Now,

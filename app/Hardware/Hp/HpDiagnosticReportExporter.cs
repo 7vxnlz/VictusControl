@@ -4,11 +4,7 @@ namespace GHelper.Hardware.Hp;
 
 public static class HpDiagnosticReportExporter
 {
-    public static string ExportDirectory => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "VictusX",
-        "Logs",
-        "Reports");
+    public static string ExportDirectory => HpDiagnosticPaths.ExportDirectory;
 
     public static string Export(string summary) => Export(summary, DateTimeOffset.Now, ExportDirectory);
 
@@ -24,12 +20,12 @@ public static class HpDiagnosticReportExporter
     public static string BuildMarkdown(string summary, DateTimeOffset timestamp)
     {
         return string.Join(Environment.NewLine,
-            "# VictusX Read-only Diagnostic Export",
+            "# " + HpDiagnosticStatusText.Title + " Export",
             string.Empty,
             "Exported: " + timestamp.ToString("O"),
             string.Empty,
             "> This export contains cached diagnostic data only. It does not invoke WMI or refresh hardware.",
-            "> Fan control and fan writes are not implemented. SetFanMax remains NO-GO / design-only.",
+            "> " + HpDiagnosticStatusText.FanControlNotImplemented + ". Fan writes are not implemented. " + HpDiagnosticStatusText.SetFanMaxNoGo + ".",
             string.Empty,
             "## Diagnostic Summary",
             string.Empty,

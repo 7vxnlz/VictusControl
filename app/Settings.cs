@@ -340,7 +340,7 @@ namespace GHelper
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = foreMain,
                 Padding = new Padding(10, 5, 10, 5),
-                Text = "HP Victus Read-only Diagnostic"
+                Text = HpDiagnosticStatusText.Title
             };
 
             hpReadOnlyTelemetrySource = new Label
@@ -368,7 +368,7 @@ namespace GHelper
                 Dock = DockStyle.Top,
                 ForeColor = colorTurbo,
                 Padding = new Padding(10, 5, 10, 5),
-                Text = "READ-ONLY: Fan control is not implemented. SetFanMax is NO-GO / design-only."
+                Text = HpDiagnosticStatusText.SafetyWarning
             };
 
             var details = new TableLayoutPanel
@@ -393,7 +393,7 @@ namespace GHelper
             };
             actions.Controls.Add(CreateHpDiagnosticActionButton("Copy summary", ButtonHpDiagnosticCopy_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Reload cached report", ButtonHpDiagnosticReload_Click));
-            actions.Controls.Add(CreateHpDiagnosticActionButton("Open report folder", ButtonHpDiagnosticOpenReportFolder_Click));
+            actions.Controls.Add(CreateHpDiagnosticActionButton("Open diagnostic folder", ButtonHpDiagnosticOpenReportFolder_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Export diagnostic report", ButtonHpDiagnosticExport_Click));
 
             hpReadOnlyTelemetryDetails = details;
@@ -451,20 +451,20 @@ namespace GHelper
 
         private void ButtonHpDiagnosticOpenReportFolder_Click(object? sender, EventArgs e)
         {
-            string reportDirectory = Path.GetDirectoryName(HpVictusCapabilityProbe.ReportPath) ?? string.Empty;
-            if (!Directory.Exists(reportDirectory))
+            string diagnosticDirectory = HpDiagnosticPaths.AppDataDirectory;
+            if (!Directory.Exists(diagnosticDirectory))
             {
-                MessageBox.Show(this, "No HP capability report folder is available yet.", "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "The local VictusX diagnostic folder is not available yet:" + Environment.NewLine + diagnosticDirectory, "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             try
             {
-                Process.Start(new ProcessStartInfo(reportDirectory) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(diagnosticDirectory) { UseShellExecute = true });
             }
             catch (Exception)
             {
-                MessageBox.Show(this, "The HP capability report folder could not be opened.", "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "The local VictusX diagnostic folder could not be opened.", "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -479,7 +479,7 @@ namespace GHelper
             try
             {
                 string filePath = HpDiagnosticReportExporter.Export(BuildHpDiagnosticSummary());
-                MessageBox.Show(this, "Read-only diagnostic report exported to:" + Environment.NewLine + filePath, "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, HpDiagnosticStatusText.ReadOnlyDiagnostic + " report exported to:" + Environment.NewLine + filePath, "VictusX Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {

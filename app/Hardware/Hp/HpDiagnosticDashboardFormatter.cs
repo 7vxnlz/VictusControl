@@ -4,8 +4,8 @@ public static class HpDiagnosticDashboardFormatter
 {
     public const string NotAvailable = "Not available";
     public const string RawFanLevelWarning = "Raw values are not RPM or percent.";
-    public const string FanControlStatus = "Blocked - not implemented";
-    public const string SetFanMaxStatus = "NO-GO / design-only";
+    public const string FanControlStatus = "Blocked - " + HpDiagnosticStatusText.FanControlNotImplemented;
+    public const string SetFanMaxStatus = HpDiagnosticStatusText.SetFanMaxNoGo;
 
     public static HpDiagnosticDashboardHealthSummary BuildHealthSummary(HpDiagnosticDashboardInput input)
     {
@@ -38,7 +38,7 @@ public static class HpDiagnosticDashboardFormatter
         [
             new("Device",
             [
-                Row("Read-only diagnostic", "Cached report and startup snapshot only; no UI action invokes WMI."),
+                Row(HpDiagnosticStatusText.ReadOnlyDiagnostic, "Cached report and startup snapshot only; no UI action invokes WMI."),
                 Row("HP/Victus detected", input.IsHpVictusDetected == true ? "Detected" : NotAvailable),
                 Row("Manufacturer", input.Manufacturer),
                 Row("Model", input.Model),

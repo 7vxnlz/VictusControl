@@ -23,9 +23,9 @@ public sealed class HpDiagnosticReportLoadResult
 
     public string SourceDescription => Status switch
     {
-        HpDiagnosticReportLoadStatus.Loaded => "Cached report: Loaded locally. Some fields are not available in older reports. Reload reads this file only and does not invoke WMI.",
-        HpDiagnosticReportLoadStatus.CouldNotBeRead => "Cached report: Report could not be read. Safe fallback values are shown.",
-        _ => "Cached report: Report not available. Safe fallback values are shown."
+        HpDiagnosticReportLoadStatus.Loaded => "Cached report: Loaded locally. " + HpDiagnosticStatusText.SomeFieldsNotAvailable + " in older reports. Reload reads this file only and does not invoke WMI.",
+        HpDiagnosticReportLoadStatus.CouldNotBeRead => "Cached report: " + HpDiagnosticStatusText.ReportCouldNotBeRead + ". Safe fallback values are shown.",
+        _ => "Cached report: " + HpDiagnosticStatusText.ReportNotAvailable + ". Safe fallback values are shown."
     };
 
     public string? GetValue(string path) => values.GetValueOrDefault(path);
