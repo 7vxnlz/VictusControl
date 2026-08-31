@@ -4,7 +4,7 @@ This is a pure-data safety design. It does not authorize or execute a hardware w
 
 ## Reference-Backed Shape
 
-`ghelper-omen` documents `SetFanMax` / `0x27` as four bytes: byte 0 is `1` to enable max fan or `0` to restore/disable it; bytes 1-3 are zero. `HpFanMaxPayloadDescription` records those fields only. It never creates a byte buffer, calls WMI, or identifies a callable method.
+The references agree on default command `0x20008`, command type `0x27`, zero output, and therefore `hpqBIOSInt0`. They do not agree on input length: `ghelper-omen` and `omencore` submit four bytes with byte 0 as `1` to enable or `0` to restore/disable and bytes 1-3 zero; OmenSuperHub submits only the first state byte. `HpFanMaxPayloadDescription` records both variants with no device-validated selection. It never creates a byte buffer or calls WMI.
 
 ## Required Preflight
 

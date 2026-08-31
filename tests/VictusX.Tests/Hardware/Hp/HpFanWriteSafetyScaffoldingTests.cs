@@ -59,9 +59,24 @@ public sealed class HpFanWriteSafetyScaffoldingTests
         HpFanMaxPayloadDescription description = HpFanMaxPayloadDescription.Describe(targetState);
 
         Assert.Equal(targetState, description.TargetState);
-        Assert.Equal(4, description.ExpectedInputLength);
         Assert.Equal(expectedFirstByteValue, description.FirstByteValue);
-        Assert.Equal(3, description.ZeroFilledTrailingByteCount);
+        Assert.Equal("hpqBIOSInt0", HpFanMaxPayloadDescription.ReferenceMethodName);
+        Assert.Equal(0x20008u, HpFanMaxPayloadDescription.ReferenceCommandValue);
+        Assert.Equal(0x27u, HpFanMaxPayloadDescription.ReferenceCommandType);
+        Assert.Equal(0, HpFanMaxPayloadDescription.ReferenceExpectedOutputSize);
+        Assert.Null(description.DeviceValidatedInputLength);
+        Assert.Collection(
+            description.ObservedReferenceInputShapes,
+            fourByteShape =>
+            {
+                Assert.Equal(4, fourByteShape.InputLength);
+                Assert.Equal(3, fourByteShape.ZeroFilledTrailingByteCount);
+            },
+            oneByteShape =>
+            {
+                Assert.Equal(1, oneByteShape.InputLength);
+                Assert.Equal(0, oneByteShape.ZeroFilledTrailingByteCount);
+            });
     }
 
     [Fact]
