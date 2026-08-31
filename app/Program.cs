@@ -47,6 +47,8 @@ namespace GHelper
         private static long lastAuto;
         private static readonly object autoLock = new();
         private static long lastTheme;
+        private static System.Windows.Forms.Timer? trayRetryTimer;
+        private static int exitCleanupStarted;
 
         public static InputDispatcher? inputDispatcher;
 
@@ -114,10 +116,18 @@ namespace GHelper
 
             if (hpVictusMode)
             {
-                var hpSnapshot = HpVictusCapabilityProbe.Probe();
-                string hpReportPath = HpVictusCapabilityProbe.WriteReport(hpSnapshot);
-                Logger.WriteLine("HP Victus capability probe: " + hpSnapshot.ToLogString());
-                Logger.WriteLine("HP Victus capability report: " + hpReportPath);
+                try
+                {
+                    var hpSnapshot = HpVictusCapabilityProbe.Probe();
+                    string hpReportPath = HpVictusCapabilityProbe.WriteReport(hpSnapshot);
+                    Logger.WriteLine("HP Victus capability probe: " + hpSnapshot.ToLogString());
+                    Logger.WriteLine("HP Victus capability report: " + hpReportPath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLine("HP Victus capability startup failed safely: " + ex);
+                    WriteStartupCrashLog(args, ex);
+                }
             }
 
             settingsForm = new SettingsForm();
@@ -169,9 +179,9 @@ namespace GHelper
                 Visible = true
             };
 
-            var trayRetry = new System.Windows.Forms.Timer { Interval = 5000 };
-            trayRetry.Tick += (_, _) => { trayRetry.Dispose(); trayIcon.Visible = false; trayIcon.Visible = true; };
-            trayRetry.Start();
+            trayRetryTimer = new System.Windows.Forms.Timer { Interval = 5000 };
+            trayRetryTimer.Tick += TrayRetryTimer_Tick;
+            trayRetryTimer.Start();
 
             WM_TASKBARCREATED = RegisterWindowMessage("TaskbarCreated");
             Logger.WriteLine($"Tray Icon: {trayIcon.Visible} | {WM_TASKBARCREATED}");
@@ -539,20 +549,72 @@ namespace GHelper
             settingsForm.RefreshSensors();
         }
 
+        private static void TrayRetryTimer_Tick(object? sender, EventArgs e)
+        {
+            trayRetryTimer?.Stop();
+            trayRetryTimer?.Dispose();
+            trayRetryTimer = null;
+
+            if (trayIcon is null) return;
+
+            trayIcon.Visible = false;
+            trayIcon.Visible = true;
+        }
+
         static void OnExit(object sender, EventArgs e)
         {
-            if (trayIcon is not null)
+            if (Interlocked.Exchange(ref exitCleanupStarted, 1) != 0) return;
+
+            TryShutdownCleanup("tray retry timer", () =>
             {
+                trayRetryTimer?.Stop();
+                trayRetryTimer?.Dispose();
+                trayRetryTimer = null;
+            });
+            TryShutdownCleanup("single-instance exit listener", ProcessHelper.StopExitListener);
+            TryShutdownCleanup("system event handlers", () =>
+            {
+                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+                SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+                SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+                SystemEvents.SessionEnding -= SystemEvents_SessionEnding;
+            });
+            TryShutdownCleanup("power settle timer", () =>
+            {
+                powerSettleTimer.Stop();
+                powerSettleTimer.Elapsed -= OnPowerSettled;
+                powerSettleTimer.Dispose();
+            });
+            TryShutdownCleanup("tray icon", () =>
+            {
+                if (trayIcon is null) return;
                 trayIcon.Visible = false;
                 trayIcon.Dispose();
+            });
+            if (!unsupportedHardwareMode)
+            {
+                TryShutdownCleanup("peripheral device events", PeripheralsProvider.UnregisterForDeviceEvents);
             }
+            TryShutdownCleanup("display events", clamshellControl.UnregisterDisplayEvents);
+            TryShutdownCleanup("power notifications", () =>
+            {
+                NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotify);
+                NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyLid);
+                NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyEnergy);
+                NativeMethods.UnregisterSuspendResumeNotification(unRegSuspendResume);
+            });
+        }
 
-            if (!unsupportedHardwareMode) PeripheralsProvider.UnregisterForDeviceEvents();
-            clamshellControl.UnregisterDisplayEvents();
-            NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotify);
-            NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyLid);
-            NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotifyEnergy);
-            NativeMethods.UnregisterSuspendResumeNotification(unRegSuspendResume);
+        private static void TryShutdownCleanup(string name, Action cleanup)
+        {
+            try
+            {
+                cleanup();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine($"Shutdown cleanup failed for {name}: {ex.Message}");
+            }
         }
 
         private static void WriteStartupCrashLog(string[] args, Exception exception)

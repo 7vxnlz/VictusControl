@@ -8,6 +8,7 @@ namespace GHelper.Helpers
     {
         private const string ExitEventName = "Global\\GHelperApp-Exit";
         private static EventWaitHandle? exitEvent;
+        private static RegisteredWaitHandle? exitWaitRegistration;
         private static long lastAdmin;
 
         private static readonly Lazy<bool> _isSystem = new Lazy<bool>(() =>
@@ -98,7 +99,16 @@ namespace GHelper.Helpers
             }
 
             if (exitEvent != null)
-                ThreadPool.RegisterWaitForSingleObject(exitEvent, (_, _) => RequestApplicationExit(exitMarshalControl), null, Timeout.Infinite, true);
+                exitWaitRegistration = ThreadPool.RegisterWaitForSingleObject(exitEvent, (_, _) => RequestApplicationExit(exitMarshalControl), null, Timeout.Infinite, true);
+        }
+
+        public static void StopExitListener()
+        {
+            RegisteredWaitHandle? registration = Interlocked.Exchange(ref exitWaitRegistration, null);
+            registration?.Unregister(null);
+
+            EventWaitHandle? handle = Interlocked.Exchange(ref exitEvent, null);
+            handle?.Dispose();
         }
 
         private static void RequestApplicationExit(Control? marshalControl)

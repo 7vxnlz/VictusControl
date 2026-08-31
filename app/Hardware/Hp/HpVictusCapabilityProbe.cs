@@ -70,6 +70,10 @@ public static class HpVictusCapabilityProbe
             "FanMaxGet",
             hpWmiSnapshot,
             HpBiosWmiCommandCatalog.Definitions);
+        var fanGetLevelDryRun = invocationClient.DryRun(
+            "FanGetLevel",
+            hpWmiSnapshot,
+            HpBiosWmiCommandCatalog.Definitions);
         bool hpVictusMode = global::AppConfig.IsHpVictusHardwareMode();
         bool hpWmiReadOnlyTestMode = global::AppConfig.IsHpWmiReadOnlyTestMode();
         bool hpWmiInvocationRequiresElevation = true;
@@ -89,6 +93,12 @@ public static class HpVictusCapabilityProbe
             accessDeniedDiagnostics.ProcessElevated &&
             fanMaxGetDryRun.Success &&
             !fanMaxGetDryRun.Invoked;
+        bool fanGetLevelInvocationAllowed =
+            hpVictusMode &&
+            hpWmiReadOnlyTestMode &&
+            accessDeniedDiagnostics.ProcessElevated &&
+            fanGetLevelDryRun.Success &&
+            !fanGetLevelDryRun.Invoked;
         string hpWmiInvocationBlockedReason = GetHpWmiInvocationBlockedReason(
             hpVictusMode,
             hpWmiReadOnlyTestMode,
@@ -130,6 +140,17 @@ public static class HpVictusCapabilityProbe
             fanMaxGetInvocation.Success,
             fanMaxGetInvocation.Invoked,
             fanMaxGetInvocation.ReturnedBytes);
+        var fanGetLevelInvocation = TryInvokeFanGetLevel(
+            invocationClient,
+            hpWmiSnapshot,
+            HpBiosWmiCommandCatalog.Definitions,
+            hpWmiReadOnlyTestMode,
+            accessDeniedDiagnostics.ProcessElevated);
+        HpFanGetLevelReportDecodeResult fanGetLevelDecode = HpFanGetLevelReportDecoder.TryDecode(
+            fanGetLevelInvocation.CommandName,
+            fanGetLevelInvocation.Success,
+            fanGetLevelInvocation.Invoked,
+            fanGetLevelInvocation.ReturnedBytes);
 
         return new HpVictusCapabilitySnapshot(
             manufacturer,
@@ -178,6 +199,14 @@ public static class HpVictusCapabilityProbe
             fanMaxGetDecode.Succeeded,
             fanMaxGetDecode.Errors,
             fanMaxGetDecode.Decoded,
+            fanGetLevelInvocationAllowed,
+            fanGetLevelInvocation.Invoked,
+            fanGetLevelInvocation.Success,
+            fanGetLevelInvocation.ReturnedByteCount ?? 0,
+            FirstNonEmpty(fanGetLevelInvocation.Errors),
+            fanGetLevelDecode.Succeeded,
+            fanGetLevelDecode.Errors,
+            fanGetLevelDecode.Decoded,
             accessDeniedDiagnostics.ProcessElevated,
             accessDeniedDiagnostics.WindowsIdentitySummary,
             accessDeniedDiagnostics.WmiNamespaceReadable,
@@ -245,6 +274,14 @@ public static class HpVictusCapabilityProbe
             snapshot.FanMaxGetDecodeSucceeded,
             snapshot.FanMaxGetDecodeErrors,
             snapshot.FanMaxGetDecoded,
+            snapshot.FanGetLevelInvocationAllowed,
+            snapshot.FanGetLevelInvocationAttempted,
+            snapshot.FanGetLevelInvocationSucceeded,
+            snapshot.FanGetLevelReturnedByteCount,
+            snapshot.FanGetLevelInvocationError,
+            snapshot.FanGetLevelDecodeSucceeded,
+            snapshot.FanGetLevelDecodeErrors,
+            snapshot.FanGetLevelDecoded,
             snapshot.ProcessElevated,
             snapshot.WindowsIdentitySummary,
             snapshot.WmiNamespaceReadable,
@@ -380,6 +417,30 @@ public static class HpVictusCapabilityProbe
             hpWmiSnapshot);
     }
 
+    private static HpWmiInvocationResult TryInvokeFanGetLevel(
+        HpWmiInvocationClient invocationClient,
+        HpWmiReadOnlySnapshot hpWmiSnapshot,
+        IEnumerable<HpBiosWmiCommandDefinition> definitions,
+        bool hpWmiReadOnlyTestModeEnabled,
+        bool processElevated)
+    {
+        HpBiosWmiCommandDefinition? definition = definitions.FirstOrDefault(candidate =>
+            string.Equals(candidate.Name, "FanGetLevel", StringComparison.OrdinalIgnoreCase));
+
+        if (definition is null)
+        {
+            return HpWmiInvocationResult.Rejected("FanGetLevel", "command definition not found");
+        }
+
+        return invocationClient.TryInvoke(
+            new HpWmiInvocationRequest(
+                definition,
+                global::AppConfig.IsHpVictusHardwareMode(),
+                hpWmiReadOnlyTestModeEnabled,
+                processElevated),
+            hpWmiSnapshot);
+    }
+
     private static string GetHpWmiInvocationBlockedReason(
         bool hpVictusMode,
         bool hpWmiReadOnlyTestMode,
@@ -423,7 +484,7 @@ public static class HpVictusCapabilityProbe
             return "If explicitly approved, rerun the controlled read-only test from an elevated Administrator terminal.";
         }
 
-        return "Proceed only with approved read-only invocation tests for SystemDesignData, FanGetCount, and FanMaxGet; keep all hardware writes forbidden.";
+        return "Proceed only with approved read-only invocation tests for SystemDesignData, FanGetCount, FanMaxGet, and FanGetLevel; keep all hardware writes forbidden.";
     }
 
     private static bool IsHpManufacturer(string manufacturer, string productVendor) =>
@@ -479,6 +540,14 @@ public static class HpVictusCapabilityProbe
         bool FanMaxGetDecodeSucceeded,
         string[] FanMaxGetDecodeErrors,
         HpFanMaxGetSnapshot? FanMaxGetDecoded,
+        bool FanGetLevelInvocationAllowed,
+        bool FanGetLevelInvocationAttempted,
+        bool FanGetLevelInvocationSucceeded,
+        int FanGetLevelReturnedByteCount,
+        string FanGetLevelInvocationError,
+        bool FanGetLevelDecodeSucceeded,
+        string[] FanGetLevelDecodeErrors,
+        HpFanGetLevelSnapshot? FanGetLevelDecoded,
         bool ProcessElevated,
         string WindowsIdentitySummary,
         bool WmiNamespaceReadable,
