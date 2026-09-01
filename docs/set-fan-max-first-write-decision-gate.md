@@ -27,3 +27,5 @@ Any future implementation remains constrained to SetFanMax only, one bounded tar
 ## Decision
 
 The gate is currently **not satisfied**. No write code, payload selection, or hardware experiment may be added until this document is explicitly changed to **GO** with the required evidence. The next safe task is documentation-only review of an existing sanitized exact-device field record; if none exists, retain NO-GO.
+
+The cached HP diagnostic report and dashboard expose this decision as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and a fail-closed reason. These fields are diagnostic-only and cannot authorize or execute a write.

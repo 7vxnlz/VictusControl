@@ -620,6 +620,9 @@ namespace GHelper
                 Fan2RawLevel = GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"),
                 SetFanMaxWriteImplemented = HpDiagnosticDashboardFormatter.FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
                 SetFanMaxWriteAllowed = HpDiagnosticDashboardFormatter.FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
+                SetFanMaxFirstWriteGateStatus = snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateStatus ?? report?.GetValue("SetFanMaxFirstWriteGateStatus"),
+                SetFanMaxFirstWriteGateSatisfied = (snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateSatisfied ?? report?.GetBool("SetFanMaxFirstWriteGateSatisfied"))?.ToString(),
+                SetFanMaxFirstWriteGateReason = snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateReason ?? report?.GetValue("SetFanMaxFirstWriteGateReason"),
                 SetFanMaxDeviceValidatedInputLength = snapshot?.SetFanMaxDryRun.SetFanMaxDeviceValidatedInputLength?.ToString() ?? report?.GetValue("SetFanMaxDeviceValidatedInputLength"),
                 SetFanMaxBlockedReason = GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"),
                 SetFanMaxNextRequiredProof = GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof")

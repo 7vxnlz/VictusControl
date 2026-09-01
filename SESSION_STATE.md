@@ -32,10 +32,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest HP dashboard note: read-only SetFanMax evidence readiness is shown from cached/report-backed state.
 - Latest audit note: SetFanMax readiness panel audited as diagnostic-only; no write path added.
 - Latest first-write gate note: SetFanMax first-write decision gate added; current state remains NO-GO.
+- Latest first-write gate dashboard note: SetFanMax first-write gate status is report-backed and fail-closed in HP diagnostics.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP diagnostics read-only while enforcing the SetFanMax first-write decision gate
-- Last completed work: added the SetFanMax first-write NO-GO decision gate
-- Files touched recently: `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-proof-gap-checklist.md`, `docs/set-fan-max-manual-evidence-capture.md`, `docs/set-fan-max-readiness-panel-audit.md`, `docs/fan-write-blocker-summary.md`, `SESSION_STATE.md`
+- Current objective: keep HP diagnostics read-only while surfacing the fail-closed SetFanMax first-write gate
+- Last completed work: added report-backed SetFanMax first-write gate status
+- Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 106/106 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested

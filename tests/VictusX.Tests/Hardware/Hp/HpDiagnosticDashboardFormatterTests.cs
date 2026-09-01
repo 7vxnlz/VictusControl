@@ -80,6 +80,9 @@ public sealed class HpDiagnosticDashboardFormatterTests
 
         HpDiagnosticDashboardSection readiness = Assert.Single(sections, section => section.Title == "SetFanMax evidence readiness");
         Assert.Contains(readiness.Rows, row => row.Label == "Current status" && row.Value == "NO-GO" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate status" && row.Value == "NO-GO" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate satisfied" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateNotSatisfied && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpFanMaxDryRunReport.FirstWriteGateReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "Fan write implemented" && row.Value == "False - not implemented");
         Assert.Contains(readiness.Rows, row => row.Label == "Fan write allowed" && row.Value == "False - blocked" && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "DeviceValidatedInputLength" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset && row.Status == HpDiagnosticDashboardStatus.Blocked);
@@ -111,6 +114,21 @@ public sealed class HpDiagnosticDashboardFormatterTests
             HpDiagnosticDashboardFormatter.BuildSections(new() { SetFanMaxDeviceValidatedInputLength = value }),
             section => section.Title == "SetFanMax evidence readiness");
         Assert.Contains(readiness.Rows, row => row.Label == "Payload length decision" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxPayloadLengthNotSelected);
+    }
+
+    [Fact]
+    public void SetFanMaxFirstWriteGate_UnexpectedCachedGoValuesRemainBlocked()
+    {
+        HpDiagnosticDashboardSection readiness = Assert.Single(
+            HpDiagnosticDashboardFormatter.BuildSections(new()
+            {
+                SetFanMaxFirstWriteGateStatus = "GO",
+                SetFanMaxFirstWriteGateSatisfied = "True"
+            }),
+            section => section.Title == "SetFanMax evidence readiness");
+
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate status" && row.Value == "Blocked - unexpected GO state" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate satisfied" && row.Value == "Blocked - unexpected satisfied state" && row.Status == HpDiagnosticDashboardStatus.Blocked);
     }
 
     [Fact]

@@ -8,6 +8,7 @@ public static class HpDiagnosticDashboardFormatter
     public const string FanControlStatus = "Blocked - " + HpDiagnosticStatusText.FanControlNotImplemented;
     public const string SetFanMaxStatus = HpDiagnosticStatusText.SetFanMaxNoGo;
     public const string SetFanMaxReadinessStatus = "NO-GO";
+    public const string SetFanMaxFirstWriteGateNotSatisfied = "False - not satisfied";
     public const string SetFanMaxInputLengthUnset = "Unset / not validated";
     public const string SetFanMaxPayloadLengthNotSelected = "Not selected";
     public const string SetFanMaxEvidenceMissing = "Missing / not proven";
@@ -83,6 +84,9 @@ public static class HpDiagnosticDashboardFormatter
             new("SetFanMax evidence readiness",
             [
                 Row("Current status", SetFanMaxReadinessStatus),
+                Row("First-write gate status", FormatFirstWriteGateStatus(input.SetFanMaxFirstWriteGateStatus)),
+                Row("First-write gate satisfied", FormatFirstWriteGateSatisfied(input.SetFanMaxFirstWriteGateSatisfied)),
+                Row("First-write gate reason", FormatFirstWriteGateReason(input.SetFanMaxFirstWriteGateReason)),
                 Row("Fan write implemented", FormatEvidenceWriteImplemented(input.SetFanMaxWriteImplemented)),
                 Row("Fan write allowed", FormatEvidenceWriteAllowed(input.SetFanMaxWriteAllowed)),
                 Row("DeviceValidatedInputLength", FormatDeviceValidatedInputLength(input.SetFanMaxDeviceValidatedInputLength)),
@@ -152,6 +156,27 @@ public static class HpDiagnosticDashboardFormatter
             : SetFanMaxInputLengthUnset;
     }
 
+    public static string FormatFirstWriteGateStatus(string? value)
+    {
+        return string.Equals(value, "GO", StringComparison.OrdinalIgnoreCase)
+            ? "Blocked - unexpected GO state"
+            : SetFanMaxReadinessStatus;
+    }
+
+    public static string FormatFirstWriteGateSatisfied(string? value)
+    {
+        return string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
+            ? "Blocked - unexpected satisfied state"
+            : SetFanMaxFirstWriteGateNotSatisfied;
+    }
+
+    public static string FormatFirstWriteGateReason(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? HpFanMaxDryRunReport.FirstWriteGateReason
+            : value;
+    }
+
     private static string FormatEvidenceWriteImplemented(string? value)
     {
         return string.Equals(value, "Implemented", StringComparison.OrdinalIgnoreCase) ||
@@ -214,6 +239,7 @@ public static class HpDiagnosticDashboardFormatter
         if (value.StartsWith("Blocked", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("NO-GO", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("False - blocked", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("False - not satisfied", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Missing", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Unset", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Not selected", StringComparison.OrdinalIgnoreCase))

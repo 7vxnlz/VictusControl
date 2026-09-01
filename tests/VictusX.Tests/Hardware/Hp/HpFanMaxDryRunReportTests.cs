@@ -54,6 +54,9 @@ public sealed class HpFanMaxDryRunReportTests
 
         Assert.False(root.GetProperty("SetFanMaxWriteImplemented").GetBoolean());
         Assert.False(root.GetProperty("SetFanMaxWriteAllowed").GetBoolean());
+        Assert.Equal("NO-GO", root.GetProperty("SetFanMaxFirstWriteGateStatus").GetString());
+        Assert.False(root.GetProperty("SetFanMaxFirstWriteGateSatisfied").GetBoolean());
+        Assert.Contains("Missing exact-device proof", root.GetProperty("SetFanMaxFirstWriteGateReason").GetString(), StringComparison.Ordinal);
         Assert.True(root.GetProperty("SetFanMaxDryRunEvaluated").GetBoolean());
         Assert.Equal(JsonValueKind.Null, root.GetProperty("SetFanMaxDeviceValidatedInputLength").ValueKind);
         Assert.Equal(JsonValueKind.Array, root.GetProperty("SetFanMaxDryRunBlockedReasons").ValueKind);

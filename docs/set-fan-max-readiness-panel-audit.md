@@ -11,6 +11,9 @@ The panel is built from `HpDiagnosticDashboardInput`, populated in `Settings.cs`
 - `SetFanMaxDeviceValidatedInputLength`
 - `SetFanMaxDryRunBlockedReasons`
 - `SetFanMaxNextRequiredProof`
+- `SetFanMaxFirstWriteGateStatus`
+- `SetFanMaxFirstWriteGateSatisfied`
+- `SetFanMaxFirstWriteGateReason`
 
 No panel action refreshes hardware, invokes WMI, runs explicit probes, or creates a write payload.
 
@@ -42,7 +45,7 @@ Source inspection found no `hpqBIOSInt*` invocation added by the readiness panel
 
 ## Current Status
 
-SetFanMax remains **NO-GO**. Fan writes are not implemented or allowed, `DeviceValidatedInputLength` remains unset for this device, and no payload length has been selected.
+SetFanMax remains **NO-GO**. The panel fails closed for missing or inconsistent gate fields, reports the gate as not satisfied, and does not treat cached data as authorization. Fan writes are not implemented or allowed, `DeviceValidatedInputLength` remains unset for this device, and no payload length has been selected.
 
 ## Recommended Next Safe Task
 

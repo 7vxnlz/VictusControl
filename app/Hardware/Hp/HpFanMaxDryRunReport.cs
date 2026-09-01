@@ -2,6 +2,9 @@ namespace GHelper.Hardware.Hp;
 
 public sealed record HpFanMaxDryRunReport
 {
+    public const string FirstWriteGateStatus = "NO-GO";
+    public const string FirstWriteGateReason = "Missing exact-device proof: payload length, restore/disable behavior, thermal/power state, failure/recovery proof, and human approval.";
+
     private HpFanMaxDryRunReport(
         bool dryRunEvaluated,
         int? deviceValidatedInputLength,
@@ -16,6 +19,9 @@ public sealed record HpFanMaxDryRunReport
 
     public bool SetFanMaxWriteImplemented => false;
     public bool SetFanMaxWriteAllowed => false;
+    public string SetFanMaxFirstWriteGateStatus => FirstWriteGateStatus;
+    public bool SetFanMaxFirstWriteGateSatisfied => false;
+    public string SetFanMaxFirstWriteGateReason => FirstWriteGateReason;
     public bool SetFanMaxDryRunEvaluated { get; }
     public int? SetFanMaxDeviceValidatedInputLength { get; }
     public string[] SetFanMaxDryRunBlockedReasons { get; }
