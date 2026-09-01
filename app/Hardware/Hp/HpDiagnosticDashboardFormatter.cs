@@ -7,6 +7,10 @@ public static class HpDiagnosticDashboardFormatter
     public const string RawFanLevelWarning = "Raw values are not RPM or percent.";
     public const string FanControlStatus = "Blocked - " + HpDiagnosticStatusText.FanControlNotImplemented;
     public const string SetFanMaxStatus = HpDiagnosticStatusText.SetFanMaxNoGo;
+    public const string SetFanMaxReadinessStatus = "NO-GO";
+    public const string SetFanMaxInputLengthUnset = "Unset / not validated";
+    public const string SetFanMaxPayloadLengthNotSelected = "Not selected";
+    public const string SetFanMaxEvidenceMissing = "Missing / not proven";
 
     public static HpDiagnosticDashboardHealthSummary BuildHealthSummary(HpDiagnosticDashboardInput input)
     {
@@ -76,6 +80,22 @@ public static class HpDiagnosticDashboardFormatter
                 Row("Fan 2 raw level byte", input.Fan2RawLevel),
                 Row("Raw level data", RawFanLevelWarning)
             ]),
+            new("SetFanMax evidence readiness",
+            [
+                Row("Current status", SetFanMaxReadinessStatus),
+                Row("Fan write implemented", FormatEvidenceWriteImplemented(input.SetFanMaxWriteImplemented)),
+                Row("Fan write allowed", FormatEvidenceWriteAllowed(input.SetFanMaxWriteAllowed)),
+                Row("DeviceValidatedInputLength", FormatDeviceValidatedInputLength(input.SetFanMaxDeviceValidatedInputLength)),
+                Row("Payload length decision", SetFanMaxPayloadLengthNotSelected),
+                Row("Exact device payload length", SetFanMaxEvidenceMissing),
+                Row("Restore/disable behavior proof", SetFanMaxEvidenceMissing),
+                Row("Thermal observation proof", SetFanMaxEvidenceMissing),
+                Row("AC/battery/power-state proof", SetFanMaxEvidenceMissing),
+                Row("Failure/recovery proof", SetFanMaxEvidenceMissing),
+                Row("Human approval checkpoint", SetFanMaxEvidenceMissing),
+                Row("Report blocked reason", input.SetFanMaxBlockedReason),
+                Row("Report next required proof", input.SetFanMaxNextRequiredProof)
+            ]),
             new("Safety / NO-GO status",
             [
                 Row("Fan control", FanControlStatus),
@@ -125,6 +145,29 @@ public static class HpDiagnosticDashboardFormatter
         _ => NotAvailable
     };
 
+    public static string FormatDeviceValidatedInputLength(string? value)
+    {
+        return int.TryParse(value, out int length) && length is 1 or 4
+            ? length + (length == 1 ? " byte reported; not approved" : " bytes reported; not approved")
+            : SetFanMaxInputLengthUnset;
+    }
+
+    private static string FormatEvidenceWriteImplemented(string? value)
+    {
+        return string.Equals(value, "Implemented", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
+            ? "Blocked - unexpected implemented state"
+            : "False - not implemented";
+    }
+
+    private static string FormatEvidenceWriteAllowed(string? value)
+    {
+        return string.Equals(value, "Allowed", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
+            ? "Blocked - unexpected allowed state"
+            : "False - blocked";
+    }
+
     public static string FormatReportSchemaVersion(string? value)
     {
         return int.TryParse(value, out int version) && version > 0
@@ -169,7 +212,11 @@ public static class HpDiagnosticDashboardFormatter
         }
 
         if (value.StartsWith("Blocked", StringComparison.OrdinalIgnoreCase) ||
-            value.StartsWith("NO-GO", StringComparison.OrdinalIgnoreCase))
+            value.StartsWith("NO-GO", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("False - blocked", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Missing", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Unset", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Not selected", StringComparison.OrdinalIgnoreCase))
         {
             return HpDiagnosticDashboardStatus.Blocked;
         }

@@ -74,6 +74,46 @@ public sealed class HpDiagnosticDashboardFormatterTests
     }
 
     [Fact]
+    public void SetFanMaxEvidenceReadiness_DefaultsFailClosed()
+    {
+        IReadOnlyList<HpDiagnosticDashboardSection> sections = HpDiagnosticDashboardFormatter.BuildSections(new());
+
+        HpDiagnosticDashboardSection readiness = Assert.Single(sections, section => section.Title == "SetFanMax evidence readiness");
+        Assert.Contains(readiness.Rows, row => row.Label == "Current status" && row.Value == "NO-GO" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "Fan write implemented" && row.Value == "False - not implemented");
+        Assert.Contains(readiness.Rows, row => row.Label == "Fan write allowed" && row.Value == "False - blocked" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "DeviceValidatedInputLength" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "Payload length decision" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxPayloadLengthNotSelected && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        string[] missingEvidenceLabels =
+        [
+            "Exact device payload length",
+            "Restore/disable behavior proof",
+            "Thermal observation proof",
+            "AC/battery/power-state proof",
+            "Failure/recovery proof",
+            "Human approval checkpoint"
+        ];
+        Assert.All(
+            missingEvidenceLabels,
+            label => Assert.Contains(readiness.Rows, row => row.Label == label && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxEvidenceMissing && row.Status == HpDiagnosticDashboardStatus.Blocked));
+    }
+
+    [Theory]
+    [InlineData("1", "1 byte reported; not approved")]
+    [InlineData("4", "4 bytes reported; not approved")]
+    [InlineData("2", HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset)]
+    [InlineData(null, HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset)]
+    public void SetFanMaxEvidenceReadiness_NeverTreatsReportedLengthAsApproval(string? value, string expected)
+    {
+        Assert.Equal(expected, HpDiagnosticDashboardFormatter.FormatDeviceValidatedInputLength(value));
+
+        HpDiagnosticDashboardSection readiness = Assert.Single(
+            HpDiagnosticDashboardFormatter.BuildSections(new() { SetFanMaxDeviceValidatedInputLength = value }),
+            section => section.Title == "SetFanMax evidence readiness");
+        Assert.Contains(readiness.Rows, row => row.Label == "Payload length decision" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxPayloadLengthNotSelected);
+    }
+
+    [Fact]
     public void HealthSummary_AllCachedDataAvailable_IsReadyExceptFanControlNoGo()
     {
         HpDiagnosticDashboardHealthSummary summary = HpDiagnosticDashboardFormatter.BuildHealthSummary(new()
@@ -152,6 +192,9 @@ public sealed class HpDiagnosticDashboardFormatterTests
         Assert.Contains(HpDiagnosticStatusText.NormalHpModeDoesNotRunExplicitProbes, summary, StringComparison.Ordinal);
         Assert.Contains(HpDiagnosticStatusText.FanControlNotImplemented, summary, StringComparison.Ordinal);
         Assert.Contains(HpDiagnosticStatusText.SetFanMaxNoGo, summary, StringComparison.Ordinal);
+        Assert.Contains("Current status: NO-GO", summary, StringComparison.Ordinal);
+        Assert.Contains("DeviceValidatedInputLength: " + HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset, summary, StringComparison.Ordinal);
+        Assert.Contains("Failure/recovery proof: " + HpDiagnosticDashboardFormatter.SetFanMaxEvidenceMissing, summary, StringComparison.Ordinal);
     }
 
     [Fact]

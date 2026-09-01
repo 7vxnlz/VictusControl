@@ -50,6 +50,7 @@ public sealed record HpDiagnosticDashboardInput
     public string? Fan2RawLevel { get; init; }
     public string? SetFanMaxWriteImplemented { get; init; }
     public string? SetFanMaxWriteAllowed { get; init; }
+    public string? SetFanMaxDeviceValidatedInputLength { get; init; }
     public string? SetFanMaxBlockedReason { get; init; }
     public string? SetFanMaxNextRequiredProof { get; init; }
 }
