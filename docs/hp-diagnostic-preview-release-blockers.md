@@ -33,7 +33,7 @@ The future ZIP/installer must include applicable license text, upstream G-Helper
 
 ## Icon/App Identity Blocker
 
-Use [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md). The inherited icon remains a release blocker until an original or properly licensed VictusX icon is added and verified for executable properties, Explorer, shortcuts, tray, and window display.
+Use [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) and [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md). The inherited icon remains a release blocker until an original or properly licensed VictusX icon is added and verified for executable properties, Explorer, shortcuts, tray, and window display.
 
 Default ASUS/G-Helper behavior and shared resources must not be broken while preparing HP diagnostic preview identity.
 
@@ -65,7 +65,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - Confirmed absence of `--hp-wmi-readonly-test` and future write/control flags.
 - Build and test results from the release candidate source.
 - Dependency and notice review result.
-- Icon/app identity verification result.
+- Icon/app identity verification result against the asset acceptance checklist.
 - SHA-256 checksum and signing status.
 - Clean-machine validation record.
 - Report showing explicit read-only invocations remain `Attempted=false` during normal HP diagnostic mode.

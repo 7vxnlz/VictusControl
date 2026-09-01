@@ -11,6 +11,7 @@
 
 - `favicon.ico` is still the inherited blue G icon, so Explorer, shortcuts, and executable properties do not present distinct VictusX branding.
 - [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) maps the separate executable, tray, window, and shared-resource paths; no asset replacement has occurred.
+- [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) defines the ownership, format, accessibility, and acceptance checklist required before any icon asset is created or replaced.
 - The project now supplies explicit VictusX product, description, company/authors, copyright, assembly, file, and informational version metadata. A future packaged smoke test must still confirm the final executable properties match those values.
 - G-Helper and ASUS strings/resources remain in the binary. HP shell isolation hides inherited control/update surfaces, but packaging must not imply that those features support HP hardware.
 - GPLv3 is present, but a preview package still needs clear source, attribution, modified-project, and third-party notice handling.
@@ -65,6 +66,7 @@ Keep the explicit VictusX metadata aligned with the future artifact version, the
 
 See [Third-Party Notices Audit](third-party-notices-audit.md) for the source-attribution and package-notice distribution gate.
 See [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) for the future HP-preview-only visual identity work.
+See [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) for the icon acceptance gate before replacing inherited visual assets.
 See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the future portable-preview acceptance procedure.
 See [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) for the consolidated release blocker checklist.
 

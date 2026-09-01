@@ -19,6 +19,8 @@
 
 ## New Icon Requirements
 
+See [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) for the detailed ownership, format, accessibility, and acceptance checklist before any asset is created or replaced.
+
 - Original or explicitly licensed for VictusX distribution, with documented provenance and terms.
 - No G-Helper blue G mark, ASUS/ROG/Armoury imagery, HP, OMEN, Victus, or Windows trademarks unless permission is established.
 - Legible at Windows tray and Explorer sizes; supply a multi-resolution `.ico` suitable for 16, 20, 24, 32, 40, 48, and 256 pixel use where the source design supports those sizes.
@@ -42,7 +44,7 @@
 
 ## Preview Release Status
 
-The inherited executable and tray identity remain a release blocker. Replacement is not sufficient by itself: dependency notice review, signing/checksums, and clean-machine packaged validation must also pass. No image, icon, or binary asset changed as part of this plan.
+The inherited executable and tray identity remain a release blocker. Replacement must satisfy the asset requirements checklist before integration. Replacement is not sufficient by itself: dependency notice review, signing/checksums, and clean-machine packaged validation must also pass. No image, icon, or binary asset changed as part of this plan.
 
 ## Recommended Next Safe Task
 
