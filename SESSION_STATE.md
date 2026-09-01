@@ -36,9 +36,10 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest fallback note: old/missing SetFanMax first-write gate report fields fail closed with explicit old-report wording.
 - Latest test coverage note: SetFanMax gate fail-closed test coverage checkpoint added.
 - Latest export note: SetFanMax manual evidence capture template added to diagnostic Markdown exports; no write path added.
+- Latest review note: SetFanMax manual evidence review workflow added; fan writes remain NO-GO.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP diagnostics read-only while exposing a manual SetFanMax evidence capture template in exports
-- Last completed work: added SetFanMax manual evidence capture template to diagnostic exports
+- Current objective: keep HP diagnostics read-only while defining SetFanMax manual evidence review
+- Last completed work: added SetFanMax manual evidence review workflow
 - Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 112/112 tests passed on 2026-09-01
 - Open questions: none for documentation handoff

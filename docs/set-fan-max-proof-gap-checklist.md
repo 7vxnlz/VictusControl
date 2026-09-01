@@ -57,4 +57,6 @@ Supporting detail: [payload-length final audit](set-fan-max-payload-length-final
 
 Use the [manual evidence capture package](set-fan-max-manual-evidence-capture.md) to record and review any independently obtained exact-device evidence. Completing the template does not authorize implementation or execution.
 
+Use the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md) to apply the required review order and fail-closed rules before this checklist or the first-write decision gate could ever be updated.
+
 The HP Diagnostic dashboard's read-only SetFanMax readiness panel is audited in [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md); it reports these gaps only and does not enable writes. The consolidated implementation threshold is the [first-write decision gate](set-fan-max-first-write-decision-gate.md), which remains NO-GO.

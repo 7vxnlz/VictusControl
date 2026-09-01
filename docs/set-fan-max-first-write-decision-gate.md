@@ -33,3 +33,5 @@ The cached HP diagnostic report and dashboard expose this decision as `SetFanMax
 Older cached reports that lack these fields must also display `NO-GO` / not satisfied with an explicit old-report missing-field reason. Cached optimistic values such as `GO` or `true` are treated as invalid for authorization and remain blocked.
 
 Test coverage for these fail-closed dashboard, report, and copy/export summary paths is tracked in [set-fan-max-gate-test-coverage-checkpoint.md](set-fan-max-gate-test-coverage-checkpoint.md).
+
+Any manually completed export must first pass the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md). Only a cited update of this gate and the proof gap checklist can change the current NO-GO decision.
