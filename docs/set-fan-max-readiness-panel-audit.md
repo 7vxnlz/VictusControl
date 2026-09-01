@@ -39,6 +39,8 @@ Old cached reports that do not contain the first-write gate fields fail closed a
 
 Copy summary and export use `HpDiagnosticDashboardFormatter.BuildSummary()` over the same read-only rows shown in the dashboard. They include the SetFanMax readiness rows and do not include raw binary dumps or write instructions.
 
+The current pure test coverage for dashboard rows, old report fallbacks, optimistic cached values, and the shared copy/export summary path is summarized in [set-fan-max-gate-test-coverage-checkpoint.md](set-fan-max-gate-test-coverage-checkpoint.md).
+
 ## Read-Only Safety
 
 The panel is rendered by formatter/model helpers and WinForms labels. It adds no write buttons, sliders, toggles, fan-speed controls, SetFanMax execution path, payload creation, or WMI invocation path. Existing safe actions remain local-only: copy summary, reload cached report, open diagnostic folder, and export diagnostic report.

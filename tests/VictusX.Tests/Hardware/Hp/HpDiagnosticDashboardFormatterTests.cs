@@ -264,6 +264,21 @@ public sealed class HpDiagnosticDashboardFormatterTests
     }
 
     [Fact]
+    public void Summary_BlocksOptimisticCachedFirstWriteGateValues()
+    {
+        string summary = HpDiagnosticDashboardFormatter.BuildSummary(new()
+        {
+            SetFanMaxFirstWriteGateStatus = "GO",
+            SetFanMaxFirstWriteGateSatisfied = "True",
+            SetFanMaxFirstWriteGateReason = "Approved"
+        });
+
+        Assert.Contains("First-write gate status: Blocked - unexpected GO state", summary, StringComparison.Ordinal);
+        Assert.Contains("First-write gate satisfied: Blocked - unexpected satisfied state", summary, StringComparison.Ordinal);
+        Assert.Contains("First-write gate reason: " + HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateUnexpectedReportReason, summary, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void HealthSummary_KeepsSetFanMaxNoGoWording()
     {
         string text = HpDiagnosticDashboardFormatter.FormatHealthSummary(

@@ -31,3 +31,5 @@ The gate is currently **not satisfied**. No write code, payload selection, or ha
 The cached HP diagnostic report and dashboard expose this decision as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and a fail-closed reason. These fields are diagnostic-only and cannot authorize or execute a write.
 
 Older cached reports that lack these fields must also display `NO-GO` / not satisfied with an explicit old-report missing-field reason. Cached optimistic values such as `GO` or `true` are treated as invalid for authorization and remain blocked.
+
+Test coverage for these fail-closed dashboard, report, and copy/export summary paths is tracked in [set-fan-max-gate-test-coverage-checkpoint.md](set-fan-max-gate-test-coverage-checkpoint.md).
