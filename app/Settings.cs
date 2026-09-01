@@ -1156,7 +1156,7 @@ namespace GHelper
 
         private void SettingsForm_VisibleChanged(object? sender, EventArgs e)
         {
-            sensorTimer.Enabled = this.Visible || sensorsAlways;
+            sensorTimer.Enabled = !AppConfig.IsHpVictusHardwareMode() && (this.Visible || sensorsAlways);
             if (this.Visible && !AppConfig.IsHpVictusHardwareMode())
             {
                 Task.Run((Action)RefreshPeripheralsBattery);
@@ -1475,6 +1475,8 @@ namespace GHelper
 
         private static void OnTimedEvent(Object? source, ElapsedEventArgs? e)
         {
+            if (AppConfig.IsHpVictusHardwareMode()) return;
+
             Program.settingsForm.RefreshSensors();
         }
 
@@ -2138,6 +2140,8 @@ namespace GHelper
 
         public async void RefreshSensors(bool force = false)
         {
+            if (AppConfig.IsHpVictusHardwareMode()) return;
+
             int throttle = (!Visible && sensorsAlways) ? 6000 : 2000;
             if (!force && Math.Abs(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastRefresh) < throttle) return;
             lastRefresh = DateTimeOffset.Now.ToUnixTimeMilliseconds();
