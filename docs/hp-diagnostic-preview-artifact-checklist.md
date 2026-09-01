@@ -25,6 +25,10 @@
 - Produce and verify a SHA-256 checksum. Add timestamped Authenticode signing when a verified publisher identity is available.
 - Exclude logs, raw device captures, machine-specific paths, and symbols from distribution.
 
+## Repository Safety Checks
+
+`HpDiagnosticPreviewConfigurationTests` reads only the launcher's and publish profile's source text. It verifies that the launcher supplies `--hp-victus`, neither source file contains `--hp-wmi-readonly-test`, and the profile opts out of the inherited ZIP-on-publish target. The tests do not execute the launcher or invoke `dotnet publish`.
+
 ## Release Status
 
 Release remains blocked. No fan or performance control, fan writes, or hardware-control support is included or claimed. SetFanMax remains NO-GO/design-only.
