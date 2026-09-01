@@ -40,6 +40,15 @@ public sealed class HpDiagnosticPreviewConfigurationTests
         Assert.Contains("'$(SkipLegacySingleExeZip)'!='true'", project, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void SettingsUi_HasNoSetFanMaxExperimentRoute()
+    {
+        string settings = ReadRepositoryFile("app", "Settings.cs");
+
+        Assert.DoesNotContain("HpFanMaxExperiment", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("--hp-fan-write-experiment", settings, StringComparison.Ordinal);
+    }
+
     private static string ReadRepositoryFile(params string[] segments)
     {
         string repositoryRoot = FindRepositoryRoot();

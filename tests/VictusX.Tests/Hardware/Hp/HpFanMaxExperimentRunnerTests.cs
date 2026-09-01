@@ -38,14 +38,43 @@ public sealed class HpFanMaxExperimentRunnerTests
     [Theory]
     [InlineData("1", "01", "00")]
     [InlineData("4", "01-00-00-00", "00-00-00-00")]
-    public void Parse_ValidFlags_MapsOnlyMatchingPayloadPair(string length, string enable, string restore)
+    public void Parse_PayloadHypotheses_MapOnlyMatchingPayloadPair(string length, string enable, string restore)
     {
-        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments(length));
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments(length, includeFourByteApproval: length == "4"));
 
         HpFanMaxExperimentPayload payload = Assert.IsType<HpFanMaxExperimentPayload>(result.Payload);
         Assert.True(result.IsValidRequest);
         Assert.Equal(enable, payload.EnableBytesHex);
         Assert.Equal(restore, payload.RestoreBytesHex);
+    }
+
+    [Fact]
+    public void Parse_FourByteWithoutOneTimeApproval_FailsClosedWithExactReason()
+    {
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments("4"));
+
+        Assert.False(result.IsValidRequest);
+        Assert.Contains(result.ValidationReasons, reason => reason.Contains(HpFanMaxExperimentRunnerCommand.OneTimeFourByteApprovalFlag, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Run_ApprovedFourByteCommand_PassesTheHumanApprovalGateInTestDouble()
+    {
+        var transport = new RecordingTransport();
+        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(ValidCommand("4"), ApprovedGates());
+
+        Assert.Equal(HpFanMaxExperimentOutcome.Pass, result.Outcome);
+        Assert.Equal(["01-00-00-00", "00-00-00-00"], transport.Payloads);
+        Assert.Null(HpFanMaxExperimentRunLogMapper.Create(result).DeviceValidatedInputLength);
+    }
+
+    [Fact]
+    public void Parse_OneByteWithFourByteApproval_FailsClosed()
+    {
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments("1", includeFourByteApproval: true));
+
+        Assert.False(result.IsValidRequest);
+        Assert.Contains(result.ValidationReasons, reason => reason.Contains("4-byte hypothesis only", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -88,10 +117,10 @@ public sealed class HpFanMaxExperimentRunnerTests
     public void Run_ApprovedTestDouble_UsesOnlySelectedPayloadAndMatchingRestore()
     {
         var transport = new RecordingTransport();
-        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(ValidCommand("1"), ApprovedGates());
+        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(ValidCommand("4"), ApprovedGates());
 
         Assert.Equal(HpFanMaxExperimentOutcome.Pass, result.Outcome);
-        Assert.Equal(["01", "00"], transport.Payloads);
+        Assert.Equal(["01-00-00-00", "00-00-00-00"], transport.Payloads);
         Assert.True(result.EnableWrite.Attempted);
         Assert.True(result.RestoreWrite.Attempted);
     }
@@ -146,16 +175,26 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     private static HpFanMaxExperimentRunnerCommandResult ValidCommand(string length) =>
-        HpFanMaxExperimentRunnerCommand.Parse(ValidArguments(length));
+        HpFanMaxExperimentRunnerCommand.Parse(ValidArguments(length, includeFourByteApproval: length == "4"));
 
-    private static string[] ValidArguments(string length) =>
-    [
+    private static string[] ValidArguments(string length, bool includeFourByteApproval = false)
+    {
+        var arguments = new List<string>
+        {
         "--hp-victus",
         "--hp-wmi-readonly-test",
         "--hp-fan-write-experiment",
         "--set-fan-max-payload-length=" + length,
         "--i-understand-this-can-affect-fans"
-    ];
+        };
+
+        if (includeFourByteApproval)
+        {
+            arguments.Add(HpFanMaxExperimentRunnerCommand.OneTimeFourByteApprovalFlag);
+        }
+
+        return arguments.ToArray();
+    }
 
     private static HpFanMaxExperimentRuntimeGates ApprovedGates() => new(true, true, true, true);
 

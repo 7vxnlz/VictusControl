@@ -51,6 +51,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest first-write runner note: developer-only first-write runner design added; it remains documentation-only with implementation and execution NO-GO.
 - Latest first-write runner implementation note: developer-only SetFanMax runner added behind required flags, exact identity, elevation, AC, baseline, and separate false approval gates; it was not run and remains NO-GO.
 - Latest first-write runner audit note: source audit hardened transport-exception restore handling; runner remains command-line-only, unexecuted, and NO-GO.
+- Latest four-byte approval note: one explicit developer-only four-byte experiment approval flag added; normal fan-write readiness and UI remain NO-GO, payload length remains unvalidated.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

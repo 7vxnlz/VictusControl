@@ -118,8 +118,8 @@ namespace GHelper
                 var gates = new HpFanMaxExperimentRuntimeGates(
                     ProcessHelper.IsUserAdministrator(),
                     new HpFanMaxExperimentAcPowerProvider().IsAcPowerOnline(),
-                    IsFirstWriteGateApproved: false,
-                    HasReviewedHumanApproval: false);
+                    IsFirstWriteGateApproved: command.HasOneTimeFourByteApproval,
+                    HasReviewedHumanApproval: command.HasOneTimeFourByteApproval);
                 result = runner.Run(command, gates);
             }
 

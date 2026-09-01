@@ -49,7 +49,7 @@ Until every item is proven, all fan writes remain **NO-GO**.
 
 ## 8. Recommended Next Safe Task
 
-The [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md) now has a developer-only, command-line-only implementation, but its current approval wiring remains fail-closed and it must not be run. Continue evidence review only: obtain independently reviewable exact-device payload, readback, restore, thermal/power, recovery, and approval proof. If it remains incomplete, retain the current read-only implementation with every fan write blocked.
+The [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md) now has a developer-only, command-line-only implementation. Its explicit four-byte-only approval flag does not select the payload, change `DeviceValidatedInputLength`, or enable normal control. Do not run it until separately authorized; continue evidence review for exact-device payload, readback, restore, thermal/power, recovery, and approval proof.
 
 Supporting decisions: [SetFanMax payload-length final audit](set-fan-max-payload-length-final-audit.md), [SetFanMode and SetFanLevel risk study](set-fan-mode-level-risk-study.md), and [missing-proof tracker](set-fan-max-missing-proof-tracker.md).
 

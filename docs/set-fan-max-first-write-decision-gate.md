@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**NO-GO.** This gate is not satisfied. The developer-only runner is implemented but its current application wiring supplies false approval values, so it cannot pass the gate or invoke a write. `DeviceValidatedInputLength` is unset, and no execution is authorized until this document is updated to **GO** with cited evidence.
+**NO-GO for normal fan-write readiness and UI.** `DeviceValidatedInputLength` is unset. The developer-only runner accepts one additional, explicitly acknowledged four-byte experiment scope, but that narrow route does not validate a payload, change this decision for normal use, or authorize a fan-control UI.
 
 ## Known Evidence
 
@@ -43,6 +43,6 @@ The focused [payload-length reference decision](set-fan-max-payload-length-refer
 
 The proposed [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) defines the evidence record. The runner implementation follows the same append-only format but does not alter any GO condition.
 
-The dry-run and baseline commands remain write-disabled. The separate first-write runner maps `WriteExecuted=true` only after an actual selected SetFanMax attempt, but current false approval wiring blocks before that transport boundary. It cannot validate an input length, select a payload, or cross this gate.
+The dry-run and baseline commands remain write-disabled. The separate first-write runner maps `WriteExecuted=true` only after an actual selected SetFanMax attempt. Its four-byte-only approval flag is limited to one developer experiment scope; it cannot validate an input length, select a payload, or cross this gate for normal use.
 
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) confirms the implementation remains command-line-only and current-gate blocked; it does not change this NO-GO decision.

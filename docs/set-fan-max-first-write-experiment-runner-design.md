@@ -2,7 +2,7 @@
 
 ## Status
 
-The developer-only runner is implemented, but the first-write gate remains **NO-GO**. The application supplies `IsFirstWriteGateApproved=false` and `HasReviewedHumanApproval=false`, so every current invocation stops after any permitted read-only baseline and writes a blocked log. `DeviceValidatedInputLength` is unset and neither payload length is validated. The implementation does not authorize execution.
+The developer-only runner is implemented. Normal fan write readiness remains **NO-GO**, but a narrowly scoped command-line approval can satisfy the runner's human-approval gate for one reviewed four-byte experiment only. It neither validates the payload length nor changes `DeviceValidatedInputLength`, which remains unset. There is no UI or tray route.
 
 ## Proven Baseline
 
@@ -26,8 +26,9 @@ The future runner would require all of these flags:
 - `--hp-fan-write-experiment`
 - `--set-fan-max-payload-length=1` or `=4`
 - `--i-understand-this-can-affect-fans`
+- `--i-approve-one-time-set-fan-max-4-byte-experiment` when, and only when, the selected hypothesis is `=4`
 
-It also requires a separately reviewed first-write gate explicitly changed to GO, exact model/SKU/BIOS match, an elevated Administrator process, confirmed AC power, explicit human approval, and a same-session successful baseline. AC is checked through the local Windows power-line status API and unknown/offline power fails closed. That baseline must include all approved read-only probes, `FanGetCount=2`, `FanMaxGet=false`, and recorded raw FanGetLevel values. Any mismatch, unavailable reading, or missing approval blocks the run before a write.
+The four-byte approval flag is limited to this one developer-only experiment scope. It is rejected for `=1`; it does not create a fallback or select a payload. The runner still requires exact model/SKU/BIOS match, an elevated Administrator process, confirmed AC power, and a same-session successful baseline. AC is checked through the local Windows power-line status API and unknown/offline power fails closed. That baseline must include all approved read-only probes, `FanGetCount=2`, `FanMaxGet=false`, and recorded raw FanGetLevel values. Any mismatch, unavailable reading, or missing approval blocks the run before a write.
 
 ## Future Run Sequence
 
@@ -66,7 +67,7 @@ Only an independently reviewed exact-device record may support a later decision.
 
 ## Current Implementation Boundary
 
-The command-line runner has no UI or tray route, never retries, and never falls back between payload lengths. It creates a blocked append-only record when a command or runtime gate fails. While the application hard-codes the documented approval gates as false, it cannot reach `hpqBIOSInt0` for a write.
+The command-line runner has no UI or tray route, never retries, and never falls back between payload lengths. It creates a blocked append-only record when a command or runtime gate fails. The new approval flag is the only route that can satisfy the runner's first-write/human-approval values, and only for the four-byte hypothesis.
 
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verified these boundaries and hardened the exception path so a managed enable-transport failure still reaches the matching one-time restore attempt.
 

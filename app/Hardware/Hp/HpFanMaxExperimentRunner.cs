@@ -77,6 +77,15 @@ public sealed class HpFanMaxExperimentRunner(
             return Blocked(command.Payload, null, false, command.ValidationReasons);
         }
 
+        if (command.Payload.Candidate != HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis || !command.HasOneTimeFourByteApproval)
+        {
+            return Blocked(
+                command.Payload,
+                null,
+                false,
+                ["Only the explicitly approved 4-byte SetFanMax experiment may cross the first-write approval gate."]);
+        }
+
         List<string> earlyFailures = [];
         if (!gates.IsAdministrator)
         {
