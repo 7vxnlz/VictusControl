@@ -63,3 +63,5 @@ Defer automatic updates, startup registration, a production installer/store pack
 ## Recommended Next Safe Task
 
 Design the dedicated HP diagnostic publish profile and preview artifact contract as documentation and MSBuild metadata only; do not publish binaries yet.
+
+See [HP Diagnostic Publish Profile Design](hp-diagnostic-publish-profile-design.md) for the proposed artifact name, dedicated launcher contract, deployment choice, and fail-closed pre-release checklist.

@@ -13,10 +13,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest evidence note: HP diagnostic shell regression audit added; shell remains diagnostic-only.
 - Latest launch note: HP diagnostic launch profile and run guide added.
 - Latest packaging note: Windows packaging readiness audit added for HP diagnostic mode.
+- Latest publish design note: HP diagnostic publish profile design added; no binaries published.
 - Branch: `main` tracking `origin/main`
 - Current objective: maintain safe handoff state and next-step checkpoint
-- Last completed work: audited Windows packaging readiness for HP diagnostic mode
-- Files touched recently: `docs/windows-packaging-readiness-audit.md`, `SESSION_STATE.md`
+- Last completed work: designed the HP diagnostic publish profile and artifact contract without publishing
+- Files touched recently: `docs/hp-diagnostic-publish-profile-design.md`, `docs/windows-packaging-readiness-audit.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 2 NU1900 audit-source warnings; 98/98 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
