@@ -27,7 +27,7 @@ No binaries or release artifacts should be published from the current state.
 
 ## Package-License/Notice Review Blocker
 
-Use [Third-Party Notices Audit](third-party-notices-audit.md) and [Dependency Notice Inventory](dependency-notice-inventory.md) as the current source material. The blocker remains open until direct and transitive package notices are reviewed against authoritative package metadata and matched to final package contents.
+Use [Third-Party Notices Audit](third-party-notices-audit.md), [Dependency Notice Inventory](dependency-notice-inventory.md), and [Package License Review Workflow](package-license-review-workflow.md) as the current source material. The blocker remains open until direct and transitive package notices are reviewed against authoritative package metadata and matched to final package contents.
 
 The future ZIP/installer must include applicable license text, upstream G-Helper modified-project attribution, and reviewed third-party notices.
 
@@ -64,7 +64,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - Confirmed launcher arguments: exactly `--hp-victus`.
 - Confirmed absence of `--hp-wmi-readonly-test` and future write/control flags.
 - Build and test results from the release candidate source.
-- Dependency and notice review result.
+- Dependency and notice review result following the package license review workflow.
 - Icon/app identity verification result against the asset acceptance checklist.
 - SHA-256 checksum and signing status.
 - Clean-machine validation record.

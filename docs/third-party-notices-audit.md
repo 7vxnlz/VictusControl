@@ -20,7 +20,7 @@ This is a repository-evidence checkpoint for a future HP diagnostic preview. It 
 | `NOTICE` / third-party inventory | Not found | Create and review a versioned third-party notice inventory before distribution. |
 | Package lock | Not found | Keep a clean-restore comparison step before packaging. |
 | Resolved dependency inventory | Locally restored assets were inspected | See [Dependency Notice Inventory](dependency-notice-inventory.md); repeat from a clean restore before packaging. |
-| Package license evidence | Not stored in the repository | Verify each package's license, notice, and redistribution requirements from its authoritative package metadata. |
+| Package license evidence | Not stored in the repository | Follow [Package License Review Workflow](package-license-review-workflow.md) and verify each package's license, notice, and redistribution requirements from authoritative package metadata. |
 
 ## NuGet Considerations
 
@@ -32,6 +32,7 @@ Before a ZIP or installer is created, the release review should include:
 
 - the applicable license text and a clear VictusX modified-from-G-Helper attribution;
 - a reviewed `THIRD-PARTY-NOTICES.md` (or equivalent package document) covering direct and resolved transitive dependencies;
+- a completed package license review record following [Package License Review Workflow](package-license-review-workflow.md);
 - a source location and source revision matching the preview artifact;
 - confirmation that no upstream notices were removed and that the package contents match the reviewed notice inventory;
 - review of the final artifact by a maintainer qualified to make the distribution decision.

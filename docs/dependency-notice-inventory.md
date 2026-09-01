@@ -46,6 +46,8 @@ The test project's three direct packages resolve ten additional test tooling pac
 
 ## Future Preview Package Gate
 
+Follow [Package License Review Workflow](package-license-review-workflow.md) before using this inventory for any preview release decision.
+
 Before a ZIP or installer is created, a maintainer should review authoritative package metadata for every application dependency above, record the applicable license and notice text in a versioned inventory, and confirm the final package contents against that inventory. The package should also include the applicable project license text and the G-Helper modified-project attribution described in [Third-Party Notices Audit](third-party-notices-audit.md).
 
 The test-only list should be reviewed separately if any test or developer tooling is distributed. A future clean restore should regenerate and compare the resolved application graph before the release decision.
@@ -56,4 +58,4 @@ This inventory does not establish any dependency's license, redistribution terms
 
 ## Recommended Next Safe Task
 
-Create a source-only `THIRD-PARTY-NOTICES.md` template with one entry per application dependency and fields for authoritative license URL, copied notice text, reviewer, and package-content confirmation. Do not populate legal conclusions from this inventory alone and do not publish.
+Create a source-only `THIRD-PARTY-NOTICES.md` template using the package license review workflow, with one entry per application dependency and fields for authoritative license URL, copied notice text, reviewer, and package-content confirmation. Do not populate legal conclusions from this inventory alone and do not publish.

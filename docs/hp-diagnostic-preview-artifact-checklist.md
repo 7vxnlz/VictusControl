@@ -22,6 +22,7 @@
 - Confirm the explicit VictusX version, product, publisher, and copyright metadata in the packaged executable; replace the inherited icon and add license and notice metadata.
 - Review the icon/app identity plan and [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md); use an original or licensed multi-resolution icon, preserve shared default-mode resources, and verify executable, tray, window, and shortcut rendering in the packaged HP preview.
 - Include the applicable license text, prominent G-Helper modified-project attribution, and a reviewed third-party notice inventory for resolved packages and dependencies.
+- Complete [Package License Review Workflow](package-license-review-workflow.md) for runtime direct and transitive dependencies before any package is distributed.
 - Review [Dependency Notice Inventory](dependency-notice-inventory.md) from a clean restore and reconcile it with final package contents before distribution.
 - Confirm the notice inventory against authoritative package metadata and the final package contents; do not treat this repository audit as legal advice.
 - Confirm the launcher is packaged under `tools` beside `VictusX.exe` and that its only application argument is `--hp-victus`.
