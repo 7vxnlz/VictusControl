@@ -56,3 +56,5 @@ Perform documentation-only collection and independent review of an existing sani
 Supporting detail: [payload-length final audit](set-fan-max-payload-length-final-audit.md), [recovery/restore proof plan](set-fan-max-recovery-restore-proof-plan.md), and [implementation gate](set-fan-max-implementation-go-no-go.md).
 
 Use the [manual evidence capture package](set-fan-max-manual-evidence-capture.md) to record and review any independently obtained exact-device evidence. Completing the template does not authorize implementation or execution.
+
+The HP Diagnostic dashboard's read-only SetFanMax readiness panel is audited in [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md); it reports these gaps only and does not enable writes.

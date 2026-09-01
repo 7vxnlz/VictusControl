@@ -81,3 +81,5 @@ After every required record is complete, an independent reviewer must record the
 The package is complete only when every required field is traceable, internally consistent, independently reviewable, and accepted without inference. Until then, SetFanMax remains **NO-GO**, `DeviceValidatedInputLength` remains unset, and all fan write/control code and UI remain forbidden.
 
 Source-of-truth gaps are tracked in the [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md). The next safe task is documentation-only review of an existing sanitized exact-device evidence record; if none exists, stop and preserve the current read-only state.
+
+The [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md) confirms the HP Diagnostic dashboard displays this evidence state as read-only status only.
