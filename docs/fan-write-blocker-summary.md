@@ -13,7 +13,7 @@ These results prove diagnostic visibility only. They do not validate any write c
 
 ## 2. Why SetFanMax Is Blocked
 
-SetFanMax (`0x27`) remains blocked because its device-specific input length is unknown. References conflict between one-byte and four-byte payloads, and neither shape has an independently reviewable result for this exact `16-s0035nt`, SKU `7Z5Z2EA#AB8`, BIOS `F.31` device. Matching enable/disable behavior, `FanMaxGet` post-write verification, restore proof, and manual recovery proof are also missing.
+SetFanMax (`0x27`) remains blocked because its device-specific input length is unknown. A first exact-device four-byte attempt returned successful WMI calls and an observed fan ramp, but FanMaxGet remained false after enable and restore; see the [first four-byte result](set-fan-max-first-4byte-experiment-result.md). The result is partial evidence, not a validated payload or reliable state readback. Matching enable/disable behavior, restore proof, and manual recovery proof remain incomplete.
 
 `DeviceValidatedInputLength` therefore remains unset and SetFanMax remains **NO-GO**.
 
@@ -49,7 +49,7 @@ Until every item is proven, all fan writes remain **NO-GO**.
 
 ## 8. Recommended Next Safe Task
 
-The [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md) now has a developer-only, command-line-only implementation. Its explicit four-byte-only approval flag does not select the payload, change `DeviceValidatedInputLength`, or enable normal control. Do not run it until separately authorized; continue evidence review for exact-device payload, readback, restore, thermal/power, recovery, and approval proof.
+The [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md) now has a developer-only, command-line-only implementation. Its explicit four-byte-only approval flag does not select the payload, change `DeviceValidatedInputLength`, or enable normal control. The next safe task is a separately authorized controlled second four-byte confirmation design with stronger manual evidence, not a one-byte test or UI work.
 
 Supporting decisions: [SetFanMax payload-length final audit](set-fan-max-payload-length-final-audit.md), [SetFanMode and SetFanLevel risk study](set-fan-mode-level-risk-study.md), and [missing-proof tracker](set-fan-max-missing-proof-tracker.md).
 

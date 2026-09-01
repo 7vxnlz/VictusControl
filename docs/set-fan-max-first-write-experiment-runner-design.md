@@ -8,6 +8,8 @@ The developer-only runner is implemented. Normal fan write readiness remains **N
 
 The exact target is Victus by HP Gaming Laptop `16-s0xxx`, SKU `7Z5Z2EA#AB8`, BIOS `F.31`, thermal policy V1. Elevated read-only baselines report `FanGetCount=2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25`; `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and `FanGetLevel` all succeeded. See [exact-device baseline evidence](set-fan-max-exact-device-baseline-evidence.md).
 
+One manually reviewed four-byte attempt returned success for enable and restore and produced an observed fan ramp, but FanMaxGet stayed `false` and the runner correctly returned `Fail`. See the [first four-byte result](set-fan-max-first-4byte-experiment-result.md). It is not payload validation and establishes that future confirmation criteria cannot rely on FanMaxGet alone.
+
 ## Candidate Payloads
 
 | Hypothesis | Enable | Matching restore/off |
@@ -73,4 +75,4 @@ The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifi
 
 ## Recommended Next Step
 
-Obtain independent review of the baseline and the unresolved restore, thermal/power, recovery, rollback, and human-approval requirements. A separate evidence decision must change the documented gate before any execution is considered; until then, execution remains **NO-GO**.
+Plan a separately authorized controlled second four-byte confirmation only, with timestamped manual fan, thermal, AC/battery, UI, and event-log observations plus readback criteria beyond FanMaxGet. Do not test one byte, update `DeviceValidatedInputLength`, or expose normal control while the result remains partial.

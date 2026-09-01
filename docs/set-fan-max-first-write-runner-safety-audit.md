@@ -22,6 +22,8 @@ After an enable attempt, the runner waits once, captures FanMaxGet/raw FanGetLev
 
 The runner was not executed for this audit, and no WMI method was invoked. The payload length remains unselected, `DeviceValidatedInputLength` remains null, and normal fan control remains absent. The narrow approval flag does not change those facts or authorize a control UI.
 
+After this source audit, one manually reviewed four-byte experiment was performed separately. Its successful WMI returns and observed fan ramp are recorded as partial evidence in the [first four-byte result](set-fan-max-first-4byte-experiment-result.md); FanMaxGet did not confirm enabled state, so this audit's NO-GO conclusion for normal use remains unchanged.
+
 ## Recommended Next Safe Task
 
 Review any future exact-device evidence against the first-write decision gate; retain the runner unexecuted while the gate is **NO-GO**.

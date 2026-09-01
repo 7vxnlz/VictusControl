@@ -10,6 +10,7 @@
 - Read-only `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and raw-only `FanGetLevel` succeeded.
 - Two elevated exact-device baseline records captured the same state: fan count `2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25`; both kept `WriteExecuted=false` and `DeviceValidatedInputLength=null`.
 - References support `hpqBIOSInt0`, command `0x20008`, type `0x27`, enable byte `0x01`, and restore/disable byte `0x00`.
+- The first exact-device four-byte experiment returned success for enable and restore and produced an observed fan ramp, but post-enable/post-restore FanMaxGet remained `false`; see the [first four-byte result](set-fan-max-first-4byte-experiment-result.md).
 
 ## Required GO Evidence
 
@@ -46,3 +47,5 @@ The proposed [manual experiment logger design](set-fan-max-manual-experiment-log
 The dry-run and baseline commands remain write-disabled. The separate first-write runner maps `WriteExecuted=true` only after an actual selected SetFanMax attempt. Its four-byte-only approval flag is limited to one developer experiment scope; it cannot validate an input length, select a payload, or cross this gate for normal use.
 
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) confirms the implementation remains command-line-only and current-gate blocked; it does not change this NO-GO decision.
+
+The first four-byte result is partial success with inconclusive readback. It does not validate a payload, update `DeviceValidatedInputLength`, or permit one-byte testing or normal fan control.
