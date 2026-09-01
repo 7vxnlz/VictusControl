@@ -48,11 +48,13 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest baseline capture note: SetFanMax developer-only baseline capture is gated to elevation and the approved read-only probes; no write path was added.
 - Latest baseline verification note: runtime baseline capture was not run from Codex because the current process was not elevated; no WMI method was invoked.
 - Latest exact-device baseline note: manual elevated one-byte and four-byte hypothesis captures matched on F.31/V1, fan count 2, max fan disabled, and raw level `22-25`; no write occurred and payload length remains unset.
+- Latest first-write runner note: developer-only first-write runner design added; it remains documentation-only with implementation and execution NO-GO.
+- Latest first-write runner implementation note: developer-only SetFanMax runner added behind required flags, exact identity, elevation, AC, baseline, and separate false approval gates; it was not run and remains NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
-- Last completed work: documented matching exact-device read-only SetFanMax baseline evidence for both payload hypotheses
+- Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation
 - Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
-- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 137/137 tests passed on 2026-09-02 after documenting exact-device SetFanMax baseline evidence
+- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 137/137 tests passed on 2026-09-02 after documenting the SetFanMax first-write runner design
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
 - Reference commits reviewed: OmenXHub `ca84cb011d1d3e5850445d19e45fbea06e83a8fd`; OmenSuperHub `a6ab6988c446ee5421466097fdf60c0d521e5c81`; omencore `b39b44978902606aa708cc0d78bcfd87e95fd88b`; ghelper-omen `1694844d2725e79a2b2065a0a1494fa1d143e3f4`; G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; ECC `5eddf1a3ffd311423be2d4ba7d26f7209c91b033`

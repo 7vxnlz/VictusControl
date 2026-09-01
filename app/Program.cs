@@ -57,6 +57,11 @@ namespace GHelper
         // The main entry point for the application
         public static void Main(string[] args)
         {
+            if (TryRunHpFanMaxExperiment(args))
+            {
+                return;
+            }
+
             if (TryRunHpFanMaxExperimentBaselineCapture(args))
             {
                 return;
@@ -76,6 +81,59 @@ namespace GHelper
                 WriteStartupCrashLog(args, ex);
                 throw;
             }
+        }
+
+        private static bool TryRunHpFanMaxExperiment(string[] args)
+        {
+            HpFanMaxExperimentRunnerCommandResult command = HpFanMaxExperimentRunnerCommand.Parse(args);
+            if (!command.ShouldExit)
+            {
+                return false;
+            }
+
+            HpFanMaxExperimentRunResult result;
+            if (!command.IsValidRequest)
+            {
+                result = new HpFanMaxExperimentRunResult(
+                    command.Payload,
+                    null,
+                    false,
+                    HpFanMaxExperimentWriteResult.NotAttempted("Blocked by required command-line flags."),
+                    null,
+                    HpFanMaxExperimentWriteResult.NotAttempted("Blocked by required command-line flags."),
+                    null,
+                    HpFanMaxExperimentOutcome.Unknown,
+                    command.ValidationReasons);
+            }
+            else
+            {
+                AppConfig.SetHpVictusHardwareMode(true);
+                AppConfig.SetHpWmiReadOnlyTestMode(true);
+                AppConfig.SetUnsupportedHardwareMode(true);
+
+                var runner = new HpFanMaxExperimentRunner(
+                    new HpFanMaxExperimentReadOnlyProvider(),
+                    new HpFanMaxExperimentWmiTransport(),
+                    new HpFanMaxExperimentDelay());
+                var gates = new HpFanMaxExperimentRuntimeGates(
+                    ProcessHelper.IsUserAdministrator(),
+                    new HpFanMaxExperimentAcPowerProvider().IsAcPowerOnline(),
+                    IsFirstWriteGateApproved: false,
+                    HasReviewedHumanApproval: false);
+                result = runner.Run(command, gates);
+            }
+
+            try
+            {
+                string path = HpFanMaxExperimentLogWriter.Write(HpFanMaxExperimentRunLogMapper.Create(result));
+                Console.WriteLine("SetFanMax first-write experiment record written: " + path);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("SetFanMax first-write experiment record could not be written: " + ex.Message);
+            }
+
+            return true;
         }
 
         private static bool TryRunHpFanMaxExperimentBaselineCapture(string[] args)

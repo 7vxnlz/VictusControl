@@ -2,7 +2,7 @@
 
 ## Status and Purpose
 
-This is a design-only audit logger for one future, separately authorized developer experiment. Writes are disabled, SetFanMax is not enabled, `DeviceValidatedInputLength` is unset, and the current decision is **NO-GO**. The logger would record evidence around one bounded enable/restore attempt; it must not grant permission or run an experiment by itself.
+This is an append-only audit logger for one future, separately authorized developer experiment. The runner is command-line-only and current approval wiring remains blocked, so writes are not enabled, `DeviceValidatedInputLength` is unset, and the current decision is **NO-GO**. The logger records evidence around a bounded enable/restore attempt only if a later separately reviewed gate permits it; it cannot grant permission itself.
 
 ## Candidate Payloads and Order
 
@@ -64,6 +64,6 @@ Missing, conflicting, ambiguous, or untraceable logs are `unknown` and preserve 
 
 One reviewed record for this exact model/SKU/BIOS must identify exactly one length, payload and method; show pre-enable, post-enable, and post-restore readbacks; confirm restore to the captured disabled baseline; include AC/battery and thermal observations; document failure/recovery handling; and contain independent human approval. Even then, it would support only a separately authorized design update, not normal control UI.
 
-## Recommended Next Implementation Step
+## Current Runner Boundary
 
-Write-disabled logging and the gated read-only baseline capture are verified. The next safe step is a documentation-only runner specification based on the captured baseline. It must not select a payload, add execution code, or weaken the first-write gate; implementation remains **NO-GO** pending write/restore, thermal/power, recovery, rollback, and human-approval evidence.
+The [first-write experiment runner](set-fan-max-first-write-experiment-runner-design.md) now implements the future sequence behind all required flags, elevation, AC, exact identity, baseline, and separate approval gates. It selects no payload and does not weaken the first-write gate: current application wiring fails closed before any write transport is reached.

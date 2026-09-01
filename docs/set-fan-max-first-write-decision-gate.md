@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**NO-GO.** This gate is not satisfied. SetFanMax is not implemented or enabled, `DeviceValidatedInputLength` is unset, and VictusX must not add write code until this document is updated to **GO** with cited evidence.
+**NO-GO.** This gate is not satisfied. The developer-only runner is implemented but its current application wiring supplies false approval values, so it cannot pass the gate or invoke a write. `DeviceValidatedInputLength` is unset, and no execution is authorized until this document is updated to **GO** with cited evidence.
 
 ## Known Evidence
 
@@ -27,7 +27,7 @@ Any future implementation remains constrained to SetFanMax only, one bounded tar
 
 ## Decision
 
-The gate is currently **not satisfied**. No write code, payload selection, or hardware experiment may be added until this document is explicitly changed to **GO** with the required evidence. The next safe task may be a documentation-only first-write runner specification based on the [exact-device baseline](set-fan-max-exact-device-baseline-evidence.md); it must contain no execution path and must preserve every unresolved GO condition.
+The gate is currently **not satisfied**. No write code, payload selection, or hardware experiment may be added until this document is explicitly changed to **GO** with the required evidence. The [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md) now documents the future sequence only; it contains no execution path and preserves every unresolved GO condition.
 
 The cached HP diagnostic report and dashboard expose this decision as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and a fail-closed reason. These fields are diagnostic-only and cannot authorize or execute a write.
 
@@ -41,6 +41,6 @@ A future import parser may help identify missing or conflicting fields, but is n
 
 The focused [payload-length reference decision](set-fan-max-payload-length-reference-decision.md) found no consensus or exact-device proof. It does not select a length or change this gate's NO-GO state.
 
-The proposed [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) defines a future evidence record only. It does not enable writes or alter any GO condition.
+The proposed [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) defines the evidence record. The runner implementation follows the same append-only format but does not alter any GO condition.
 
-The write-disabled logger scaffold serializes supplied NO-GO records only; it cannot set `WriteExecuted`, validate an input length, or invoke a WMI method. Its developer-only dry-run command exits after a local blocked record and cannot cross this gate.
+The dry-run and baseline commands remain write-disabled. The separate first-write runner maps `WriteExecuted=true` only after an actual selected SetFanMax attempt, but current false approval wiring blocks before that transport boundary. It cannot validate an input length, select a payload, or cross this gate.

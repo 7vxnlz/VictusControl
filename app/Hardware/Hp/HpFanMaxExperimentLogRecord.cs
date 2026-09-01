@@ -44,7 +44,7 @@ public sealed record HpFanMaxExperimentLogRecord
     public HpFanMaxExperimentOutcome Outcome { get; init; } = HpFanMaxExperimentOutcome.Unknown;
     public string[] BlockedReasons { get; init; } = [];
 
-    public bool WriteExecuted => false;
+    public bool WriteExecuted { get; internal init; }
     public bool FirstWriteGateSatisfied => false;
     public int? DeviceValidatedInputLength => null;
 
@@ -60,7 +60,7 @@ public sealed record HpFanMaxExperimentLogRecord
             [
                 "SetFanMax first-write gate is NO-GO.",
                 "DeviceValidatedInputLength is unset.",
-                "Write execution is not implemented."
+                "No SetFanMax write was attempted for this record."
             ]
         };
     }

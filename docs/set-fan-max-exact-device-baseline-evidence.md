@@ -57,6 +57,8 @@ The captured baseline is two fans, max-fan mode disabled, and raw FanGetLevel pr
 
 This evidence is not enough to implement normal fan control UI and is not enough to implement or run a first-write runner. It is enough to refine a **documentation-only**, developer-only first-write runner design around the proven baseline and explicit remaining blockers. That design must select no payload length, contain no write path, and preserve **NO-GO** until the [first-write decision gate](set-fan-max-first-write-decision-gate.md) is changed with independently reviewed write/restore, thermal/power, recovery, and approval evidence.
 
+The exact state sequence and fail-closed boundaries are defined in the [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md). It is not an implementation or execution authorization.
+
 ## Recommended Next Step
 
-Create a documentation-only first-write runner specification that consumes the exact-device baseline, defines fail-closed state transitions and evidence fields, and leaves payload selection and all execution unimplemented.
+Keep the [first-write experiment runner design](set-fan-max-first-write-experiment-runner-design.md) documentation-only and obtain independent review of the remaining write, restore, thermal/power, recovery, rollback, and approval gaps.
