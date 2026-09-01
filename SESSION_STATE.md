@@ -24,10 +24,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest release blocker note: HP diagnostic preview release blocker checklist consolidated; release remains blocked.
 - Latest icon requirements note: VictusX icon asset requirements added; no assets changed.
 - Latest package license note: package license review workflow added; release remains blocked.
+- Latest signing note: signing/checksum workflow added; no artifacts signed or checksummed.
 - Branch: `main` tracking `origin/main`
 - Current objective: maintain safe handoff state and next-step checkpoint
-- Last completed work: created the package license review workflow for the HP diagnostic preview
-- Files touched recently: `docs/package-license-review-workflow.md`, `docs/dependency-notice-inventory.md`, `docs/third-party-notices-audit.md`, `docs/hp-diagnostic-preview-release-blockers.md`, `docs/hp-diagnostic-preview-artifact-checklist.md`, `SESSION_STATE.md`
+- Last completed work: created the signing/checksum workflow for the HP diagnostic preview
+- Files touched recently: `docs/signing-checksum-workflow.md`, `docs/hp-diagnostic-preview-release-blockers.md`, `docs/hp-diagnostic-preview-artifact-checklist.md`, `docs/windows-packaging-readiness-audit.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 2 NU1900 audit-source warnings; 101/101 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested

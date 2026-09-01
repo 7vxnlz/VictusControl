@@ -39,7 +39,7 @@ Default ASUS/G-Helper behavior and shared resources must not be broken while pre
 
 ## Signing/Checksum Blocker
 
-A preview package needs at least a verified SHA-256 checksum. Authenticode signing should be added when a verified publisher identity is available. The checksum/signing process must be repeatable and must apply to the final package actually tested.
+A preview package needs at least a verified SHA-256 checksum. Authenticode signing should be added when a verified publisher identity is available. Follow [Signing and Checksum Workflow](signing-checksum-workflow.md); the checksum/signing process must be repeatable and must apply to the final package actually tested.
 
 ## Clean-Machine Validation Blocker
 
@@ -66,7 +66,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - Build and test results from the release candidate source.
 - Dependency and notice review result following the package license review workflow.
 - Icon/app identity verification result against the asset acceptance checklist.
-- SHA-256 checksum and signing status.
+- SHA-256 checksum and signing status following the signing/checksum workflow.
 - Clean-machine validation record.
 - Report showing explicit read-only invocations remain `Attempted=false` during normal HP diagnostic mode.
 - Manual confirmation that no fan/performance/write UI is present.

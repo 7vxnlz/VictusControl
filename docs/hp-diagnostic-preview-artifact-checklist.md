@@ -29,7 +29,7 @@
 - Run a clean-machine packaged smoke test: diagnostic-only shell, no elevation, no control/update surfaces, and every explicit invocation field `Attempted=false`.
 - Run the clean-machine validation plan using the package launcher only; verify report/export paths, Event Viewer and Reliability Monitor, process cleanup, and portable-folder removal.
 - Verify report loading and local-only copy, reload, folder-open, and export behavior for missing and corrupt reports.
-- Produce and verify a SHA-256 checksum. Add timestamped Authenticode signing when a verified publisher identity is available.
+- Follow [Signing and Checksum Workflow](signing-checksum-workflow.md): produce and verify a SHA-256 checksum for the final validated artifact, and add timestamped Authenticode signing when a verified publisher identity is available.
 - Exclude logs, raw device captures, machine-specific paths, and symbols from distribution.
 
 ## Repository Safety Checks
