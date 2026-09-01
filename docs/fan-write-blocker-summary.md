@@ -58,3 +58,5 @@ The authoritative current gap list is the [SetFanMax proof gap checklist](set-fa
 The [manual evidence capture package](set-fan-max-manual-evidence-capture.md) defines the required record format. It is documentation-only and does not permit VictusX to generate missing write evidence.
 
 The [SetFanMax first-write decision gate](set-fan-max-first-write-decision-gate.md) consolidates the required proof into one explicit NO-GO threshold before any implementation-design task may begin.
+
+The focused [payload-length reference decision](set-fan-max-payload-length-reference-decision.md) confirms that neither reference shape is exact-device evidence; no payload length or write candidate has been selected.

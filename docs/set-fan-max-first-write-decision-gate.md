@@ -37,3 +37,5 @@ Test coverage for these fail-closed dashboard, report, and copy/export summary p
 Any manually completed export must first pass the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md). Only a cited update of this gate and the proof gap checklist can change the current NO-GO decision.
 
 A future import parser may help identify missing or conflicting fields, but is not evidence approval and cannot update this gate; see the [evidence import/review design](set-fan-max-evidence-import-review-design.md).
+
+The focused [payload-length reference decision](set-fan-max-payload-length-reference-decision.md) found no consensus or exact-device proof. It does not select a length or change this gate's NO-GO state.
