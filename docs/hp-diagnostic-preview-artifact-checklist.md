@@ -18,7 +18,7 @@
 
 ## Before Any Preview Publish
 
-- Replace the inherited icon and define explicit VictusX version, product, publisher, copyright, license, and notice metadata.
+- Confirm the explicit VictusX version, product, publisher, and copyright metadata in the packaged executable; replace the inherited icon and add license and notice metadata.
 - Confirm the launcher is packaged under `tools` beside `VictusX.exe` and that its only application argument is `--hp-victus`.
 - Run a clean-machine packaged smoke test: diagnostic-only shell, no elevation, no control/update surfaces, and every explicit invocation field `Attempted=false`.
 - Verify report loading and local-only copy, reload, folder-open, and export behavior for missing and corrupt reports.

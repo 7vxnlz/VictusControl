@@ -5,12 +5,12 @@
 - The solution, project, assembly, executable, and ZIP target use `VictusX` / `VictusX.exe`.
 - The manifest identity is `VictusX.app`, x64 is the only configured platform, and the app runs `asInvoker`.
 - Internal `GHelper` root namespace, startup object, resource names, and single-instance event naming remain from the imported base.
-- Assembly version `0.279` still resembles the upstream G-Helper version and is not a defined VictusX preview version.
+- Explicit VictusX metadata now defines product, read-only diagnostic description, contributor attribution, copyright, and coherent `0.1.0-preview.1` / `0.1.0.0` version fields.
 
 ## Branding and Metadata Risks
 
 - `favicon.ico` is still the inherited blue G icon, so Explorer, shortcuts, and executable properties do not present distinct VictusX branding.
-- Windows currently derives `VictusX` for product, company, and description, but these values are not explicitly defined. The built executable reports file version `0.279`, product version `1.0.0+<git hash>`, and no copyright, so preview version identity is inconsistent.
+- The project now supplies explicit VictusX product, description, company/authors, copyright, assembly, file, and informational version metadata. A future packaged smoke test must still confirm the final executable properties match those values.
 - G-Helper and ASUS strings/resources remain in the binary. HP shell isolation hides inherited control/update surfaces, but packaging must not imply that those features support HP hardware.
 - GPLv3 is present, but a preview package still needs clear source, attribution, modified-project, and third-party notice handling.
 
@@ -42,7 +42,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 
 ## Pre-release Checklist
 
-- Add a distinct VictusX icon and explicit product/version/publisher metadata.
+- Confirm the explicit product/version/publisher metadata in a packaged executable and add a distinct VictusX icon.
 - Choose and document framework-dependent versus self-contained runtime packaging.
 - Add a dedicated HP diagnostic publish profile and versioned artifact name.
 - Provide a shortcut or launcher that always supplies only `--hp-victus`.
@@ -54,7 +54,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 
 ## Change Now
 
-Define VictusX product metadata and icon requirements, then add a separate HP diagnostic publish profile whose artifact and launch instructions require `--hp-victus`. Keep it non-releasing until the packaged smoke-test checklist passes.
+Keep the explicit VictusX metadata aligned with the future artifact version, then replace the inherited icon and complete the packaged smoke-test checklist before any release work.
 
 ## Wait Until Later
 
