@@ -31,10 +31,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest SetFanMax evidence note: manual evidence capture package added; payload length remains unset and writes remain NO-GO.
 - Latest HP dashboard note: read-only SetFanMax evidence readiness is shown from cached/report-backed state.
 - Latest audit note: SetFanMax readiness panel audited as diagnostic-only; no write path added.
+- Latest first-write gate note: SetFanMax first-write decision gate added; current state remains NO-GO.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP diagnostics read-only while documenting SetFanMax readiness panel safety
-- Last completed work: added source-level SetFanMax readiness panel audit
-- Files touched recently: `docs/set-fan-max-readiness-panel-audit.md`, `docs/set-fan-max-proof-gap-checklist.md`, `docs/set-fan-max-manual-evidence-capture.md`, `SESSION_STATE.md`
+- Current objective: keep HP diagnostics read-only while enforcing the SetFanMax first-write decision gate
+- Last completed work: added the SetFanMax first-write NO-GO decision gate
+- Files touched recently: `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-proof-gap-checklist.md`, `docs/set-fan-max-manual-evidence-capture.md`, `docs/set-fan-max-readiness-panel-audit.md`, `docs/fan-write-blocker-summary.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 106/106 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested

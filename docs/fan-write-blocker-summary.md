@@ -56,3 +56,5 @@ Supporting decisions: [SetFanMax payload-length final audit](set-fan-max-payload
 The authoritative current gap list is the [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md). It keeps payload length unset and all fan writes **NO-GO** until exact-device restore, thermal/power, recovery, rollback, and approval evidence is complete.
 
 The [manual evidence capture package](set-fan-max-manual-evidence-capture.md) defines the required record format. It is documentation-only and does not permit VictusX to generate missing write evidence.
+
+The [SetFanMax first-write decision gate](set-fan-max-first-write-decision-gate.md) consolidates the required proof into one explicit NO-GO threshold before any implementation-design task may begin.

@@ -46,4 +46,4 @@ SetFanMax remains **NO-GO**. Fan writes are not implemented or allowed, `DeviceV
 
 ## Recommended Next Safe Task
 
-Keep collecting and reviewing documentation-only proof using the SetFanMax proof gap and manual evidence capture documents. Do not implement any fan write code until exact-device payload length and restore behavior are independently proven and separately approved.
+Keep collecting and reviewing documentation-only proof using the SetFanMax proof gap and manual evidence capture documents. The [first-write decision gate](set-fan-max-first-write-decision-gate.md) remains the consolidated NO-GO threshold. Do not implement any fan write code until every gate requirement is independently proven and separately approved.
