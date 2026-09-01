@@ -52,3 +52,5 @@ Until every item is proven, all fan writes remain **NO-GO**.
 Continue documentation/evidence work only: seek an existing, sanitized, independently reviewable field record for this exact Victus and BIOS that identifies one command's input contract, independent readback, restore result, and recovery outcome. If no complete record exists, stop and retain the current read-only implementation with every fan write blocked.
 
 Supporting decisions: [SetFanMax payload-length final audit](set-fan-max-payload-length-final-audit.md), [SetFanMode and SetFanLevel risk study](set-fan-mode-level-risk-study.md), and [missing-proof tracker](set-fan-max-missing-proof-tracker.md).
+
+The authoritative current gap list is the [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md). It keeps payload length unset and all fan writes **NO-GO** until exact-device restore, thermal/power, recovery, rollback, and approval evidence is complete.

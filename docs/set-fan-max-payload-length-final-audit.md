@@ -68,3 +68,5 @@ SetFanMax remains **NO-GO**. No implementation task, payload construction for ex
 Perform a documentation-only search and independent review for an existing, sanitized field record naming this exact model/SKU/BIOS (or proven firmware-equivalent hardware) and recording command `0x27`, exact input size, return code, and `FanMaxGet` baseline/post-action/post-restore results. If that complete record is not found, stop: keep the input length unset and the implementation NO-GO.
 
 Supporting evidence: [model/BIOS matrix](set-fan-max-model-bios-evidence-matrix.md), [omencore four-byte deep dive](omencore-victus-16s-setfanmax-evidence-deep-dive.md), and [OmenSuperHub/OmenXHub one-byte deep dive](omensuperhub-omenxhub-setfanmax-one-byte-evidence-deep-dive.md).
+
+The [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md) is the final source of truth for all evidence still required. This audit does not select a payload length; `DeviceValidatedInputLength` remains unset and the gate remains **NO-GO**.

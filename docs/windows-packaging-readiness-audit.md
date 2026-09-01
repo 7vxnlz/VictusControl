@@ -48,6 +48,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 ## Pre-release Checklist
 
 - Treat [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) as the consolidated source-of-truth release gate before any preview package is published.
+- Review [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) before selecting any package candidate.
 - Confirm the explicit product/version/publisher metadata in a packaged executable and add a distinct VictusX icon.
 - Choose and document framework-dependent versus self-contained runtime packaging.
 - Add a dedicated HP diagnostic publish profile and versioned artifact name.
@@ -72,6 +73,7 @@ See [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) for th
 See [Signing and Checksum Workflow](signing-checksum-workflow.md) for future release integrity evidence.
 See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the future portable-preview acceptance procedure.
 See [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) for the consolidated release blocker checklist.
+See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the current source-only package readiness decision.
 
 ## Wait Until Later
 

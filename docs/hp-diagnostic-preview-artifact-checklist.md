@@ -19,6 +19,7 @@
 ## Before Any Preview Publish
 
 - Review [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) as the final consolidated release gate.
+- Review [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) and confirm every remaining blocker has final evidence.
 - Review [HP Diagnostic Preview User Safety Notes](hp-diagnostic-preview-user-safety-notes.md) and include or link them from preview release instructions.
 - Confirm the explicit VictusX version, product, publisher, and copyright metadata in the packaged executable; replace the inherited icon and add license and notice metadata.
 - Review the icon/app identity plan and [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md); use an original or licensed multi-resolution icon, preserve shared default-mode resources, and verify executable, tray, window, and shortcut rendering in the packaged HP preview.

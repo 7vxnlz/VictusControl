@@ -6,11 +6,14 @@ The VictusX HP diagnostic preview is not release-ready. HP diagnostic mode is st
 
 No binaries or release artifacts should be published from the current state.
 
+See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the final source-only readiness summary.
+
 ## Completed Prerequisites
 
 - HP diagnostic mode launches with `--hp-victus` and uses a Diagnostic/Quit-only shell.
 - HP read-only diagnostic dashboard is report-backed and local-file-only.
 - User-facing safety notes exist for the future preview entry path.
+- Final source-only readiness audit exists for the current preview package state.
 - HP capability report schema metadata persists.
 - Publish profile and launcher source files exist for a future HP diagnostic preview.
 - Safety tests guard the launcher/profile from including `--hp-wmi-readonly-test`.

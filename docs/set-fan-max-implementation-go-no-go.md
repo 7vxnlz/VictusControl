@@ -28,6 +28,8 @@ Recovery and restore evidence must satisfy [the SetFanMax recovery and restore p
 
 The [final payload-length audit](set-fan-max-payload-length-final-audit.md) confirms that neither the one-byte nor four-byte reference evidence validates this exact device. `DeviceValidatedInputLength` therefore remains unset.
 
+The [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md) is the source of truth for the remaining implementation and UI evidence. Any unchecked item keeps this gate **NO-GO**.
+
 ## 4. GO Conditions
 
 Every condition below must be true and supported by attached evidence:

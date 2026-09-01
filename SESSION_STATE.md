@@ -26,11 +26,13 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest package license note: package license review workflow added; release remains blocked.
 - Latest signing note: signing/checksum workflow added; no artifacts signed or checksummed.
 - Latest user safety note: HP diagnostic preview user-facing safety notes added; no artifacts released.
+- Latest source readiness note: HP diagnostic preview source readiness audit added; release remains blocked.
+- Latest SetFanMax proof note: final proof gap checklist added; fan write implementation remains NO-GO.
 - Branch: `main` tracking `origin/main`
-- Current objective: maintain safe handoff state and next-step checkpoint
-- Last completed work: created user-facing safety notes for the future HP diagnostic preview
-- Files touched recently: `docs/hp-diagnostic-preview-user-safety-notes.md`, `README.md`, `docs/hp-diagnostic-preview-release-blockers.md`, `docs/hp-diagnostic-preview-artifact-checklist.md`, `SESSION_STATE.md`
-- Known build/test status: build passed with 0 errors and 2 NU1900 audit-source warnings; 101/101 tests passed on 2026-09-01
+- Current objective: keep SetFanMax evidence fail-closed before any fan write implementation
+- Last completed work: created the final SetFanMax proof gap checklist and linked safety decisions
+- Files touched recently: `docs/set-fan-max-proof-gap-checklist.md`, `docs/fan-write-blocker-summary.md`, `docs/set-fan-max-implementation-go-no-go.md`, `docs/set-fan-max-payload-length-final-audit.md`, `SESSION_STATE.md`
+- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 101/101 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
 - Reference commits reviewed: G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; only top-level/project/license/README metadata was inspected
