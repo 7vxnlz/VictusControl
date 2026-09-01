@@ -144,6 +144,8 @@ public sealed class HpFanMaxExperimentRunner(
         }
         catch (Exception ex)
         {
+            // A transport can throw after its write boundary; restore conservatively in that uncertain state.
+            enable = new HpFanMaxExperimentWriteResult(true, false, "Enable transport threw: " + ex.GetType().Name + ".");
             failures.Add("Enable phase failed: " + ex.GetType().Name + ".");
         }
         finally

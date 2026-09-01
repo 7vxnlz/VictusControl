@@ -68,6 +68,8 @@ Only an independently reviewed exact-device record may support a later decision.
 
 The command-line runner has no UI or tray route, never retries, and never falls back between payload lengths. It creates a blocked append-only record when a command or runtime gate fails. While the application hard-codes the documented approval gates as false, it cannot reach `hpqBIOSInt0` for a write.
 
+The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verified these boundaries and hardened the exception path so a managed enable-transport failure still reaches the matching one-time restore attempt.
+
 ## Recommended Next Step
 
 Obtain independent review of the baseline and the unresolved restore, thermal/power, recovery, rollback, and human-approval requirements. A separate evidence decision must change the documented gate before any execution is considered; until then, execution remains **NO-GO**.

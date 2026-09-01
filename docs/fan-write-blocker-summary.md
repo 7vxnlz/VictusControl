@@ -62,3 +62,5 @@ The [SetFanMax first-write decision gate](set-fan-max-first-write-decision-gate.
 The focused [payload-length reference decision](set-fan-max-payload-length-reference-decision.md) confirms that neither reference shape is exact-device evidence; no payload length or write candidate has been selected.
 
 The [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) is documentation-only and cannot bypass any blocker, enable a command, or justify fan UI control.
+
+The [first-write runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifies the implemented runner remains command-line-only, approval-gated, and unable to alter this NO-GO status.

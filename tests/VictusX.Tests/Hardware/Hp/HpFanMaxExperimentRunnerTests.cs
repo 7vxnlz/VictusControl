@@ -97,6 +97,18 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     [Fact]
+    public void Run_EnableTransportThrows_RestoresUsingTheMatchingPayload()
+    {
+        var transport = new ThrowingEnableTransport();
+        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(ValidCommand("4"), ApprovedGates());
+
+        Assert.Equal(HpFanMaxExperimentOutcome.Fail, result.Outcome);
+        Assert.Equal(["01-00-00-00", "00-00-00-00"], transport.Payloads);
+        Assert.True(result.EnableWrite.Attempted);
+        Assert.True(result.RestoreWrite.Attempted);
+    }
+
+    [Fact]
     public void BlockedLog_KeepsWriteExecutedFalseAndInputLengthUnset()
     {
         var transport = new RecordingTransport();
@@ -120,6 +132,13 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     private static HpFanMaxExperimentRunner CreateRunner(RecordingTransport transport, HpFanMaxExperimentBaseline? baseline = null)
+    {
+        var provider = new FixedReadOnlyProvider(baseline ?? CreateBaseline());
+        transport.Attach(provider);
+        return new HpFanMaxExperimentRunner(provider, transport, new NoDelay());
+    }
+
+    private static HpFanMaxExperimentRunner CreateRunner(ThrowingEnableTransport transport, HpFanMaxExperimentBaseline? baseline = null)
     {
         var provider = new FixedReadOnlyProvider(baseline ?? CreateBaseline());
         transport.Attach(provider);
@@ -162,6 +181,27 @@ public sealed class HpFanMaxExperimentRunnerTests
         {
             Payloads.Add(Convert.ToHexString(payload).Chunk(2).Select(static pair => new string(pair)).Aggregate(static (left, right) => left + "-" + right));
             _provider?.SetEnabled(payload[0] == 0x01);
+            return new HpFanMaxExperimentWriteResult(true, true, null);
+        }
+    }
+
+    private sealed class ThrowingEnableTransport : IHpFanMaxExperimentWriteTransport
+    {
+        public List<string> Payloads { get; } = [];
+        private FixedReadOnlyProvider? _provider;
+
+        public void Attach(FixedReadOnlyProvider provider) => _provider = provider;
+
+        public HpFanMaxExperimentWriteResult TrySetFanMax(byte[] payload)
+        {
+            string hex = Convert.ToHexString(payload).Chunk(2).Select(static pair => new string(pair)).Aggregate(static (left, right) => left + "-" + right);
+            Payloads.Add(hex);
+            if (payload[0] == 0x01)
+            {
+                throw new InvalidOperationException("Injected enable transport failure.");
+            }
+
+            _provider?.SetEnabled(false);
             return new HpFanMaxExperimentWriteResult(true, true, null);
         }
     }

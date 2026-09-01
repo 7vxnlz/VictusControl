@@ -44,3 +44,5 @@ The focused [payload-length reference decision](set-fan-max-payload-length-refer
 The proposed [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) defines the evidence record. The runner implementation follows the same append-only format but does not alter any GO condition.
 
 The dry-run and baseline commands remain write-disabled. The separate first-write runner maps `WriteExecuted=true` only after an actual selected SetFanMax attempt, but current false approval wiring blocks before that transport boundary. It cannot validate an input length, select a payload, or cross this gate.
+
+The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) confirms the implementation remains command-line-only and current-gate blocked; it does not change this NO-GO decision.

@@ -50,6 +50,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest exact-device baseline note: manual elevated one-byte and four-byte hypothesis captures matched on F.31/V1, fan count 2, max fan disabled, and raw level `22-25`; no write occurred and payload length remains unset.
 - Latest first-write runner note: developer-only first-write runner design added; it remains documentation-only with implementation and execution NO-GO.
 - Latest first-write runner implementation note: developer-only SetFanMax runner added behind required flags, exact identity, elevation, AC, baseline, and separate false approval gates; it was not run and remains NO-GO.
+- Latest first-write runner audit note: source audit hardened transport-exception restore handling; runner remains command-line-only, unexecuted, and NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation
