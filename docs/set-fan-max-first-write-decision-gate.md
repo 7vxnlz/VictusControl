@@ -8,6 +8,7 @@
 
 - The exact target is HP Victus `16-s0035nt`, SKU `7Z5Z2EA#AB8`, BIOS `F.31`, thermal policy V1, with two fans.
 - Read-only `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and raw-only `FanGetLevel` succeeded.
+- Two elevated exact-device baseline records captured the same state: fan count `2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25`; both kept `WriteExecuted=false` and `DeviceValidatedInputLength=null`.
 - References support `hpqBIOSInt0`, command `0x20008`, type `0x27`, enable byte `0x01`, and restore/disable byte `0x00`.
 
 ## Required GO Evidence
@@ -26,7 +27,7 @@ Any future implementation remains constrained to SetFanMax only, one bounded tar
 
 ## Decision
 
-The gate is currently **not satisfied**. No write code, payload selection, or hardware experiment may be added until this document is explicitly changed to **GO** with the required evidence. The next safe task is documentation-only review of an existing sanitized exact-device field record; if none exists, retain NO-GO.
+The gate is currently **not satisfied**. No write code, payload selection, or hardware experiment may be added until this document is explicitly changed to **GO** with the required evidence. The next safe task may be a documentation-only first-write runner specification based on the [exact-device baseline](set-fan-max-exact-device-baseline-evidence.md); it must contain no execution path and must preserve every unresolved GO condition.
 
 The cached HP diagnostic report and dashboard expose this decision as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and a fail-closed reason. These fields are diagnostic-only and cannot authorize or execute a write.
 

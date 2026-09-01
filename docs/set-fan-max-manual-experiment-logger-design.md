@@ -38,7 +38,7 @@ The separate baseline command is `--hp-victus --hp-wmi-readonly-test --hp-fan-wr
 
 The record captures decoded identity and baseline facts where available: model, SKU, BIOS, thermal policy version, fan count, max-fan state, and the known raw FanGetLevel prefix. It summarizes each probe's attempted/success/decode/byte-count state without logging full binary output. The payload length remains a hypothesis only; the record always preserves `WriteExecuted=false`, `DeviceValidatedInputLength=null`, `FirstWriteGateSatisfied=false`, and **NO-GO**. It does not invoke SetFanMax or any other write-capable command, and it does not start the normal UI.
 
-Runtime verification of this command remains pending from an elevated Administrator terminal. The 2026-09-02 Codex session was not elevated, so it intentionally did not run the baseline command or invoke any WMI method; no exact-device baseline record was claimed from that session.
+Manual elevated runtime verification produced exact-device baseline records for both hypothesis labels. Each record identified SKU `7Z5Z2EA#AB8`, BIOS `F.31`, thermal policy V1, fan count `2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25`; all four approved read-only probes succeeded. Both records kept `WriteExecuted=false`, `FirstWriteGateSatisfied=false`, and `DeviceValidatedInputLength=null`. See the [exact-device baseline evidence](set-fan-max-exact-device-baseline-evidence.md).
 
 ## Required Evidence Record
 
@@ -66,4 +66,4 @@ One reviewed record for this exact model/SKU/BIOS must identify exactly one leng
 
 ## Recommended Next Implementation Step
 
-Write-disabled record, formatter, parser, local `CreateNew` writer, and gated read-only baseline capture scaffolding now exist. The dry-run handler only serializes a supplied NO-GO record; the baseline handler may invoke only the approved read-only probes after its explicit flags and elevation gate. Both exit before normal startup and neither is a runtime write path. First obtain and independently review a sanitized exact-device evidence record using the existing manual evidence workflow; retain NO-GO if the record does not exist or is incomplete.
+Write-disabled logging and the gated read-only baseline capture are verified. The next safe step is a documentation-only runner specification based on the captured baseline. It must not select a payload, add execution code, or weaken the first-write gate; implementation remains **NO-GO** pending write/restore, thermal/power, recovery, rollback, and human-approval evidence.

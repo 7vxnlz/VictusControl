@@ -36,7 +36,7 @@ Missing, stale, ambiguous, or mismatched baseline data keeps the package incompl
 
 When separately authorized and run from an elevated Administrator process, the developer-only baseline command can collect the four existing approved read-only probes into `%APPDATA%\VictusX\Logs\FanExperiments\`. It requires `--hp-victus`, `--hp-wmi-readonly-test`, `--hp-fan-write-experiment-baseline`, and exactly one unvalidated `--set-fan-max-payload-length=1` or `=4` hypothesis. It captures baseline evidence only, writes no fan state, and exits before the normal UI. Its output remains **NO-GO** and cannot select a payload length or update `DeviceValidatedInputLength`.
 
-No baseline record may be treated as real device evidence until the command has completed from an elevated Administrator process and the generated record has been independently reviewed.
+Manual elevated captures now provide matching exact-device read-only baselines for both hypothesis labels: fan count `2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25`, with all four approved probes succeeding. The [exact-device baseline evidence](set-fan-max-exact-device-baseline-evidence.md) records the sanitized results. This completes only the read-only baseline portion; it does not validate a payload length or supply write, restore, thermal/power, recovery, rollback, or approval proof.
 
 ## External Observation Record
 
@@ -86,7 +86,7 @@ After every required record is complete, an independent reviewer must record the
 
 The package is complete only when every required field is traceable, internally consistent, independently reviewable, and accepted without inference. Until then, SetFanMax remains **NO-GO**, `DeviceValidatedInputLength` remains unset, and all fan write/control code and UI remain forbidden.
 
-Source-of-truth gaps are tracked in the [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md). The next safe task is documentation-only review of an existing sanitized exact-device evidence record; if none exists, stop and preserve the current read-only state.
+Source-of-truth gaps are tracked in the [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md). The next safe task is a documentation-only first-write runner specification that uses the proven baseline but leaves payload selection and all write execution absent.
 
 The [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md) confirms the HP Diagnostic dashboard displays this evidence state as read-only status only. The [first-write decision gate](set-fan-max-first-write-decision-gate.md) defines the fail-closed threshold before a separate implementation-design task could be considered.
 

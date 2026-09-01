@@ -25,6 +25,14 @@ The reviewed references consistently support the following metadata, but not thi
 
 Read-only success from `FanMaxGet`, `FanGetCount`, or `FanGetLevel` does not establish the write input length. Neither candidate is selected.
 
+## Proven Read-Only Baseline
+
+- [x] Exact-device identity captured for SKU `7Z5Z2EA#AB8`, BIOS `F.31`, thermal policy V1.
+- [x] Elevated `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and `FanGetLevel` baseline probes succeeded and decoded.
+- [x] Both hypothesis-labelled records captured fan count `2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25` without a write.
+
+See the [exact-device baseline evidence](set-fan-max-exact-device-baseline-evidence.md). These checks establish the pre-write baseline only; they do not satisfy the payload ABI, restore, thermal/power, recovery, rollback, or approval gaps below.
+
 ## Remaining Proof Gaps
 
 - [ ] **Device input ABI:** one independently reviewable record selects exactly one input length for this exact model/SKU/BIOS, with no alternate-shape fallback.
@@ -51,7 +59,7 @@ No code should guess `1` or `4`, choose by repository count or model similarity,
 
 ## Recommended Next Safe Task
 
-Perform documentation-only collection and independent review of an existing sanitized SetFanMax field record for Victus `16-s0035nt` / `7Z5Z2EA#AB8` / BIOS `F.31`. It must include exact input size plus `FanMaxGet` baseline, post-action, restore, thermal/power, and recovery evidence. If no complete record exists, stop and retain **NO-GO**; do not generate the missing evidence through VictusX.
+Use the proven read-only baseline to create a documentation-only first-write runner specification. The specification must select no payload length, contain no write execution, and make the remaining payload ABI, post-action, restore, thermal/power, recovery, rollback, and approval evidence explicit stop conditions. Implementation remains **NO-GO**.
 
 Supporting detail: [payload-length final audit](set-fan-max-payload-length-final-audit.md), [recovery/restore proof plan](set-fan-max-recovery-restore-proof-plan.md), and [implementation gate](set-fan-max-implementation-go-no-go.md).
 
