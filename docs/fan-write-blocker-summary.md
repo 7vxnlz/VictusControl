@@ -54,3 +54,5 @@ Continue documentation/evidence work only: seek an existing, sanitized, independ
 Supporting decisions: [SetFanMax payload-length final audit](set-fan-max-payload-length-final-audit.md), [SetFanMode and SetFanLevel risk study](set-fan-mode-level-risk-study.md), and [missing-proof tracker](set-fan-max-missing-proof-tracker.md).
 
 The authoritative current gap list is the [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md). It keeps payload length unset and all fan writes **NO-GO** until exact-device restore, thermal/power, recovery, rollback, and approval evidence is complete.
+
+The [manual evidence capture package](set-fan-max-manual-evidence-capture.md) defines the required record format. It is documentation-only and does not permit VictusX to generate missing write evidence.

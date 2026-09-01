@@ -30,6 +30,8 @@ The [final payload-length audit](set-fan-max-payload-length-final-audit.md) conf
 
 The [SetFanMax proof gap checklist](set-fan-max-proof-gap-checklist.md) is the source of truth for the remaining implementation and UI evidence. Any unchecked item keeps this gate **NO-GO**.
 
+Any evidence submitted for reconsideration must satisfy the [manual evidence capture package](set-fan-max-manual-evidence-capture.md). An incomplete package, or one requiring inference, keeps this gate **NO-GO**.
+
 ## 4. GO Conditions
 
 Every condition below must be true and supported by attached evidence:

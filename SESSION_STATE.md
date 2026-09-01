@@ -28,10 +28,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest user safety note: HP diagnostic preview user-facing safety notes added; no artifacts released.
 - Latest source readiness note: HP diagnostic preview source readiness audit added; release remains blocked.
 - Latest SetFanMax proof note: final proof gap checklist added; fan write implementation remains NO-GO.
+- Latest SetFanMax evidence note: manual evidence capture package added; payload length remains unset and writes remain NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep SetFanMax evidence fail-closed before any fan write implementation
-- Last completed work: created the final SetFanMax proof gap checklist and linked safety decisions
-- Files touched recently: `docs/set-fan-max-proof-gap-checklist.md`, `docs/fan-write-blocker-summary.md`, `docs/set-fan-max-implementation-go-no-go.md`, `docs/set-fan-max-payload-length-final-audit.md`, `SESSION_STATE.md`
+- Last completed work: created the manual SetFanMax evidence capture package and linked safety decisions
+- Files touched recently: `docs/set-fan-max-manual-evidence-capture.md`, `docs/set-fan-max-proof-gap-checklist.md`, `docs/set-fan-max-implementation-go-no-go.md`, `docs/fan-write-blocker-summary.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 101/101 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
