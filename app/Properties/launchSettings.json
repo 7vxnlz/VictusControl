@@ -2,6 +2,10 @@
   "profiles": {
     "GHelper": {
       "commandName": "Project"
+    },
+    "VictusX HP Diagnostic": {
+      "commandName": "Project",
+      "commandLineArgs": "--hp-victus"
     }
   }
 }

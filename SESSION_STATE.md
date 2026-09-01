@@ -11,10 +11,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest SetFanMax note: Payload-shape decision plan added; implementation remains NO-GO.
 - Latest approval note: DeviceValidatedInputLength manual approval design added; SetFanMax remains NO-GO.
 - Latest evidence note: HP diagnostic shell regression audit added; shell remains diagnostic-only.
+- Latest launch note: HP diagnostic launch profile and run guide added.
 - Branch: `main` tracking `origin/main`
 - Current objective: maintain safe handoff state and next-step checkpoint
-- Last completed work: audited HP diagnostic shell isolation and blocked inherited sensor refresh in HP mode
-- Files touched recently: `app/Program.cs`, `app/Settings.cs`, `docs/hp-diagnostic-shell-regression-audit.md`, `SESSION_STATE.md`
+- Last completed work: added a safe HP diagnostic launch profile and developer run guide
+- Files touched recently: `app/Properties/launchSettings.json`, `docs/victusx-hp-diagnostic-run-guide.md`, `README.md`, `SESSION_STATE.md`
 - Known build/test status: `dotnet build VictusX.sln` passed on 2026-08-30 with 0 warnings and 0 errors
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
