@@ -10,6 +10,7 @@ No binaries or release artifacts should be published from the current state.
 
 - HP diagnostic mode launches with `--hp-victus` and uses a Diagnostic/Quit-only shell.
 - HP read-only diagnostic dashboard is report-backed and local-file-only.
+- User-facing safety notes exist for the future preview entry path.
 - HP capability report schema metadata persists.
 - Publish profile and launcher source files exist for a future HP diagnostic preview.
 - Safety tests guard the launcher/profile from including `--hp-wmi-readonly-test`.
@@ -24,6 +25,7 @@ No binaries or release artifacts should be published from the current state.
 - Run the clean-machine validation plan against a final candidate package.
 - Confirm the final package contains no logs, captured device data, symbols, machine paths, or developer-only flags.
 - Confirm the release entry point always launches with only `--hp-victus`.
+- Include or link [HP Diagnostic Preview User Safety Notes](hp-diagnostic-preview-user-safety-notes.md) with the preview package.
 
 ## Package-License/Notice Review Blocker
 
@@ -70,6 +72,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - Clean-machine validation record.
 - Report showing explicit read-only invocations remain `Attempted=false` during normal HP diagnostic mode.
 - Manual confirmation that no fan/performance/write UI is present.
+- Final user-facing safety notes reviewed for the exact release candidate.
 
 ## Recommended Next Safe Task
 

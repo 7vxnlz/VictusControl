@@ -92,6 +92,8 @@ For IDE profile usage, local report paths, and safety notes, see the [VictusX HP
 
 The future preview profile and launcher contract are documented in the [HP Diagnostic preview artifact checklist](docs/hp-diagnostic-preview-artifact-checklist.md); no preview artifact has been published.
 
+User-facing safety notes for a future HP diagnostic preview are documented in [docs/hp-diagnostic-preview-user-safety-notes.md](docs/hp-diagnostic-preview-user-safety-notes.md).
+
 The `--hp-wmi-readonly-test` flag is only for controlled developer testing. Do not use it unless you are intentionally testing the guarded HP WMI invocation path and understand the current limitations.
 
 HP WMI real invocation tests are developer-only and may require running VictusX from an elevated Administrator terminal. The normal safe command remains:
