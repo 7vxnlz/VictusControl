@@ -32,6 +32,12 @@ The write-disabled command `--hp-victus --hp-fan-write-experiment-dry-run --set-
 
 Runtime verification produced blocked records for both payload hypotheses. The four-byte record stored `PayloadLengthCandidate=FourByteHypothesis` with `PayloadBytesHypothesis=01-00-00-00`; the one-byte record stored `PayloadLengthCandidate=OneByteHypothesis` with `PayloadBytesHypothesis=01`. Both records kept `WriteExecuted=false`, `DeviceValidatedInputLength=null`, `FirstWriteGateSatisfied=false`, `Outcome=Unknown`, and the standard NO-GO blocked reasons. Enable and restore results both state that WMI and hardware were not attempted.
 
+## Developer-Only Read-Only Baseline Capture
+
+The separate baseline command is `--hp-victus --hp-wmi-readonly-test --hp-fan-write-experiment-baseline --set-fan-max-payload-length=1` or `=4`. It requires an elevated Administrator process and exits after writing one append-only experiment record. It reuses only the existing approved read-only probes: `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and `FanGetLevel`.
+
+The record captures decoded identity and baseline facts where available: model, SKU, BIOS, thermal policy version, fan count, max-fan state, and the known raw FanGetLevel prefix. It summarizes each probe's attempted/success/decode/byte-count state without logging full binary output. The payload length remains a hypothesis only; the record always preserves `WriteExecuted=false`, `DeviceValidatedInputLength=null`, `FirstWriteGateSatisfied=false`, and **NO-GO**. It does not invoke SetFanMax or any other write-capable command, and it does not start the normal UI.
+
 ## Required Evidence Record
 
 The baseline record must include timestamp; model; SKU; BIOS; thermal policy; selected candidate length; proposed payload bytes; command `0x20008`; type `0x27`; WMI class/method; FanGetCount; FanMaxGet; raw FanGetLevel; AC/battery state; temperature source/baseline; and operator approval.
@@ -58,4 +64,4 @@ One reviewed record for this exact model/SKU/BIOS must identify exactly one leng
 
 ## Recommended Next Implementation Step
 
-Write-disabled record, formatter, parser, and local `CreateNew` writer scaffolding now exist. The dry-run handler only serializes a supplied NO-GO record, then exits before normal startup; it is not a runtime write path. First obtain and independently review a sanitized exact-device evidence record using the existing manual evidence workflow; retain NO-GO if the record does not exist or is incomplete.
+Write-disabled record, formatter, parser, local `CreateNew` writer, and gated read-only baseline capture scaffolding now exist. The dry-run handler only serializes a supplied NO-GO record; the baseline handler may invoke only the approved read-only probes after its explicit flags and elevation gate. Both exit before normal startup and neither is a runtime write path. First obtain and independently review a sanitized exact-device evidence record using the existing manual evidence workflow; retain NO-GO if the record does not exist or is incomplete.

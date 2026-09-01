@@ -31,6 +31,9 @@ public sealed record HpFanMaxExperimentLogRecord
     public int? BaselineFanGetCount { get; init; }
     public bool? BaselineFanMaxGet { get; init; }
     public string? BaselineFanGetLevelRaw { get; init; }
+    public bool BaselineCapturePerformed { get; init; }
+    public string BaselineCaptureResult { get; init; } = "Not captured.";
+    public string[] BaselineReadOnlyProbeSummary { get; init; } = [];
     public string? EnableResult { get; init; }
     public bool? PostEnableFanMaxGet { get; init; }
     public string? PostEnableFanGetLevelRaw { get; init; }

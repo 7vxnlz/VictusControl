@@ -47,7 +47,10 @@ public sealed class HpFanMaxExperimentLogTests
             ThermalPolicyVersion = 1,
             BaselineFanGetCount = 2,
             BaselineFanMaxGet = false,
-            BaselineFanGetLevelRaw = "17-00"
+            BaselineFanGetLevelRaw = "17-00",
+            BaselineCapturePerformed = true,
+            BaselineCaptureResult = "Approved read-only baseline capture completed.",
+            BaselineReadOnlyProbeSummary = ["FanMaxGet: attempted=True; succeeded=True; decodeSucceeded=True; returnedByteCount=4"]
         };
 
         using JsonDocument document = JsonDocument.Parse(HpFanMaxExperimentLogFormatter.Format(record));
@@ -63,6 +66,9 @@ public sealed class HpFanMaxExperimentLogTests
         Assert.Equal(JsonValueKind.Null, root.GetProperty("DeviceValidatedInputLength").ValueKind);
         Assert.Equal("FourByteHypothesis", root.GetProperty("PayloadLengthCandidate").GetString());
         Assert.Equal("01-00-00-00", root.GetProperty("PayloadBytesHypothesis").GetString());
+        Assert.True(root.GetProperty("BaselineCapturePerformed").GetBoolean());
+        Assert.Equal("Approved read-only baseline capture completed.", root.GetProperty("BaselineCaptureResult").GetString());
+        Assert.Equal(JsonValueKind.Array, root.GetProperty("BaselineReadOnlyProbeSummary").ValueKind);
         Assert.Equal("Unknown", root.GetProperty("Outcome").GetString());
         Assert.Equal(JsonValueKind.Array, root.GetProperty("BlockedReasons").ValueKind);
     }

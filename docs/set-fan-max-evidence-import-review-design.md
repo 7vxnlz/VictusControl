@@ -10,6 +10,8 @@ The input is an exported diagnostic Markdown file with its manual evidence templ
 
 Developer dry-run JSON records may be used only as supporting evidence that the logging path is fail-closed. They are not manual hardware evidence because they intentionally contain no WMI invocation, no live readbacks, no write result, and no restore result.
 
+Developer-only baseline JSON records may supply timestamped exact-device identity and the approved read-only probe summaries when their required flags and elevation are independently verified. They are baseline evidence only: they cannot validate either payload length, prove an enable/restore chain, or change the gate from **NO-GO**.
+
 ## Validation and Fail-Closed Behavior
 
 Treat malformed Markdown, missing sections, duplicate or conflicting values, stale or untraceable evidence, non-exact device identity, missing restore proof, and unknown payload length as invalid. The result must report missing or conflicting evidence and remain `NO-GO`; it must never infer values from prose, defaults, repository similarity, or absent fields.

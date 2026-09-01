@@ -32,6 +32,10 @@ Capture timestamped, decoded results and any errors before relying on an externa
 
 Missing, stale, ambiguous, or mismatched baseline data keeps the package incomplete.
 
+### Developer-Only Baseline Record
+
+When separately authorized and run from an elevated Administrator process, the developer-only baseline command can collect the four existing approved read-only probes into `%APPDATA%\VictusX\Logs\FanExperiments\`. It requires `--hp-victus`, `--hp-wmi-readonly-test`, `--hp-fan-write-experiment-baseline`, and exactly one unvalidated `--set-fan-max-payload-length=1` or `=4` hypothesis. It captures baseline evidence only, writes no fan state, and exits before the normal UI. Its output remains **NO-GO** and cannot select a payload length or update `DeviceValidatedInputLength`.
+
 ## External Observation Record
 
 External observations support readbacks but never replace them:

@@ -57,6 +57,11 @@ namespace GHelper
         // The main entry point for the application
         public static void Main(string[] args)
         {
+            if (TryRunHpFanMaxExperimentBaselineCapture(args))
+            {
+                return;
+            }
+
             if (TryRunHpFanMaxExperimentDryRun(args))
             {
                 return;
@@ -72,6 +77,119 @@ namespace GHelper
                 throw;
             }
         }
+
+        private static bool TryRunHpFanMaxExperimentBaselineCapture(string[] args)
+        {
+            HpFanMaxExperimentBaselineCaptureCommandResult result = HpFanMaxExperimentBaselineCaptureCommand.Parse(args);
+            if (!result.ShouldExit)
+            {
+                return false;
+            }
+
+            HpFanMaxExperimentLogRecord record;
+            if (!result.IsValidRequest)
+            {
+                record = HpFanMaxExperimentBaselineCaptureMapper.CreateBlocked(result);
+            }
+            else if (!ProcessHelper.IsUserAdministrator())
+            {
+                record = HpFanMaxExperimentBaselineCaptureMapper.CreateBlocked(
+                    result,
+                    "Baseline capture requires an elevated Administrator process before approved read-only probes can run.");
+            }
+            else
+            {
+                AppConfig.SetHpVictusHardwareMode(true);
+                AppConfig.SetHpWmiReadOnlyTestMode(true);
+                AppConfig.SetUnsupportedHardwareMode(true);
+
+                try
+                {
+                    HpVictusCapabilitySnapshot snapshot = HpVictusCapabilityProbe.Probe();
+                    record = HpFanMaxExperimentBaselineCaptureMapper.CreateCaptured(
+                        result,
+                        CreateHpFanMaxExperimentBaselineData(snapshot));
+                }
+                catch (Exception ex)
+                {
+                    record = HpFanMaxExperimentBaselineCaptureMapper.CreateBlocked(
+                        result,
+                        "Baseline capture failed safely before a complete read-only record was collected: " + ex.GetType().Name + ".");
+                }
+            }
+
+            try
+            {
+                string path = HpFanMaxExperimentLogWriter.Write(record);
+                Console.WriteLine("SetFanMax read-only baseline record written: " + path);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("SetFanMax read-only baseline record could not be written: " + ex.Message);
+            }
+
+            return true;
+        }
+
+        private static HpFanMaxExperimentBaselineCaptureData CreateHpFanMaxExperimentBaselineData(
+            HpVictusCapabilitySnapshot snapshot)
+        {
+            int? thermalPolicyVersion = snapshot.SystemDesignDataInvocationSucceeded && snapshot.SystemDesignDataDecodeSucceeded
+                ? snapshot.SystemDesignDataDecoded?.ThermalPolicyVersion
+                : null;
+            int? fanCount = snapshot.FanGetCountInvocationSucceeded && snapshot.FanGetCountDecodeSucceeded
+                ? snapshot.FanGetCountDecoded?.FanCount
+                : null;
+            bool? maxFanEnabled = snapshot.FanMaxGetInvocationSucceeded && snapshot.FanMaxGetDecodeSucceeded
+                ? snapshot.FanMaxGetDecoded?.IsMaxFanEnabled
+                : null;
+            string? fanGetLevelRaw = snapshot.FanGetLevelInvocationSucceeded && snapshot.FanGetLevelDecodeSucceeded
+                ? snapshot.FanGetLevelDecoded?.KnownPrefixHex
+                : null;
+
+            return new HpFanMaxExperimentBaselineCaptureData(
+                snapshot.Model,
+                snapshot.SystemSku,
+                snapshot.BiosVersion,
+                thermalPolicyVersion,
+                fanCount,
+                maxFanEnabled,
+                fanGetLevelRaw,
+                [
+                    BuildReadOnlyProbeSummary(
+                        "SystemDesignData",
+                        snapshot.SystemDesignDataInvocationAttempted,
+                        snapshot.SystemDesignDataInvocationSucceeded,
+                        snapshot.SystemDesignDataDecodeSucceeded,
+                        snapshot.SystemDesignDataReturnedByteCount),
+                    BuildReadOnlyProbeSummary(
+                        "FanGetCount",
+                        snapshot.FanGetCountInvocationAttempted,
+                        snapshot.FanGetCountInvocationSucceeded,
+                        snapshot.FanGetCountDecodeSucceeded,
+                        snapshot.FanGetCountReturnedByteCount),
+                    BuildReadOnlyProbeSummary(
+                        "FanMaxGet",
+                        snapshot.FanMaxGetInvocationAttempted,
+                        snapshot.FanMaxGetInvocationSucceeded,
+                        snapshot.FanMaxGetDecodeSucceeded,
+                        snapshot.FanMaxGetReturnedByteCount),
+                    BuildReadOnlyProbeSummary(
+                        "FanGetLevel",
+                        snapshot.FanGetLevelInvocationAttempted,
+                        snapshot.FanGetLevelInvocationSucceeded,
+                        snapshot.FanGetLevelDecodeSucceeded,
+                        snapshot.FanGetLevelReturnedByteCount)
+                ]);
+        }
+
+        private static string BuildReadOnlyProbeSummary(
+            string commandName,
+            bool attempted,
+            bool succeeded,
+            bool decodeSucceeded,
+            int returnedByteCount) =>
+            $"{commandName}: attempted={attempted}; succeeded={succeeded}; decodeSucceeded={decodeSucceeded}; returnedByteCount={returnedByteCount}";
 
         private static bool TryRunHpFanMaxExperimentDryRun(string[] args)
         {
