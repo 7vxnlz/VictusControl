@@ -10,6 +10,7 @@
 ## Branding and Metadata Risks
 
 - `favicon.ico` is still the inherited blue G icon, so Explorer, shortcuts, and executable properties do not present distinct VictusX branding.
+- [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) maps the separate executable, tray, window, and shared-resource paths; no asset replacement has occurred.
 - The project now supplies explicit VictusX product, description, company/authors, copyright, assembly, file, and informational version metadata. A future packaged smoke test must still confirm the final executable properties match those values.
 - G-Helper and ASUS strings/resources remain in the binary. HP shell isolation hides inherited control/update surfaces, but packaging must not imply that those features support HP hardware.
 - GPLv3 is present, but a preview package still needs clear source, attribution, modified-project, and third-party notice handling.
@@ -61,6 +62,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 Keep the explicit VictusX metadata aligned with the future artifact version, then replace the inherited icon and complete the packaged smoke-test checklist before any release work.
 
 See [Third-Party Notices Audit](third-party-notices-audit.md) for the source-attribution and package-notice distribution gate.
+See [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) for the future HP-preview-only visual identity work.
 
 ## Wait Until Later
 
