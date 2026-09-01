@@ -18,6 +18,7 @@
 
 ## Before Any Preview Publish
 
+- Review [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) as the final consolidated release gate.
 - Confirm the explicit VictusX version, product, publisher, and copyright metadata in the packaged executable; replace the inherited icon and add license and notice metadata.
 - Review the icon/app identity plan; use an original or licensed multi-resolution icon, preserve shared default-mode resources, and verify executable, tray, window, and shortcut rendering in the packaged HP preview.
 - Include the applicable license text, prominent G-Helper modified-project attribution, and a reviewed third-party notice inventory for resolved packages and dependencies.
@@ -36,4 +37,4 @@
 
 ## Release Status
 
-Release remains blocked. No fan or performance control, fan writes, or hardware-control support is included or claimed. SetFanMax remains NO-GO/design-only.
+Release remains blocked by the consolidated [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md). No fan or performance control, fan writes, or hardware-control support is included or claimed. SetFanMax remains NO-GO/design-only.
