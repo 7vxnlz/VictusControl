@@ -9,6 +9,8 @@ public static class HpDiagnosticDashboardFormatter
     public const string SetFanMaxStatus = HpDiagnosticStatusText.SetFanMaxNoGo;
     public const string SetFanMaxReadinessStatus = "NO-GO";
     public const string SetFanMaxFirstWriteGateNotSatisfied = "False - not satisfied";
+    public const string SetFanMaxFirstWriteGateMissingOldReportReason = "Missing first-write gate field(s) in cached/old report; failing closed to NO-GO until exact-device proof is present.";
+    public const string SetFanMaxFirstWriteGateUnexpectedReportReason = "Cached report contains optimistic first-write gate data; failing closed to NO-GO.";
     public const string SetFanMaxInputLengthUnset = "Unset / not validated";
     public const string SetFanMaxPayloadLengthNotSelected = "Not selected";
     public const string SetFanMaxEvidenceMissing = "Missing / not proven";
@@ -86,7 +88,10 @@ public static class HpDiagnosticDashboardFormatter
                 Row("Current status", SetFanMaxReadinessStatus),
                 Row("First-write gate status", FormatFirstWriteGateStatus(input.SetFanMaxFirstWriteGateStatus)),
                 Row("First-write gate satisfied", FormatFirstWriteGateSatisfied(input.SetFanMaxFirstWriteGateSatisfied)),
-                Row("First-write gate reason", FormatFirstWriteGateReason(input.SetFanMaxFirstWriteGateReason)),
+                Row("First-write gate reason", FormatFirstWriteGateReason(
+                    input.SetFanMaxFirstWriteGateStatus,
+                    input.SetFanMaxFirstWriteGateSatisfied,
+                    input.SetFanMaxFirstWriteGateReason)),
                 Row("Fan write implemented", FormatEvidenceWriteImplemented(input.SetFanMaxWriteImplemented)),
                 Row("Fan write allowed", FormatEvidenceWriteAllowed(input.SetFanMaxWriteAllowed)),
                 Row("DeviceValidatedInputLength", FormatDeviceValidatedInputLength(input.SetFanMaxDeviceValidatedInputLength)),
@@ -170,11 +175,22 @@ public static class HpDiagnosticDashboardFormatter
             : SetFanMaxFirstWriteGateNotSatisfied;
     }
 
-    public static string FormatFirstWriteGateReason(string? value)
+    public static string FormatFirstWriteGateReason(string? status, string? satisfied, string? reason)
     {
-        return string.IsNullOrWhiteSpace(value)
-            ? HpFanMaxDryRunReport.FirstWriteGateReason
-            : value;
+        if (string.Equals(status, "GO", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(satisfied, bool.TrueString, StringComparison.OrdinalIgnoreCase))
+        {
+            return SetFanMaxFirstWriteGateUnexpectedReportReason;
+        }
+
+        if (string.IsNullOrWhiteSpace(status) ||
+            string.IsNullOrWhiteSpace(satisfied) ||
+            string.IsNullOrWhiteSpace(reason))
+        {
+            return SetFanMaxFirstWriteGateMissingOldReportReason;
+        }
+
+        return reason;
     }
 
     private static string FormatEvidenceWriteImplemented(string? value)
@@ -241,6 +257,7 @@ public static class HpDiagnosticDashboardFormatter
             value.StartsWith("False - blocked", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("False - not satisfied", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Missing", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Cached report contains optimistic", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Unset", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Not selected", StringComparison.OrdinalIgnoreCase))
         {

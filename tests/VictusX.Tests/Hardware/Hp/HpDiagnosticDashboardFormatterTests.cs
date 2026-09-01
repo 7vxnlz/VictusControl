@@ -82,7 +82,7 @@ public sealed class HpDiagnosticDashboardFormatterTests
         Assert.Contains(readiness.Rows, row => row.Label == "Current status" && row.Value == "NO-GO" && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "First-write gate status" && row.Value == "NO-GO" && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "First-write gate satisfied" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateNotSatisfied && row.Status == HpDiagnosticDashboardStatus.Blocked);
-        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpFanMaxDryRunReport.FirstWriteGateReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateMissingOldReportReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "Fan write implemented" && row.Value == "False - not implemented");
         Assert.Contains(readiness.Rows, row => row.Label == "Fan write allowed" && row.Value == "False - blocked" && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "DeviceValidatedInputLength" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset && row.Status == HpDiagnosticDashboardStatus.Blocked);
@@ -123,12 +123,59 @@ public sealed class HpDiagnosticDashboardFormatterTests
             HpDiagnosticDashboardFormatter.BuildSections(new()
             {
                 SetFanMaxFirstWriteGateStatus = "GO",
-                SetFanMaxFirstWriteGateSatisfied = "True"
+                SetFanMaxFirstWriteGateSatisfied = "True",
+                SetFanMaxFirstWriteGateReason = "Approved"
             }),
             section => section.Title == "SetFanMax evidence readiness");
 
         Assert.Contains(readiness.Rows, row => row.Label == "First-write gate status" && row.Value == "Blocked - unexpected GO state" && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "First-write gate satisfied" && row.Value == "Blocked - unexpected satisfied state" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateUnexpectedReportReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
+    }
+
+    [Fact]
+    public void SetFanMaxFirstWriteGate_OldReportMissingGateFieldsShowsOldReportReason()
+    {
+        HpDiagnosticDashboardSection readiness = Assert.Single(
+            HpDiagnosticDashboardFormatter.BuildSections(new()
+            {
+                SetFanMaxWriteImplemented = "Not implemented",
+                SetFanMaxWriteAllowed = "Blocked"
+            }),
+            section => section.Title == "SetFanMax evidence readiness");
+
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate status" && row.Value == "NO-GO" && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate satisfied" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateNotSatisfied && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateMissingOldReportReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
+    }
+
+    [Fact]
+    public void SetFanMaxFirstWriteGate_PartialGateFieldsStillShowOldReportReason()
+    {
+        HpDiagnosticDashboardSection readiness = Assert.Single(
+            HpDiagnosticDashboardFormatter.BuildSections(new()
+            {
+                SetFanMaxFirstWriteGateStatus = "NO-GO",
+                SetFanMaxFirstWriteGateReason = HpFanMaxDryRunReport.FirstWriteGateReason
+            }),
+            section => section.Title == "SetFanMax evidence readiness");
+
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateMissingOldReportReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
+    }
+
+    [Fact]
+    public void SetFanMaxFirstWriteGate_CurrentNoGoReportKeepsExactReason()
+    {
+        HpDiagnosticDashboardSection readiness = Assert.Single(
+            HpDiagnosticDashboardFormatter.BuildSections(new()
+            {
+                SetFanMaxFirstWriteGateStatus = "NO-GO",
+                SetFanMaxFirstWriteGateSatisfied = "False",
+                SetFanMaxFirstWriteGateReason = HpFanMaxDryRunReport.FirstWriteGateReason
+            }),
+            section => section.Title == "SetFanMax evidence readiness");
+
+        Assert.Contains(readiness.Rows, row => row.Label == "First-write gate reason" && row.Value == HpFanMaxDryRunReport.FirstWriteGateReason && row.Status == HpDiagnosticDashboardStatus.Blocked);
     }
 
     [Fact]
@@ -211,6 +258,7 @@ public sealed class HpDiagnosticDashboardFormatterTests
         Assert.Contains(HpDiagnosticStatusText.FanControlNotImplemented, summary, StringComparison.Ordinal);
         Assert.Contains(HpDiagnosticStatusText.SetFanMaxNoGo, summary, StringComparison.Ordinal);
         Assert.Contains("Current status: NO-GO", summary, StringComparison.Ordinal);
+        Assert.Contains("First-write gate reason: " + HpDiagnosticDashboardFormatter.SetFanMaxFirstWriteGateMissingOldReportReason, summary, StringComparison.Ordinal);
         Assert.Contains("DeviceValidatedInputLength: " + HpDiagnosticDashboardFormatter.SetFanMaxInputLengthUnset, summary, StringComparison.Ordinal);
         Assert.Contains("Failure/recovery proof: " + HpDiagnosticDashboardFormatter.SetFanMaxEvidenceMissing, summary, StringComparison.Ordinal);
     }

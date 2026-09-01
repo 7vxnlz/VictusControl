@@ -33,6 +33,8 @@ The formatter adds a `SetFanMax evidence readiness` section with:
 
 Missing or blank values render as `Not available`. Missing, invalid, or unapproved `DeviceValidatedInputLength` renders as `Unset / not validated`. Even cached `1` or `4` is shown only as reported/not approved, and the payload decision remains `Not selected`.
 
+Old cached reports that do not contain the first-write gate fields fail closed as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and an explicit cached/old-report missing-field reason. A cached report that ever claims `GO` or `true` is treated as unexpected optimistic data and still renders blocked.
+
 ## Copy And Export
 
 Copy summary and export use `HpDiagnosticDashboardFormatter.BuildSummary()` over the same read-only rows shown in the dashboard. They include the SetFanMax readiness rows and do not include raw binary dumps or write instructions.
