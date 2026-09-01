@@ -8,6 +8,8 @@ This future, documentation-only design accepts a manually completed HP Diagnosti
 
 The input is an exported diagnostic Markdown file with its manual evidence template completed. A future parser may extract the exact device identity, SystemDesignData summary, timestamped FanGetCount/FanMaxGet/FanGetLevel baselines, AC/battery and thermal observations, payload-length evidence, enable/restore readbacks, recovery notes, reviewer metadata, and human-approval checkpoint.
 
+Developer dry-run JSON records may be used only as supporting evidence that the logging path is fail-closed. They are not manual hardware evidence because they intentionally contain no WMI invocation, no live readbacks, no write result, and no restore result.
+
 ## Validation and Fail-Closed Behavior
 
 Treat malformed Markdown, missing sections, duplicate or conflicting values, stale or untraceable evidence, non-exact device identity, missing restore proof, and unknown payload length as invalid. The result must report missing or conflicting evidence and remain `NO-GO`; it must never infer values from prose, defaults, repository similarity, or absent fields.
@@ -15,6 +17,8 @@ Treat malformed Markdown, missing sections, duplicate or conflicting values, sta
 ## Limits of Parser Output
 
 Parsing can summarize evidence completeness only. It cannot automatically set the first-write gate to `GO`, grant write permission, set `DeviceValidatedInputLength`, or select one-byte versus four-byte input length. A single imported record is not hardware validation.
+
+Imported dry-run records must remain blocked even when they contain a one-byte or four-byte payload hypothesis. `WriteExecuted=false`, `DeviceValidatedInputLength=null`, and `FirstWriteGateSatisfied=false` are expected and must not be treated as progress toward approval.
 
 ## Required Human Review
 

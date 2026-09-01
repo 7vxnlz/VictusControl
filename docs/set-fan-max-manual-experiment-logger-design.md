@@ -30,6 +30,8 @@ The proposed log folder is `%APPDATA%\VictusX\Logs\FanExperiments\`. A future im
 
 The write-disabled command `--hp-victus --hp-fan-write-experiment-dry-run --set-fan-max-payload-length=1` or `=4` now creates one local blocked JSON record and exits before normal application startup. The length is recorded only as a hypothesis. Missing `--hp-victus`, missing/invalid/duplicate length values, or `--hp-wmi-readonly-test` are rejected in that record. It does not invoke WMI, collect live readbacks, execute SetFanMax, or alter `DeviceValidatedInputLength`.
 
+Runtime verification produced blocked records for both payload hypotheses. The four-byte record stored `PayloadLengthCandidate=FourByteHypothesis` with `PayloadBytesHypothesis=01-00-00-00`; the one-byte record stored `PayloadLengthCandidate=OneByteHypothesis` with `PayloadBytesHypothesis=01`. Both records kept `WriteExecuted=false`, `DeviceValidatedInputLength=null`, `FirstWriteGateSatisfied=false`, `Outcome=Unknown`, and the standard NO-GO blocked reasons. Enable and restore results both state that WMI and hardware were not attempted.
+
 ## Required Evidence Record
 
 The baseline record must include timestamp; model; SKU; BIOS; thermal policy; selected candidate length; proposed payload bytes; command `0x20008`; type `0x27`; WMI class/method; FanGetCount; FanMaxGet; raw FanGetLevel; AC/battery state; temperature source/baseline; and operator approval.

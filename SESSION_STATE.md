@@ -4,7 +4,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 
 ## Current State
 
-- Date: 2026-09-01
+- Date: 2026-09-02
 - Latest safety note: HP Diagnostic report loading hardened for missing/corrupt reports.
 - Latest path note: HP Diagnostic paths and status messages standardized.
 - Latest reference note: Reference fan write flow comparison added; no write implementation.
@@ -44,11 +44,12 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest experiment logger note: SetFanMax manual experiment logger design added; writes remain disabled and NO-GO.
 - Latest experiment scaffold note: SetFanMax local experiment log scaffold added; it serializes blocked records only and has no WMI or write path.
 - Latest dry-run note: SetFanMax developer-only dry-run command logs a blocked record only, then exits before normal startup; no WMI or write path exists.
+- Latest dry-run verification note: SetFanMax dry-run runtime verification wrote blocked one-byte and four-byte hypothesis logs; both kept WriteExecuted=false and DeviceValidatedInputLength unset.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
-- Last completed work: added a developer-only SetFanMax dry-run command that writes blocked local records only
+- Last completed work: runtime-verified the SetFanMax dry-run command writes blocked one-byte and four-byte hypothesis logs only
 - Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
-- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 127/127 tests passed on 2026-09-01 after the SetFanMax dry-run command addition
+- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 127/127 tests passed on 2026-09-02 after SetFanMax dry-run runtime verification
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
 - Reference commits reviewed: OmenXHub `ca84cb011d1d3e5850445d19e45fbea06e83a8fd`; OmenSuperHub `a6ab6988c446ee5421466097fdf60c0d521e5c81`; omencore `b39b44978902606aa708cc0d78bcfd87e95fd88b`; ghelper-omen `1694844d2725e79a2b2065a0a1494fa1d143e3f4`; G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; ECC `5eddf1a3ffd311423be2d4ba7d26f7209c91b033`
