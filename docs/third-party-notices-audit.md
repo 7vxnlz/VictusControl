@@ -18,12 +18,13 @@ This is a repository-evidence checkpoint for a future HP diagnostic preview. It 
 | `LICENSE` | Present; GPLv3 text | Include the applicable license text and verify its presentation in the package. |
 | README credits | Present for G-Helper and research references | Add a concise package attribution that names G-Helper, the source location/commit, and that VictusX is modified. |
 | `NOTICE` / third-party inventory | Not found | Create and review a versioned third-party notice inventory before distribution. |
-| Package lock / resolved dependency inventory | Not found | Capture the resolved package graph from a clean restore before packaging. |
+| Package lock | Not found | Keep a clean-restore comparison step before packaging. |
+| Resolved dependency inventory | Locally restored assets were inspected | See [Dependency Notice Inventory](dependency-notice-inventory.md); repeat from a clean restore before packaging. |
 | Package license evidence | Not stored in the repository | Verify each package's license, notice, and redistribution requirements from its authoritative package metadata. |
 
 ## NuGet Considerations
 
-`app/VictusX.csproj` directly references FftSharp, HidSharpCore, NAudio.Wasapi, NvAPIWrapper.Net, Microsoft.Management.Infrastructure, System.Management, TaskScheduler, and WinForms.DataVisualization. This audit does not infer their licenses or notice requirements. A future notice inventory must record the exact resolved version, package source, license evidence, any required notice text, and whether transitive dependencies add obligations.
+`app/VictusX.csproj` directly references FftSharp, HidSharpCore, NAudio.Wasapi, NvAPIWrapper.Net, Microsoft.Management.Infrastructure, System.Management, TaskScheduler, and WinForms.DataVisualization. [Dependency Notice Inventory](dependency-notice-inventory.md) records their locally resolved versions and discovered transitives. This audit does not infer their licenses or notice requirements. A future notice inventory must record authoritative license evidence, any required notice text, and whether transitive dependencies add obligations.
 
 ## Future Preview Distribution Gate
 

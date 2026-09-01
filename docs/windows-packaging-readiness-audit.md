@@ -14,6 +14,7 @@
 - G-Helper and ASUS strings/resources remain in the binary. HP shell isolation hides inherited control/update surfaces, but packaging must not imply that those features support HP hardware.
 - GPLv3 is present, but a preview package still needs clear source, attribution, modified-project, and third-party notice handling.
 - `docs/third-party-notices-audit.md` now records the repository evidence: GPLv3 text and README-level G-Helper credit exist, while a versioned third-party notice inventory and resolved package-license review remain outstanding.
+- `docs/dependency-notice-inventory.md` records the current local restore graph: 11 application packages and 13 test-only packages. It intentionally leaves license and notice status unreviewed pending authoritative metadata.
 
 ## Package and Installer Status
 
@@ -52,6 +53,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - Run build/tests and a packaged smoke test with every explicit invocation field `Attempted=false`.
 - Add license/third-party notices, checksums, malware scan results, and a signing plan before public distribution.
 - Review the third-party notices audit, preserve applicable upstream notices, and verify direct and transitive package attribution from authoritative metadata.
+- Review and complete the dependency notice inventory against a clean restore and the final package contents.
 - Confirm no developer-only flags, symbols, logs, machine paths, or captured device data are shipped.
 
 ## Change Now

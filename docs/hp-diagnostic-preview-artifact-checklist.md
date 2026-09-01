@@ -20,6 +20,7 @@
 
 - Confirm the explicit VictusX version, product, publisher, and copyright metadata in the packaged executable; replace the inherited icon and add license and notice metadata.
 - Include the applicable license text, prominent G-Helper modified-project attribution, and a reviewed third-party notice inventory for resolved packages and dependencies.
+- Review [Dependency Notice Inventory](dependency-notice-inventory.md) from a clean restore and reconcile it with final package contents before distribution.
 - Confirm the notice inventory against authoritative package metadata and the final package contents; do not treat this repository audit as legal advice.
 - Confirm the launcher is packaged under `tools` beside `VictusX.exe` and that its only application argument is `--hp-victus`.
 - Run a clean-machine packaged smoke test: diagnostic-only shell, no elevation, no control/update surfaces, and every explicit invocation field `Attempted=false`.

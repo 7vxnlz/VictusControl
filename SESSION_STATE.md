@@ -18,10 +18,11 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest preview safety note: HP diagnostic preview profile/launcher safety checks added.
 - Latest metadata note: HP diagnostic preview metadata cleaned; no artifacts published.
 - Latest notices note: third-party notices audit added; release remains blocked.
+- Latest dependency note: dependency notice inventory added; release remains blocked.
 - Branch: `main` tracking `origin/main`
 - Current objective: maintain safe handoff state and next-step checkpoint
-- Last completed work: audited third-party notices and attribution for the HP diagnostic preview
-- Files touched recently: `docs/third-party-notices-audit.md`, `docs/windows-packaging-readiness-audit.md`, `docs/hp-diagnostic-preview-artifact-checklist.md`, `SESSION_STATE.md`
+- Last completed work: created the HP diagnostic preview dependency notice inventory
+- Files touched recently: `docs/dependency-notice-inventory.md`, `docs/third-party-notices-audit.md`, `docs/windows-packaging-readiness-audit.md`, `docs/hp-diagnostic-preview-artifact-checklist.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 2 NU1900 audit-source warnings; 101/101 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
