@@ -35,11 +35,12 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest first-write gate dashboard note: SetFanMax first-write gate status is report-backed and fail-closed in HP diagnostics.
 - Latest fallback note: old/missing SetFanMax first-write gate report fields fail closed with explicit old-report wording.
 - Latest test coverage note: SetFanMax gate fail-closed test coverage checkpoint added.
+- Latest export note: SetFanMax manual evidence capture template added to diagnostic Markdown exports; no write path added.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP diagnostics read-only while documenting SetFanMax gate test coverage
-- Last completed work: added SetFanMax gate test coverage checkpoint
+- Current objective: keep HP diagnostics read-only while exposing a manual SetFanMax evidence capture template in exports
+- Last completed work: added SetFanMax manual evidence capture template to diagnostic exports
 - Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
-- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 111/111 tests passed on 2026-09-01
+- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 112/112 tests passed on 2026-09-01
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
 - Reference commits reviewed: G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; only top-level/project/license/README metadata was inspected

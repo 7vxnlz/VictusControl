@@ -27,6 +27,20 @@ public sealed class HpDiagnosticReportExporterTests
     }
 
     [Fact]
+    public void BuildMarkdown_IncludesNoWriteManualEvidenceCaptureTemplate()
+    {
+        string content = HpDiagnosticReportExporter.BuildMarkdown("Model: Victus", DateTimeOffset.UnixEpoch);
+
+        Assert.Contains("## SetFanMax Manual Evidence Capture Template", content, StringComparison.Ordinal);
+        Assert.Contains("NO-GO: no fan write has been performed.", content, StringComparison.Ordinal);
+        Assert.Contains("Payload length is not selected; do not guess 1-byte vs 4-byte.", content, StringComparison.Ordinal);
+        Assert.Contains("- Device model: ", content, StringComparison.Ordinal);
+        Assert.Contains("- FanGetLevel raw baseline: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Restore/disable observation: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Human approval checkpoint: ", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Exporter_HasNoWmiDependencyOrInvocationSurface()
     {
         Type exporterType = typeof(HpDiagnosticReportExporter);

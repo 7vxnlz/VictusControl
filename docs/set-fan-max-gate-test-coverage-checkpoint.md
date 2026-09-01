@@ -17,7 +17,7 @@ Cached `GO`, `true`, or implemented/allowed-style values are treated as unexpect
 
 ## Dashboard, Copy, And Export Coverage
 
-The dashboard row formatter and `BuildSummary()` path are covered. Copy summary and export both use `BuildSummary()`, so their SetFanMax gate text inherits the same fail-closed wording and excludes raw binary dumps.
+The dashboard row formatter and `BuildSummary()` path are covered. Copy summary and export both use `BuildSummary()`, so their SetFanMax gate text inherits the same fail-closed wording and excludes raw binary dumps. The Markdown exporter also has pure coverage for its blank, no-write manual evidence capture template.
 
 ## Remaining Untested Areas
 
