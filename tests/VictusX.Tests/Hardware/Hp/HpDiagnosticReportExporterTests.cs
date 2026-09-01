@@ -35,8 +35,17 @@ public sealed class HpDiagnosticReportExporterTests
         Assert.Contains("NO-GO: no fan write has been performed.", content, StringComparison.Ordinal);
         Assert.Contains("Payload length is not selected; do not guess 1-byte vs 4-byte.", content, StringComparison.Ordinal);
         Assert.Contains("- Device model: ", content, StringComparison.Ordinal);
+        Assert.Contains("- SystemDesignData summary: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Evidence timestamps/conditions: ", content, StringComparison.Ordinal);
         Assert.Contains("- FanGetLevel raw baseline: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Non-write temperature source/baseline, if available: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Payload evidence method/command/type/input size: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Payload state-byte meaning: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Enable readback evidence: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Restore readback evidence: ", content, StringComparison.Ordinal);
         Assert.Contains("- Restore/disable observation: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Reviewer name/date: ", content, StringComparison.Ordinal);
+        Assert.Contains("- Evidence references/conflicts reviewed: ", content, StringComparison.Ordinal);
         Assert.Contains("- Human approval checkpoint: ", content, StringComparison.Ordinal);
     }
 

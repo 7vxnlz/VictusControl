@@ -86,6 +86,6 @@ The [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md) conf
 
 ## Export Template
 
-HP Diagnostic Markdown exports include a blank manual evidence capture template for the identity, baseline, observation, recovery, and approval fields above. It is export-only text: it remains **NO-GO**, does not select a payload length, and cannot invoke WMI or perform a fan write.
+HP Diagnostic Markdown exports include a blank manual evidence capture template for the identity, SystemDesignData, baseline, observation, payload-length evidence, readback, recovery, reviewer, and approval fields above. It is export-only text: it remains **NO-GO**, does not select a payload length, and cannot invoke WMI or perform a fan write.
 
-Use the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md) to review a completed export. Completing its review sequence still cannot approve code writes by itself.
+Use the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md) to review a completed export. Completing its review sequence still cannot approve code writes by itself. The template is aligned to the workflow so missing manual evidence is visible instead of implied.

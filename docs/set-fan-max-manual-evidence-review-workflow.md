@@ -4,7 +4,7 @@ This workflow reviews a manually completed HP Diagnostic Markdown export. It is 
 
 ## Required Export Content
 
-Review the diagnostic summary, SetFanMax readiness/gate state, and the blank manual evidence template. Reject the record if the export is missing its read-only disclaimer, `NO-GO` status, or the warning not to guess `1` versus `4` bytes.
+Review the diagnostic summary, SetFanMax readiness/gate state, and the blank manual evidence template. The export template must reserve fields for identity, SystemDesignData, baseline readbacks, timestamps/conditions, payload-length evidence, enable/restore readbacks, recovery notes, reviewer metadata, and human approval. Reject the record if the export is missing its read-only disclaimer, `NO-GO` status, or the warning not to guess `1` versus `4` bytes.
 
 ## Review Sequence
 
