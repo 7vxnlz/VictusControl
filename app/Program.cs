@@ -57,6 +57,11 @@ namespace GHelper
         // The main entry point for the application
         public static void Main(string[] args)
         {
+            if (TryRunHpFanMaxExperimentDryRun(args))
+            {
+                return;
+            }
+
             try
             {
                 MainCore(args);
@@ -66,6 +71,27 @@ namespace GHelper
                 WriteStartupCrashLog(args, ex);
                 throw;
             }
+        }
+
+        private static bool TryRunHpFanMaxExperimentDryRun(string[] args)
+        {
+            HpFanMaxExperimentDryRunCommandResult result = HpFanMaxExperimentDryRunCommand.Parse(args);
+            if (!result.ShouldExit)
+            {
+                return false;
+            }
+
+            try
+            {
+                string path = HpFanMaxExperimentLogWriter.Write(result.LogRecord!);
+                Console.WriteLine("SetFanMax dry-run record written: " + path);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("SetFanMax dry-run record could not be written: " + ex.Message);
+            }
+
+            return true;
         }
 
         private static void MainCore(string[] args)

@@ -26,6 +26,10 @@ The future implementation would require all of the following, with no UI route:
 
 The proposed log folder is `%APPDATA%\VictusX\Logs\FanExperiments\`. A future implementation must create a new timestamped, append-only text or Markdown record before any action and leave it locally available after failure.
 
+## Current Developer-Only Dry Run
+
+The write-disabled command `--hp-victus --hp-fan-write-experiment-dry-run --set-fan-max-payload-length=1` or `=4` now creates one local blocked JSON record and exits before normal application startup. The length is recorded only as a hypothesis. Missing `--hp-victus`, missing/invalid/duplicate length values, or `--hp-wmi-readonly-test` are rejected in that record. It does not invoke WMI, collect live readbacks, execute SetFanMax, or alter `DeviceValidatedInputLength`.
+
 ## Required Evidence Record
 
 The baseline record must include timestamp; model; SKU; BIOS; thermal policy; selected candidate length; proposed payload bytes; command `0x20008`; type `0x27`; WMI class/method; FanGetCount; FanMaxGet; raw FanGetLevel; AC/battery state; temperature source/baseline; and operator approval.
@@ -52,4 +56,4 @@ One reviewed record for this exact model/SKU/BIOS must identify exactly one leng
 
 ## Recommended Next Implementation Step
 
-Write-disabled record, formatter, and local `CreateNew` writer scaffolding now exist. They only serialize supplied NO-GO data and are not wired to UI, startup, WMI, or a runtime write path. First obtain and independently review a sanitized exact-device evidence record using the existing manual evidence workflow; retain NO-GO if the record does not exist or is incomplete.
+Write-disabled record, formatter, parser, and local `CreateNew` writer scaffolding now exist. The dry-run handler only serializes a supplied NO-GO record, then exits before normal startup; it is not a runtime write path. First obtain and independently review a sanitized exact-device evidence record using the existing manual evidence workflow; retain NO-GO if the record does not exist or is incomplete.

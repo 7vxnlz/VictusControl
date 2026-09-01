@@ -42,4 +42,4 @@ The focused [payload-length reference decision](set-fan-max-payload-length-refer
 
 The proposed [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) defines a future evidence record only. It does not enable writes or alter any GO condition.
 
-The write-disabled logger scaffold serializes supplied NO-GO records only; it cannot set `WriteExecuted`, validate an input length, or invoke a WMI method.
+The write-disabled logger scaffold serializes supplied NO-GO records only; it cannot set `WriteExecuted`, validate an input length, or invoke a WMI method. Its developer-only dry-run command exits after a local blocked record and cannot cross this gate.
