@@ -90,6 +90,8 @@ dotnet run --project app\VictusX.csproj -- --hp-victus
 
 For IDE profile usage, local report paths, and safety notes, see the [VictusX HP Diagnostic run guide](docs/victusx-hp-diagnostic-run-guide.md).
 
+The future preview profile and launcher contract are documented in the [HP Diagnostic preview artifact checklist](docs/hp-diagnostic-preview-artifact-checklist.md); no preview artifact has been published.
+
 The `--hp-wmi-readonly-test` flag is only for controlled developer testing. Do not use it unless you are intentionally testing the guarded HP WMI invocation path and understand the current limitations.
 
 HP WMI real invocation tests are developer-only and may require running VictusX from an elevated Administrator terminal. The normal safe command remains:
