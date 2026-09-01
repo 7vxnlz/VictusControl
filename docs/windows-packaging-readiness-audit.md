@@ -56,6 +56,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - Review the third-party notices audit, preserve applicable upstream notices, and verify direct and transitive package attribution from authoritative metadata.
 - Review and complete the dependency notice inventory against a clean restore and the final package contents.
 - Confirm no developer-only flags, symbols, logs, machine paths, or captured device data are shipped.
+- Execute the [Clean-Machine Validation Plan](clean-machine-validation-plan.md) against the final candidate package and retain the acceptance record.
 
 ## Change Now
 
@@ -63,6 +64,7 @@ Keep the explicit VictusX metadata aligned with the future artifact version, the
 
 See [Third-Party Notices Audit](third-party-notices-audit.md) for the source-attribution and package-notice distribution gate.
 See [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) for the future HP-preview-only visual identity work.
+See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the future portable-preview acceptance procedure.
 
 ## Wait Until Later
 
