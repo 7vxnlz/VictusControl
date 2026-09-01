@@ -38,6 +38,8 @@ The separate baseline command is `--hp-victus --hp-wmi-readonly-test --hp-fan-wr
 
 The record captures decoded identity and baseline facts where available: model, SKU, BIOS, thermal policy version, fan count, max-fan state, and the known raw FanGetLevel prefix. It summarizes each probe's attempted/success/decode/byte-count state without logging full binary output. The payload length remains a hypothesis only; the record always preserves `WriteExecuted=false`, `DeviceValidatedInputLength=null`, `FirstWriteGateSatisfied=false`, and **NO-GO**. It does not invoke SetFanMax or any other write-capable command, and it does not start the normal UI.
 
+Runtime verification of this command remains pending from an elevated Administrator terminal. The 2026-09-02 Codex session was not elevated, so it intentionally did not run the baseline command or invoke any WMI method; no exact-device baseline record was claimed from that session.
+
 ## Required Evidence Record
 
 The baseline record must include timestamp; model; SKU; BIOS; thermal policy; selected candidate length; proposed payload bytes; command `0x20008`; type `0x27`; WMI class/method; FanGetCount; FanMaxGet; raw FanGetLevel; AC/battery state; temperature source/baseline; and operator approval.
