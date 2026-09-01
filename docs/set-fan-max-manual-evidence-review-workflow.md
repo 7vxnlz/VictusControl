@@ -19,6 +19,10 @@ Review the diagnostic summary, SetFanMax readiness/gate state, and the blank man
 
 Retain **NO-GO** for incomplete, conflicting, stale, untraceable, or non-exact-device evidence; unknown input length; missing baseline, thermal/power, restore, recovery, or reviewer record; any alternate-shape retry; or evidence involving EC or other fan write commands. Review completion is not write authorization.
 
+## Future Import Support
+
+A future parser may summarize a manually completed export only as untrusted evidence. Its fail-closed requirements and limits are defined in the [evidence import/review design](set-fan-max-evidence-import-review-design.md): parser output cannot select a payload length, approve a write, or change this workflow's NO-GO status.
+
 ## If Evidence Ever Meets The Gate
 
 Before any separately authorized implementation-design task, update the [first-write decision gate](set-fan-max-first-write-decision-gate.md) to `GO` with cited exact-device evidence and update the [proof gap checklist](set-fan-max-proof-gap-checklist.md) with each proven item. Until those documents change together, no write code may be added.

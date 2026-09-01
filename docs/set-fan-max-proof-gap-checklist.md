@@ -59,4 +59,6 @@ Use the [manual evidence capture package](set-fan-max-manual-evidence-capture.md
 
 Use the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md) to apply the required review order and fail-closed rules before this checklist or the first-write decision gate could ever be updated.
 
+The planned [evidence import/review design](set-fan-max-evidence-import-review-design.md) may flag incomplete or conflicting manual exports only. It cannot mark any proof as proven, select a payload length, or change NO-GO.
+
 The HP Diagnostic dashboard's read-only SetFanMax readiness panel is audited in [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md); it reports these gaps only and does not enable writes. The consolidated implementation threshold is the [first-write decision gate](set-fan-max-first-write-decision-gate.md), which remains NO-GO.

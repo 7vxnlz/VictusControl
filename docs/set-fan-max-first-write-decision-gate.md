@@ -35,3 +35,5 @@ Older cached reports that lack these fields must also display `NO-GO` / not sati
 Test coverage for these fail-closed dashboard, report, and copy/export summary paths is tracked in [set-fan-max-gate-test-coverage-checkpoint.md](set-fan-max-gate-test-coverage-checkpoint.md).
 
 Any manually completed export must first pass the [manual evidence review workflow](set-fan-max-manual-evidence-review-workflow.md). Only a cited update of this gate and the proof gap checklist can change the current NO-GO decision.
+
+A future import parser may help identify missing or conflicting fields, but is not evidence approval and cannot update this gate; see the [evidence import/review design](set-fan-max-evidence-import-review-design.md).

@@ -38,9 +38,10 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest export note: SetFanMax manual evidence capture template added to diagnostic Markdown exports; no write path added.
 - Latest review note: SetFanMax manual evidence review workflow added; fan writes remain NO-GO.
 - Latest alignment note: SetFanMax evidence export template aligned with manual review workflow.
+- Latest import design note: SetFanMax manual evidence import/review design added; parser output must remain fail-closed and cannot authorize writes.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP diagnostics read-only while aligning SetFanMax export evidence with review workflow
-- Last completed work: aligned SetFanMax exported evidence template with manual review workflow
+- Current objective: keep HP diagnostics read-only while documenting fail-closed SetFanMax manual evidence review
+- Last completed work: designed fail-closed SetFanMax manual evidence import/review behavior
 - Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
 - Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 112/112 tests passed on 2026-09-01 after SetFanMax export/review alignment
 - Open questions: none for documentation handoff
