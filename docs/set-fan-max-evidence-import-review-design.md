@@ -24,6 +24,8 @@ An independent reviewer must validate the original evidence, exact model/SKU/BIO
 
 Use pure parser tests for valid structure, missing fields, duplicate/conflicting values, old template versions, malformed Markdown, and fail-closed results. Tests must use fixtures only: no WMI, no hardware, no write payload execution, and no runtime gate mutation.
 
+The concrete fixture matrix and required blocked outcomes are in the [evidence import parser test plan](set-fan-max-evidence-import-parser-test-plan.md).
+
 ## Recommended Next Safe Task
 
 Keep the existing export template and review workflow documentation-only. Implement a pure, fixture-based parser only after a separately authorized design task defines a versioned input grammar and reviewer-owned evidence storage.

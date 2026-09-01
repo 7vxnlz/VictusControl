@@ -23,6 +23,8 @@ Retain **NO-GO** for incomplete, conflicting, stale, untraceable, or non-exact-d
 
 A future parser may summarize a manually completed export only as untrusted evidence. Its fail-closed requirements and limits are defined in the [evidence import/review design](set-fan-max-evidence-import-review-design.md): parser output cannot select a payload length, approve a write, or change this workflow's NO-GO status.
 
+Future parser tests must use manual Markdown fixtures only and preserve these limits; see the [evidence import parser test plan](set-fan-max-evidence-import-parser-test-plan.md).
+
 ## If Evidence Ever Meets The Gate
 
 Before any separately authorized implementation-design task, update the [first-write decision gate](set-fan-max-first-write-decision-gate.md) to `GO` with cited exact-device evidence and update the [proof gap checklist](set-fan-max-proof-gap-checklist.md) with each proven item. Until those documents change together, no write code may be added.
