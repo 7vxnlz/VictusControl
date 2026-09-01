@@ -38,4 +38,4 @@ The fan later stopping is consistent with the matching restore, firmware policy,
 
 ## Recommended Next Safe Step
 
-Plan one controlled second four-byte confirmation experiment only, with precise enable/restore timestamps, AC/battery state, fan-noise start/stop times, independent thermal observations, UI/event-log notes, and explicit success criteria that do not rely on FanMaxGet alone. Do not execute it until separately authorized.
+The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) defines the required observation record, classifications, and stop conditions. Do not execute it until separately authorized.

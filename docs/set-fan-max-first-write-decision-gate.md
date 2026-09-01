@@ -49,3 +49,5 @@ The dry-run and baseline commands remain write-disabled. The separate first-writ
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) confirms the implementation remains command-line-only and current-gate blocked; it does not change this NO-GO decision.
 
 The first four-byte result is partial success with inconclusive readback. It does not validate a payload, update `DeviceValidatedInputLength`, or permit one-byte testing or normal fan control.
+
+The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) is the only proposed follow-up. It preserves NO-GO until repeatable evidence and separate review justify a limited developer-only decision.

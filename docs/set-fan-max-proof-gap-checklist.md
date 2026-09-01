@@ -63,6 +63,8 @@ No code should guess `1` or `4`, choose by repository count or model similarity,
 
 Prepare a controlled second four-byte confirmation design with stronger manual observations and success criteria. Do not test one byte, select a payload, or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
 
+The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) defines the needed observation and classification contract. It does not close any checkbox by itself.
+
 Supporting detail: [payload-length final audit](set-fan-max-payload-length-final-audit.md), [recovery/restore proof plan](set-fan-max-recovery-restore-proof-plan.md), and [implementation gate](set-fan-max-implementation-go-no-go.md).
 
 Use the [manual evidence capture package](set-fan-max-manual-evidence-capture.md) to record and review any independently obtained exact-device evidence. Completing the template does not authorize implementation or execution.

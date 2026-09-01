@@ -53,6 +53,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest first-write runner audit note: source audit hardened transport-exception restore handling; runner remains command-line-only, unexecuted, and NO-GO.
 - Latest four-byte approval note: one explicit developer-only four-byte experiment approval flag added; normal fan-write readiness and UI remain NO-GO, payload length remains unvalidated.
 - Latest four-byte result note: first exact-device four-byte experiment had successful calls and observed fan ramp, but FanMaxGet stayed false; treat as partial evidence, keep payload length unset and normal control NO-GO.
+- Latest second confirmation note: controlled second four-byte confirmation protocol added; it requires improved manual observations and keeps one-byte, payload validation, and normal control blocked.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

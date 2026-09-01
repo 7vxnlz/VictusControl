@@ -64,3 +64,5 @@ The focused [payload-length reference decision](set-fan-max-payload-length-refer
 The [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) is documentation-only and cannot bypass any blocker, enable a command, or justify fan UI control.
 
 The [first-write runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifies the implemented runner remains command-line-only, approval-gated, and unable to alter this NO-GO status.
+
+The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) defines a repeatable evidence protocol only. It does not authorize execution, a one-byte test, payload validation, or normal fan control.
