@@ -25,6 +25,8 @@ A future parser may summarize a manually completed export only as untrusted evid
 
 Future parser tests must use manual Markdown fixtures only and preserve these limits; see the [evidence import parser test plan](set-fan-max-evidence-import-parser-test-plan.md).
 
+The future [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) describes required capture fields and stop conditions only. Its logs remain untrusted until reviewed through this workflow.
+
 ## If Evidence Ever Meets The Gate
 
 Before any separately authorized implementation-design task, update the [first-write decision gate](set-fan-max-first-write-decision-gate.md) to `GO` with cited exact-device evidence and update the [proof gap checklist](set-fan-max-proof-gap-checklist.md) with each proven item. Until those documents change together, no write code may be added.

@@ -63,4 +63,6 @@ The planned [evidence import/review design](set-fan-max-evidence-import-review-d
 
 The focused [payload-length reference decision](set-fan-max-payload-length-reference-decision.md) confirms that generic one-byte and near-device four-byte evidence cannot resolve this exact-device gap.
 
+The [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) specifies the evidence a future separately authorized attempt would need to capture; it cannot fill any checkbox without independent review.
+
 The HP Diagnostic dashboard's read-only SetFanMax readiness panel is audited in [SetFanMax readiness panel audit](set-fan-max-readiness-panel-audit.md); it reports these gaps only and does not enable writes. The consolidated implementation threshold is the [first-write decision gate](set-fan-max-first-write-decision-gate.md), which remains NO-GO.

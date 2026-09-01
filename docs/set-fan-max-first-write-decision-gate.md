@@ -39,3 +39,7 @@ Any manually completed export must first pass the [manual evidence review workfl
 A future import parser may help identify missing or conflicting fields, but is not evidence approval and cannot update this gate; see the [evidence import/review design](set-fan-max-evidence-import-review-design.md).
 
 The focused [payload-length reference decision](set-fan-max-payload-length-reference-decision.md) found no consensus or exact-device proof. It does not select a length or change this gate's NO-GO state.
+
+The proposed [manual experiment logger design](set-fan-max-manual-experiment-logger-design.md) defines a future evidence record only. It does not enable writes or alter any GO condition.
+
+The write-disabled logger scaffold serializes supplied NO-GO records only; it cannot set `WriteExecuted`, validate an input length, or invoke a WMI method.

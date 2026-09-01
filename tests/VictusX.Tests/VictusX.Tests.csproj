@@ -21,6 +21,9 @@
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelDecoder.cs" Link="Hardware\Hp\HpFanGetLevelDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelReportDecoder.cs" Link="Hardware\Hp\HpFanGetLevelReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxDryRunReport.cs" Link="Hardware\Hp\HpFanMaxDryRunReport.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogRecord.cs" Link="Hardware\Hp\HpFanMaxExperimentLogRecord.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogFormatter.cs" Link="Hardware\Hp\HpFanMaxExperimentLogFormatter.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogWriter.cs" Link="Hardware\Hp\HpFanMaxExperimentLogWriter.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxDeviceValidationDecision.cs" Link="Hardware\Hp\HpFanMaxDeviceValidationDecision.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxDeviceValidationEvaluator.cs" Link="Hardware\Hp\HpFanMaxDeviceValidationEvaluator.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxGetDecoder.cs" Link="Hardware\Hp\HpFanMaxGetDecoder.cs" />
