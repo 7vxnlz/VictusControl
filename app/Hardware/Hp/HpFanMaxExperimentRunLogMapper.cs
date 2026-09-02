@@ -10,7 +10,7 @@ public static class HpFanMaxExperimentRunLogMapper
 
         HpFanMaxExperimentBaseline? baseline = result.Baseline;
         bool writeAttempted = result.EnableWrite.Attempted || result.RestoreWrite.Attempted;
-        return new HpFanMaxExperimentLogRecord
+        HpFanMaxExperimentLogRecord record = new()
         {
             PayloadLengthCandidate = result.Payload?.Candidate,
             PayloadBytesHypothesis = result.Payload?.EnableBytesHex,
@@ -46,6 +46,19 @@ public static class HpFanMaxExperimentRunLogMapper
             BlockedReasons = result.BlockedReasons,
             WriteExecuted = writeAttempted
         };
+
+        return record.ExperimentalOutcomeClassification == HpFanMaxExperimentalOutcomeClassification.CommandSucceededPhysicalResponseObservedReadbackInconclusive
+            ? record with
+            {
+                Outcome = HpFanMaxExperimentOutcome.Unknown,
+                BlockedReasons = record.BlockedReasons
+                    .Where(reason => !string.Equals(
+                        reason,
+                        "Enable result or post-enable FanMaxGet readback did not confirm max fan enabled.",
+                        StringComparison.Ordinal))
+                    .ToArray()
+            }
+            : record;
     }
 
     private static string FormatResult(HpFanMaxExperimentWriteResult result) =>

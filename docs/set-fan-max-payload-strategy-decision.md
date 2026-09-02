@@ -31,6 +31,8 @@ Experiment records now separately preserve enable/restore command success, FanMa
 
 For a separately approved developer experiment only, the operator may record `--physical-fan-response-observed=true|false`, `--restore-observed=true|false`, and bounded `--manual-observation-notes="..."`. These log-only arguments do not pass an approval gate, select a payload, or trigger hardware behavior. Omitted observations remain unknown; they are never inferred from FanMaxGet or raw FanGetLevel values.
 
+The [classified four-byte result](set-fan-max-4byte-classified-experiment-result.md) records command success, physical response, and observed restore with inconclusive FanMaxGet. Its legacy `Outcome` is `Unknown`, not plain `Fail`; the classification remains the authoritative experimental interpretation.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.

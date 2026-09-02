@@ -25,6 +25,32 @@ public sealed class HpFanMaxExperimentOutcomeClassifierTests
     }
 
     [Fact]
+    public void Mapper_ReadbackInconclusivePhysicalResponse_UsesUnknownLegacyOutcomeAndRemovesFanMaxGetFailure()
+    {
+        HpFanMaxExperimentRunResult result = new(
+            new HpFanMaxExperimentPayload(HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis, [0x01, 0x00, 0x00, 0x00], [0x00, 0x00, 0x00, 0x00]),
+            null,
+            true,
+            new HpFanMaxExperimentWriteResult(true, true, null),
+            new HpFanMaxExperimentFanReadback(true, false, "33-00", null),
+            new HpFanMaxExperimentWriteResult(true, true, null),
+            new HpFanMaxExperimentFanReadback(true, false, "33-00", null),
+            HpFanMaxExperimentOutcome.Fail,
+            ["Enable result or post-enable FanMaxGet readback did not confirm max fan enabled."]);
+
+        HpFanMaxExperimentLogRecord record = HpFanMaxExperimentRunLogMapper.Create(
+            result,
+            new HpFanMaxExperimentManualObservation(true, true, "Fan ramp observed and restore observed.", []));
+
+        Assert.Equal(HpFanMaxExperimentOutcome.Unknown, record.Outcome);
+        Assert.Equal(
+            HpFanMaxExperimentalOutcomeClassification.CommandSucceededPhysicalResponseObservedReadbackInconclusive,
+            record.ExperimentalOutcomeClassification);
+        Assert.DoesNotContain(record.BlockedReasons, reason => reason.Contains("FanMaxGet", StringComparison.Ordinal));
+        Assert.Null(record.DeviceValidatedInputLength);
+    }
+
+    [Fact]
     public void SuccessfulCommandWithoutPhysicalConfirmation_RemainsFailOrUnknownRatherThanValidated()
     {
         HpFanMaxExperimentLogRecord record = CreateWrittenRecord() with

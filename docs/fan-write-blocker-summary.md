@@ -17,7 +17,7 @@ SetFanMax (`0x27`) remains blocked because its device-specific input length is u
 
 `DeviceValidatedInputLength` therefore remains unset and normal SetFanMax control remains **NO-GO**. The repeated four-byte physical response permits only separately approved, command-line-only developer experiments. One byte may be used only for one separately approved comparison experiment; neither path permits normal writes or UI control.
 
-Experiment logs may classify a successful command plus manually observed fan response and `FanMaxGet=false` as readback-inconclusive. That distinction does not validate a payload, recover a reliable latch readback, or permit normal fan control.
+Experiment logs may classify a successful command plus manually observed fan response and `FanMaxGet=false` as readback-inconclusive. In that narrow case, legacy `Outcome` is `Unknown` rather than a misleading plain `Fail`, and the FanMaxGet-only failure reason is omitted. This distinction does not validate a payload, recover a reliable latch readback, or permit normal fan control.
 
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
