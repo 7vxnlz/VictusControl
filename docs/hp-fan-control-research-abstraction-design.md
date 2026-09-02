@@ -26,7 +26,7 @@ This abstraction must not grow into normal fan control. The following remain uns
 
 ## Internal Contracts
 
-The pure, unwired `HpFanResearchContracts` layer now records these narrow roles without changing runner behavior:
+The pure `HpFanResearchContracts` layer records these narrow roles. Its fixed four-byte pulse metadata now flows into the existing command-line pulse path without changing runner behavior:
 
 - `IHpFanResearchOperation`: one named, bounded research operation; it has no generic speed, curve, or mode input.
 - `HpFanResearchRequest`: immutable operation identity, explicitly approved payload hypothesis, and manual-observation metadata. It must never represent a UI command or persisted user preference.
@@ -39,6 +39,8 @@ The pure, unwired `HpFanResearchContracts` layer now records these narrow roles 
 `HpFanResearchOperationKind` has only `FourByteMaxFanPulse`. The associated operation descriptor keeps `DeviceValidatedInputLength` null. `IHpFanResearchOperation` and `IHpFanMaxPulseResearchOperation` describe fixed pulse metadata only; neither exposes execution or generic fan-control methods. The pulse parser now carries that operation and the existing runner accepts it through a behavior-preserving pulse-specific overload.
 
 Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. The pulse-specific contract wiring changes no flags, gates, bytes, retries, fallback behavior, restore path, log location, UI, or tray route. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
+
+The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records the same four-byte enable/restore behavior with observed response and restore. It is developer-only evidence, not normal-control validation.
 
 ## Required Safety Gates
 

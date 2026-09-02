@@ -28,3 +28,5 @@ This validates only the bounded developer pulse path. It does not fully validate
 The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) is now implemented as a read-only local-log summary in the Diagnostic dashboard. It has no pulse execution or user-facing control route.
 
 The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) defines how the developer-only pulse path may later be organized internally without becoming a normal fan-control API.
+
+The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) confirms that the same gated four-byte pulse behavior remained operational after the internal contract wiring.

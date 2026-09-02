@@ -71,6 +71,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest HP fan research abstraction note: internal architecture design added around the gated developer-only four-byte pulse path; no normal fan-control API or UI route is authorized.
 - Latest HP fan research contract note: pure, unwired contracts now represent only the four-byte developer pulse and fail-closed research evidence; no runtime or UI behavior changed.
 - Latest HP fan research refactor note: the command-line-only four-byte pulse now consumes the narrow research contract through a behavior-preserving runner overload; no UI route or normal-control permission changed.
+- Latest HP fan research runtime note: manual post-refactor four-byte pulse verification preserved observed response and restore with inconclusive FanMaxGet; normal control remains NO-GO and DeviceValidatedInputLength remains unset.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

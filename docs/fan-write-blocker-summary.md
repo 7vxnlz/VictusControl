@@ -35,6 +35,8 @@ The [HP fan control research abstraction design](hp-fan-control-research-abstrac
 
 The research contracts represent only `FourByteMaxFanPulse`, fail-closed gates, snapshots, outcomes, and append-only log requests. The pulse parser and runner now use the fixed four-byte contract metadata without changing flags, gates, payloads, restore behavior, logging, or UI. This does not alter normal-control **NO-GO**.
 
+The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records a successful bounded developer pulse after that wiring. FanMaxGet remained inconclusive and `DeviceValidatedInputLength` remained unset, so the result does not alter normal-control **NO-GO**.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked
