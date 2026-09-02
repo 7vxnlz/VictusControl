@@ -130,7 +130,6 @@ VictusX builds on the excellent work of:
 - [OmenCore](https://github.com/theantipopau/omencore), used as an HP/Omen research reference
 - [OmenSuperHub](https://github.com/breadeding/OmenSuperHub), used as an HP/Omen research reference
 - [OmenXHub](https://github.com/MasonDye/OmenXHub), used as an HP/Omen research reference
-- [ECC](https://github.com/affaan-m/ECC), used as a hardware-control research reference
 
 VictusX is independent and is not affiliated with, authorized by, or endorsed by HP Inc., ASUS, or the original G-Helper project.
 
