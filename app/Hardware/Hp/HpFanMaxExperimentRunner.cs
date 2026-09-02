@@ -27,7 +27,8 @@ public sealed record HpFanMaxExperimentRuntimeGates(
     bool IsAdministrator,
     bool IsAcPowerOnline,
     bool IsFirstWriteGateApproved,
-    bool HasReviewedHumanApproval);
+    bool HasReviewedHumanApproval,
+    bool HasSecondFourByteConfirmationApproval);
 
 public sealed record HpFanMaxExperimentRunResult(
     HpFanMaxExperimentPayload? Payload,
@@ -77,13 +78,15 @@ public sealed class HpFanMaxExperimentRunner(
             return Blocked(command.Payload, null, false, command.ValidationReasons);
         }
 
-        if (command.Payload.Candidate != HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis || !command.HasOneTimeFourByteApproval)
+        if (command.Payload.Candidate != HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis ||
+            !command.HasOneTimeFourByteApproval ||
+            !command.HasSecondFourByteConfirmationApproval)
         {
             return Blocked(
                 command.Payload,
                 null,
                 false,
-                ["Only the explicitly approved 4-byte SetFanMax experiment may cross the first-write approval gate."]);
+                ["Only the explicitly approved second 4-byte SetFanMax confirmation may cross the first-write approval gate."]);
         }
 
         List<string> earlyFailures = [];
@@ -121,6 +124,11 @@ public sealed class HpFanMaxExperimentRunner(
         if (!gates.HasReviewedHumanApproval)
         {
             gateFailures.Add("Separate reviewed human approval is not present.");
+        }
+
+        if (!gates.HasSecondFourByteConfirmationApproval)
+        {
+            gateFailures.Add("Separate approval for the second 4-byte confirmation is not present.");
         }
 
         if (gateFailures.Count > 0)

@@ -119,7 +119,8 @@ namespace GHelper
                     ProcessHelper.IsUserAdministrator(),
                     new HpFanMaxExperimentAcPowerProvider().IsAcPowerOnline(),
                     IsFirstWriteGateApproved: command.HasOneTimeFourByteApproval,
-                    HasReviewedHumanApproval: command.HasOneTimeFourByteApproval);
+                    HasReviewedHumanApproval: command.HasOneTimeFourByteApproval,
+                    HasSecondFourByteConfirmationApproval: command.HasSecondFourByteConfirmationApproval);
                 result = runner.Run(command, gates);
             }
 

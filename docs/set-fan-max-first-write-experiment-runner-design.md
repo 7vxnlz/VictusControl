@@ -29,8 +29,9 @@ The future runner would require all of these flags:
 - `--set-fan-max-payload-length=1` or `=4`
 - `--i-understand-this-can-affect-fans`
 - `--i-approve-one-time-set-fan-max-4-byte-experiment` when, and only when, the selected hypothesis is `=4`
+- `--i-approve-second-set-fan-max-4-byte-confirmation` for the separately reviewed second four-byte confirmation only
 
-The four-byte approval flag is limited to this one developer-only experiment scope. It is rejected for `=1`; it does not create a fallback or select a payload. The runner still requires exact model/SKU/BIOS match, an elevated Administrator process, confirmed AC power, and a same-session successful baseline. AC is checked through the local Windows power-line status API and unknown/offline power fails closed. That baseline must include all approved read-only probes, `FanGetCount=2`, `FanMaxGet=false`, and recorded raw FanGetLevel values. Any mismatch, unavailable reading, or missing approval blocks the run before a write.
+The original four-byte approval and the separate second-confirmation approval are both required for the documented confirmation. Either is rejected for `=1`; neither creates a fallback, selects a payload, or changes `DeviceValidatedInputLength`. The runner still requires exact model/SKU/BIOS match, an elevated Administrator process, confirmed AC power, and a same-session successful baseline. AC is checked through the local Windows power-line status API and unknown/offline power fails closed. That baseline must include all approved read-only probes, `FanGetCount=2`, `FanMaxGet=false`, and recorded raw FanGetLevel values. Any mismatch, unavailable reading, or missing approval blocks the run before a write.
 
 ## Future Run Sequence
 
@@ -69,7 +70,7 @@ Only an independently reviewed exact-device record may support a later decision.
 
 ## Current Implementation Boundary
 
-The command-line runner has no UI or tray route, never retries, and never falls back between payload lengths. It creates a blocked append-only record when a command or runtime gate fails. The new approval flag is the only route that can satisfy the runner's first-write/human-approval values, and only for the four-byte hypothesis.
+The command-line runner has no UI or tray route, never retries, and never falls back between payload lengths. It creates a blocked append-only record when a command or runtime gate fails. The original and second-confirmation approvals are both required for the documented second four-byte confirmation; they cannot satisfy a one-byte request or alter normal fan-write readiness.
 
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verified these boundaries and hardened the exception path so a managed enable-transport failure still reaches the matching one-time restore attempt.
 

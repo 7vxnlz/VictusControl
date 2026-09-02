@@ -2,11 +2,11 @@
 
 ## Scope And Result
 
-Source-level review found the developer-only runner is command-line-only and unreachable from the Diagnostic UI, tray menu, and normal startup unless `--hp-fan-write-experiment` is present. Normal fan write readiness remains **NO-GO**. The sole narrow approval route is `--i-approve-one-time-set-fan-max-4-byte-experiment`, which is accepted only for the four-byte hypothesis and does not validate it.
+Source-level review found the developer-only runner is command-line-only and unreachable from the Diagnostic UI, tray menu, and normal startup unless `--hp-fan-write-experiment` is present. Normal fan write readiness remains **NO-GO**. The documented second four-byte confirmation requires both `--i-approve-one-time-set-fan-max-4-byte-experiment` and `--i-approve-second-set-fan-max-4-byte-confirmation`; both are rejected for the one-byte hypothesis and neither validates a payload.
 
 ## Verified Gates
 
-- Requires `--hp-victus`, `--hp-wmi-readonly-test`, `--hp-fan-write-experiment`, one `--set-fan-max-payload-length=1` or `=4`, and `--i-understand-this-can-affect-fans`. A four-byte run additionally requires `--i-approve-one-time-set-fan-max-4-byte-experiment`.
+- Requires `--hp-victus`, `--hp-wmi-readonly-test`, `--hp-fan-write-experiment`, one `--set-fan-max-payload-length=1` or `=4`, and `--i-understand-this-can-affect-fans`. The documented four-byte confirmation additionally requires both explicit four-byte approvals, including `--i-approve-second-set-fan-max-4-byte-confirmation`.
 - Rejects missing, invalid, duplicate, dry-run, and baseline-capture combinations.
 - Requires Administrator elevation and confirmed local AC power; offline or unknown power blocks before baseline capture.
 - Requires HP Victus identity, SKU `7Z5Z2EA#AB8`, BIOS `F.31`, thermal policy V1, successful decoded baseline probes, fan count `2`, `FanMaxGet=false`, and nonempty raw FanGetLevel data.

@@ -11,8 +11,10 @@ One byte remains blocked. A second payload shape would confound the unresolved f
 Use only this command after separate authorization:
 
 ```powershell
-dotnet run --project app\VictusX.csproj -- --hp-victus --hp-wmi-readonly-test --hp-fan-write-experiment --set-fan-max-payload-length=4 --i-understand-this-can-affect-fans --i-approve-one-time-set-fan-max-4-byte-experiment
+dotnet run --project app\VictusX.csproj -- --hp-victus --hp-wmi-readonly-test --hp-fan-write-experiment --set-fan-max-payload-length=4 --i-understand-this-can-affect-fans --i-approve-one-time-set-fan-max-4-byte-experiment --i-approve-second-set-fan-max-4-byte-confirmation
 ```
+
+Both four-byte approvals are required: the original one-time approval scopes the initial four-byte experiment path, while `--i-approve-second-set-fan-max-4-byte-confirmation` scopes this confirmation only. The second flag cannot approve `=1`, validate a payload length, change `DeviceValidatedInputLength`, add a retry, or expose a UI feature.
 
 Do not add flags, retry, substitute `=1`, or use the command as a UI feature.
 
