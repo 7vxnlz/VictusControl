@@ -48,7 +48,7 @@ The test project's three direct packages resolve ten additional test tooling pac
 
 Follow [Package License Review Workflow](package-license-review-workflow.md) before using this inventory for any preview release decision.
 
-Follow [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) when converting this inventory into a reviewed package notice file for a future HP Diagnostic preview.
+Follow [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) when converting this inventory and the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) into a reviewed package notice file for a future HP Diagnostic preview.
 
 Before a ZIP or installer is created, a maintainer should review authoritative package metadata for every application dependency above, record the applicable license and notice text in a versioned inventory, and confirm the final package contents against that inventory. The package should also include the applicable project license text and the G-Helper modified-project attribution described in [Third-Party Notices Audit](third-party-notices-audit.md).
 
@@ -60,4 +60,4 @@ This inventory does not establish any dependency's license, redistribution terms
 
 ## Recommended Next Safe Task
 
-Create a source-only `THIRD-PARTY-NOTICES.md` template using the package license review workflow, with one entry per application dependency and fields for authoritative license URL, copied notice text, reviewer, and package-content confirmation. Do not populate legal conclusions from this inventory alone and do not publish.
+Review each runtime entry in the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) with authoritative evidence, then record reviewer, date, required notice text, and final package-content confirmation. Do not publish until the review is complete.

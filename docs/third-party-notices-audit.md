@@ -17,7 +17,7 @@ This is a repository-evidence checkpoint for a future HP diagnostic preview. It 
 | --- | --- | --- |
 | `LICENSE` | Present; GPLv3 text | Include the applicable license text and verify its presentation in the package. |
 | README credits | Present for G-Helper and research references | Add a concise package attribution that names G-Helper, the source location/commit, and that VictusX is modified. |
-| `NOTICE` / third-party inventory | Not found | Create and review a versioned third-party notice inventory before distribution. |
+| `THIRD-PARTY-NOTICES.md` | Draft now present; license conclusions remain pending | Review each runtime entry against authoritative metadata and final package contents before distribution. |
 | Package lock | Not found | Keep a clean-restore comparison step before packaging. |
 | Resolved dependency inventory | Locally restored assets were inspected | See [Dependency Notice Inventory](dependency-notice-inventory.md); repeat from a clean restore before packaging. |
 | Package license evidence | Not stored in the repository | Follow [Package License Review Workflow](package-license-review-workflow.md) and verify each package's license, notice, and redistribution requirements from authoritative package metadata. |
@@ -37,7 +37,7 @@ Before a ZIP or installer is created, the release review should include:
 - confirmation that no upstream notices were removed and that the package contents match the reviewed notice inventory;
 - review of the final artifact by a maintainer qualified to make the distribution decision.
 
-Use [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) as the source-only checklist for turning the current audit and inventory into a reviewed package notice set.
+Use [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) as the checklist and starting record for turning the current audit and inventory into a reviewed package notice set.
 
 ## Still Blocked or Unknown
 
@@ -45,4 +45,4 @@ The precise third-party license and notice requirements, transitive dependency i
 
 ## Recommended Next Safe Task
 
-Create a source-only `THIRD-PARTY-NOTICES.md` draft with placeholder entries for each runtime dependency, keeping all license conclusions marked pending review.
+Review the draft's runtime entries against authoritative package metadata and a final package file list; keep it marked draft until that work is complete.

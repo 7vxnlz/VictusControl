@@ -4,7 +4,7 @@
 
 - Top-level `LICENSE` is present and contains the GNU General Public License version 3 text.
 - `README.md` credits G-Helper as the original application base and lists HP/Omen reference repositories.
-- No top-level `NOTICE`, `NOTICE.md`, `THIRD-PARTY-NOTICES.md`, or reviewed package notices file is currently present.
+- A top-level `THIRD-PARTY-NOTICES.md` source-level draft is present; it records discovered package identities but deliberately leaves license conclusions pending.
 - [Third-Party Notices Audit](third-party-notices-audit.md), [Dependency Notice Inventory](dependency-notice-inventory.md), and [Package License Review Workflow](package-license-review-workflow.md) define the current evidence and review process.
 - The package license/notice blocker remains open until authoritative package metadata and final package contents are reviewed together.
 
@@ -93,7 +93,7 @@ An acceptable preview package may ship only after:
 
 ## Remaining Blocking Items
 
-- No reviewed `THIRD-PARTY-NOTICES.md` or equivalent package notices file exists.
+- `THIRD-PARTY-NOTICES.md` is draft-only and has not been reviewed against authoritative runtime package metadata or final artifact contents.
 - Direct and transitive runtime dependency licenses remain unreviewed from authoritative metadata.
 - Final package contents do not exist yet, so package notice matching cannot be completed.
 - Icon/app identity attribution cannot be finalized until the future icon asset is approved.
@@ -115,4 +115,4 @@ An acceptable preview package may ship only after:
 
 ## Recommended Next Safe Task
 
-Create a source-only `THIRD-PARTY-NOTICES.md` draft with placeholder entries for each runtime dependency and explicit `pending review` fields. Do not publish artifacts or fill legal conclusions from local project metadata alone.
+Review the source-level `THIRD-PARTY-NOTICES.md` draft against authoritative runtime package metadata and a final package file list. Do not publish artifacts or fill legal conclusions from local project metadata alone.

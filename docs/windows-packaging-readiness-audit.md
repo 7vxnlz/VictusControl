@@ -18,7 +18,7 @@
 - GPLv3 is present, but a preview package still needs clear source, attribution, modified-project, and third-party notice handling.
 - `docs/third-party-notices-audit.md` now records the repository evidence: GPLv3 text and README-level G-Helper credit exist, while a versioned third-party notice inventory and resolved package-license review remain outstanding.
 - `docs/dependency-notice-inventory.md` records the current local restore graph: 11 application packages and 13 test-only packages. It intentionally leaves license and notice status unreviewed pending authoritative metadata.
-- [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) defines the source-only path to a reviewed package notice set; no notice file or release artifact has been created yet.
+- [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and the draft [Third-Party Notices](../THIRD-PARTY-NOTICES.md) define the source-only path to a reviewed package notice set; the draft is not release evidence and no artifact has been created.
 
 ## Package and Installer Status
 

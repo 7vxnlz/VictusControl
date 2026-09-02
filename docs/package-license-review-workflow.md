@@ -60,7 +60,7 @@ A future preview package should include:
 - icon attribution if the future icon requires it;
 - source location and source revision for the packaged build.
 
-The [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) lists the release-facing files, package contents, and verification checklist that must be satisfied after this workflow is completed.
+The [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) list the release-facing files, package contents, and verification checklist that must be satisfied after this workflow is completed.
 
 ## Fail-Closed Release Criteria
 
@@ -68,4 +68,4 @@ Do not publish a preview if any runtime dependency has unreviewed license or not
 
 ## Recommended Next Safe Task
 
-Create a source-only `THIRD-PARTY-NOTICES.md` draft with placeholders for each runtime dependency and keep every legal conclusion marked pending review.
+Review the existing source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) against authoritative metadata and final package contents; retain its pending status until the record is complete.
