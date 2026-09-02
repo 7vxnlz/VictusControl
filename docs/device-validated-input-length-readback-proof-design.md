@@ -129,4 +129,4 @@ Fail-closed rule: one missing criterion keeps normal/user-facing fan control **N
 
 ## Recommended Next Safe Implementation Task
 
-Implement a read-only analyzer over existing local logs and cached reports that summarizes proof gaps for `DeviceValidatedInputLength`, FanMaxGet reliability, FanGetLevel interpretation, and restore confidence. The analyzer must not invoke WMI, run experiments, expose controls, add pulse buttons, or update `DeviceValidatedInputLength`.
+The read-only HP fan proof-gap analyzer now aggregates valid local experiment logs and the already cached capability report for dashboard, copy, and export text. It ignores missing or invalid evidence, preserves `DeviceValidatedInputLength` as unset, treats FanMaxGet as inconclusive and FanGetLevel as raw-only, and cannot invoke WMI, run experiments, expose controls, add pulse buttons, or update a safety decision.

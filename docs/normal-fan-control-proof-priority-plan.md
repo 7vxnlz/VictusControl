@@ -130,4 +130,4 @@ Not acceptable: using any unsupported command as a fallback, retry path, UI opti
 
 ## Recommended Next Safe Task
 
-The [DeviceValidatedInputLength and readback proof design](device-validated-input-length-readback-proof-design.md) defines the fail-closed evidence rules for the top blockers. Its recommended next implementation task is a read-only analyzer over existing local logs and cached reports, with no experiment execution, WMI invocation, or control UI.
+The [DeviceValidatedInputLength and readback proof design](device-validated-input-length-readback-proof-design.md) now has a read-only local evidence analyzer. It reports the top gaps from valid local logs and cached reports without WMI, experiment execution, or controls. The next safe work is a restore/recovery proof design based on that fail-closed summary.

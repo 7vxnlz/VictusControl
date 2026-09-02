@@ -342,6 +342,30 @@ public sealed class HpDiagnosticDashboardFormatterTests
     }
 
     [Fact]
+    public void ProofGapAnalysis_ShowsReadOnlyFailClosedDecisions()
+    {
+        HpDiagnosticDashboardSection proofGaps = Assert.Single(
+            HpDiagnosticDashboardFormatter.BuildSections(new()
+            {
+                FanProofGapEvidenceSources = "Local experiment logs: 1 valid, 0 invalid ignored; cached capability report loaded locally. No WMI or hardware action was performed.",
+                FanProofGapDeveloperPulseDecision = HpFanProofGapAnalyzer.DeveloperPulseOperational,
+                FanProofGapDeviceValidatedInputLengthDecision = HpFanProofGapAnalyzer.DeviceValidatedInputLengthUnset,
+                FanProofGapFanMaxGetDecision = HpFanProofGapAnalyzer.FanMaxGetInconclusive,
+                FanProofGapFanGetLevelDecision = HpFanProofGapAnalyzer.FanGetLevelRawOnly,
+                FanProofGapRestoreVerificationDecision = HpFanProofGapAnalyzer.RestoreVerificationPartial,
+                FanProofGapRepeatabilityDecision = HpFanProofGapAnalyzer.RepeatabilityPartial,
+                FanProofGapThermalPowerSafetyDecision = HpFanProofGapAnalyzer.ThermalPowerSafetyMissing,
+                FanProofGapNormalFanControlDecision = HpFanProofGapAnalyzer.NormalFanControlNoGo
+            }),
+            section => section.Title == "HP fan proof-gap analysis");
+
+        Assert.Contains(proofGaps.Rows, row => row.Label == "DeviceValidatedInputLength" && row.Value == HpFanProofGapAnalyzer.DeviceValidatedInputLengthUnset && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(proofGaps.Rows, row => row.Label == "FanMaxGet reliability" && row.Value == HpFanProofGapAnalyzer.FanMaxGetInconclusive && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(proofGaps.Rows, row => row.Label == "FanGetLevel interpretation" && row.Value == HpFanProofGapAnalyzer.FanGetLevelRawOnly);
+        Assert.Contains(proofGaps.Rows, row => row.Label == "Normal fan-control readiness" && row.Value == HpFanProofGapAnalyzer.NormalFanControlNoGo && row.Status == HpDiagnosticDashboardStatus.Blocked);
+    }
+
+    [Fact]
     public void Summary_BlocksOptimisticCachedFirstWriteGateValues()
     {
         string summary = HpDiagnosticDashboardFormatter.BuildSummary(new()

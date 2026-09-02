@@ -33,6 +33,7 @@ namespace GHelper
         Label? hpReadOnlyTelemetryWarning;
         HpDiagnosticReportLoadResult? hpCachedDiagnosticReport;
         HpFanMaxPulseHistoryLoadResult? hpPulseHistory;
+        HpFanProofGapAnalysis? hpFanProofGaps;
 
         public GPUModeControl gpuControl;
         public AllyControl allyControl;
@@ -549,6 +550,7 @@ namespace GHelper
             HpDiagnosticReportSchemaV2Refresher.TryRefreshExistingReport(HpVictusCapabilityProbe.ReportPath);
             hpCachedDiagnosticReport = HpDiagnosticReportLoader.Load(HpVictusCapabilityProbe.ReportPath);
             hpPulseHistory = HpFanMaxPulseHistoryLoader.Load(HpFanMaxExperimentLogWriter.ExperimentDirectory);
+            hpFanProofGaps = HpFanProofGapAnalyzer.Analyze(HpFanMaxExperimentLogWriter.ExperimentDirectory, hpCachedDiagnosticReport);
             if (hpReadOnlyTelemetrySource is not null)
             {
                 hpReadOnlyTelemetrySource.Text = hpCachedDiagnosticReport.SourceDescription;
@@ -598,6 +600,7 @@ namespace GHelper
             HpVictusCapabilitySnapshot? snapshot = Program.hpVictusCapabilitySnapshot;
             HpDiagnosticReportLoadResult? report = hpCachedDiagnosticReport;
             HpFanMaxPulseHistoryEntry? pulse = hpPulseHistory?.Entry;
+            HpFanProofGapAnalysis? proofGaps = hpFanProofGaps;
             return new HpDiagnosticDashboardInput
             {
                 ReportSchemaVersion = report?.GetValue("ReportSchemaVersion"),
@@ -633,6 +636,15 @@ namespace GHelper
                 SetFanMaxPulseReadbackReliability = pulse?.ReadbackReliability,
                 SetFanMaxPulseOutcomeClassification = pulse?.ExperimentalOutcomeClassification,
                 SetFanMaxPulseNotesSummary = pulse?.NotesSummary,
+                FanProofGapEvidenceSources = proofGaps?.EvidenceSources,
+                FanProofGapDeveloperPulseDecision = proofGaps?.DeveloperPulseDecision,
+                FanProofGapDeviceValidatedInputLengthDecision = proofGaps?.DeviceValidatedInputLengthDecision,
+                FanProofGapFanMaxGetDecision = proofGaps?.FanMaxGetDecision,
+                FanProofGapFanGetLevelDecision = proofGaps?.FanGetLevelDecision,
+                FanProofGapRestoreVerificationDecision = proofGaps?.RestoreVerificationDecision,
+                FanProofGapRepeatabilityDecision = proofGaps?.RepeatabilityDecision,
+                FanProofGapThermalPowerSafetyDecision = proofGaps?.ThermalPowerSafetyDecision,
+                FanProofGapNormalFanControlDecision = proofGaps?.NormalFanControlDecision,
                 SetFanMaxWriteImplemented = HpDiagnosticDashboardFormatter.FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
                 SetFanMaxWriteAllowed = HpDiagnosticDashboardFormatter.FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
                 SetFanMaxFirstWriteGateStatus = snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateStatus ?? report?.GetValue("SetFanMaxFirstWriteGateStatus"),

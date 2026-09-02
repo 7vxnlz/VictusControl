@@ -15,12 +15,18 @@ public sealed record HpFanMaxPulseHistoryEntry(
     string? PayloadBytesHypothesis,
     bool? WriteExecuted,
     bool? EnableCommandSucceeded,
+    bool? PostEnableFanMaxGet,
     bool? RestoreCommandSucceeded,
     bool? PhysicalFanResponseObserved,
     bool? RestoreObserved,
     string? ReadbackReliability,
     string? ExperimentalOutcomeClassification,
     string? NotesSummary);
+
+public sealed record HpFanMaxPulseHistoryEntriesLoadResult(
+    HpFanMaxPulseHistoryLoadStatus Status,
+    IReadOnlyList<HpFanMaxPulseHistoryEntry> Entries,
+    int InvalidLogCount);
 
 public sealed record HpFanMaxPulseHistoryLoadResult(
     HpFanMaxPulseHistoryLoadStatus Status,
@@ -41,12 +47,22 @@ public static class HpFanMaxPulseHistoryLoader
 
     public static HpFanMaxPulseHistoryLoadResult Load(string directoryPath)
     {
+        HpFanMaxPulseHistoryEntriesLoadResult entriesResult = LoadAll(directoryPath);
+        HpFanMaxPulseHistoryEntry? latest = entriesResult.Entries
+            .OrderByDescending(entry => entry.TimestampUtc)
+            .FirstOrDefault();
+
+        return new HpFanMaxPulseHistoryLoadResult(entriesResult.Status, latest, entriesResult.InvalidLogCount);
+    }
+
+    public static HpFanMaxPulseHistoryEntriesLoadResult LoadAll(string directoryPath)
+    {
         if (string.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath))
         {
-            return new HpFanMaxPulseHistoryLoadResult(HpFanMaxPulseHistoryLoadStatus.NotAvailable, null, 0);
+            return new HpFanMaxPulseHistoryEntriesLoadResult(HpFanMaxPulseHistoryLoadStatus.NotAvailable, [], 0);
         }
 
-        HpFanMaxPulseHistoryEntry? latest = null;
+        var entries = new List<HpFanMaxPulseHistoryEntry>();
         int invalidLogCount = 0;
         try
         {
@@ -54,10 +70,7 @@ public static class HpFanMaxPulseHistoryLoader
             {
                 if (TryReadEntry(filePath, out HpFanMaxPulseHistoryEntry? entry) && entry is not null)
                 {
-                    if (latest is null || entry.TimestampUtc > latest.TimestampUtc)
-                    {
-                        latest = entry;
-                    }
+                    entries.Add(entry);
                 }
                 else
                 {
@@ -67,14 +80,14 @@ public static class HpFanMaxPulseHistoryLoader
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            return new HpFanMaxPulseHistoryLoadResult(HpFanMaxPulseHistoryLoadStatus.CouldNotBeRead, null, invalidLogCount);
+            return new HpFanMaxPulseHistoryEntriesLoadResult(HpFanMaxPulseHistoryLoadStatus.CouldNotBeRead, [], invalidLogCount);
         }
 
-        return latest is not null
-            ? new HpFanMaxPulseHistoryLoadResult(HpFanMaxPulseHistoryLoadStatus.Loaded, latest, invalidLogCount)
-            : new HpFanMaxPulseHistoryLoadResult(
+        return entries.Count > 0
+            ? new HpFanMaxPulseHistoryEntriesLoadResult(HpFanMaxPulseHistoryLoadStatus.Loaded, entries, invalidLogCount)
+            : new HpFanMaxPulseHistoryEntriesLoadResult(
                 invalidLogCount > 0 ? HpFanMaxPulseHistoryLoadStatus.CouldNotBeRead : HpFanMaxPulseHistoryLoadStatus.NotAvailable,
-                null,
+                [],
                 invalidLogCount);
     }
 
@@ -101,6 +114,7 @@ public static class HpFanMaxPulseHistoryLoader
                 GetString(root, "PayloadBytesHypothesis"),
                 GetBoolean(root, "WriteExecuted"),
                 GetBoolean(root, "EnableCommandSucceeded"),
+                GetBoolean(root, "PostEnableFanMaxGet"),
                 GetBoolean(root, "RestoreCommandSucceeded"),
                 GetBoolean(root, "PhysicalFanResponseObserved"),
                 GetBoolean(root, "RestoreObserved"),

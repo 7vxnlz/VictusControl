@@ -110,6 +110,18 @@ public static class HpDiagnosticDashboardFormatter
                 Row("Evidence scope", "Developer-only evidence - no pulse/run action is available"),
                 Row("Normal fan control", PulseHistoryNormalControlDisabled)
             ]),
+            new("HP fan proof-gap analysis",
+            [
+                Row("Evidence sources", input.FanProofGapEvidenceSources),
+                Row("Developer-only pulse", input.FanProofGapDeveloperPulseDecision),
+                Row("DeviceValidatedInputLength", input.FanProofGapDeviceValidatedInputLengthDecision),
+                Row("FanMaxGet reliability", input.FanProofGapFanMaxGetDecision),
+                Row("FanGetLevel interpretation", input.FanProofGapFanGetLevelDecision),
+                Row("Restore verification", input.FanProofGapRestoreVerificationDecision),
+                Row("Repeatability", input.FanProofGapRepeatabilityDecision),
+                Row("Thermal/power safety", input.FanProofGapThermalPowerSafetyDecision),
+                Row("Normal fan-control readiness", input.FanProofGapNormalFanControlDecision)
+            ]),
             new("SetFanMax evidence readiness",
             [
                 Row("Current status", SetFanMaxReadinessStatus),
@@ -352,6 +364,9 @@ public static class HpDiagnosticDashboardFormatter
             value.StartsWith("False - blocked", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("False - not satisfied", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Missing", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Inconclusive", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Raw-only", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Partial", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Unknown", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Cached report contains optimistic", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Unset", StringComparison.OrdinalIgnoreCase) ||

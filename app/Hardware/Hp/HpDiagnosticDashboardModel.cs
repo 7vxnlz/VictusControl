@@ -59,6 +59,15 @@ public sealed record HpDiagnosticDashboardInput
     public string? SetFanMaxPulseReadbackReliability { get; init; }
     public string? SetFanMaxPulseOutcomeClassification { get; init; }
     public string? SetFanMaxPulseNotesSummary { get; init; }
+    public string? FanProofGapEvidenceSources { get; init; }
+    public string? FanProofGapDeveloperPulseDecision { get; init; }
+    public string? FanProofGapDeviceValidatedInputLengthDecision { get; init; }
+    public string? FanProofGapFanMaxGetDecision { get; init; }
+    public string? FanProofGapFanGetLevelDecision { get; init; }
+    public string? FanProofGapRestoreVerificationDecision { get; init; }
+    public string? FanProofGapRepeatabilityDecision { get; init; }
+    public string? FanProofGapThermalPowerSafetyDecision { get; init; }
+    public string? FanProofGapNormalFanControlDecision { get; init; }
     public string? SetFanMaxWriteImplemented { get; init; }
     public string? SetFanMaxWriteAllowed { get; init; }
     public string? SetFanMaxFirstWriteGateStatus { get; init; }

@@ -43,6 +43,8 @@ The [normal fan control proof priority plan](normal-fan-control-proof-priority-p
 
 The [DeviceValidatedInputLength and readback proof design](device-validated-input-length-readback-proof-design.md) defines fail-closed proof criteria for the top blockers. It keeps physical fan response separate from payload validation, treats FanMaxGet as inconclusive, and keeps FanGetLevel raw-only.
 
+The HP Diagnostic dashboard now includes a read-only proof-gap analyzer over local append-only experiment logs and the cached capability report. Missing or invalid evidence stays fail-closed; it cannot invoke WMI, run a pulse, or enable fan control.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked
