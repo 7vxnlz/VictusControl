@@ -57,4 +57,4 @@ Only after two consistent four-byte records may a separate review consider a lim
 
 ## Recommended Next Implementation Step
 
-Do not change hardware code now. After this design is independently reviewed, the only safe implementation work is an append-only, non-executing observation template/log-field update so the required manual evidence can be captured consistently.
+The confirmation was completed and recorded in the [second four-byte result](set-fan-max-second-4byte-confirmation-result.md). Do not change hardware behavior now. The only safe follow-up is report/log-only experimental status metadata that distinguishes an observed physical response from validated normal control.

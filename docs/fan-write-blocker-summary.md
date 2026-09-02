@@ -13,7 +13,7 @@ These results prove diagnostic visibility only. They do not validate any write c
 
 ## 2. Why SetFanMax Is Blocked
 
-SetFanMax (`0x27`) remains blocked because its device-specific input length is unknown. A first exact-device four-byte attempt returned successful WMI calls and an observed fan ramp, but FanMaxGet remained false after enable and restore; see the [first four-byte result](set-fan-max-first-4byte-experiment-result.md). The result is partial evidence, not a validated payload or reliable state readback. Matching enable/disable behavior, restore proof, and manual recovery proof remain incomplete.
+SetFanMax (`0x27`) remains blocked because its device-specific input length is unknown. Two exact-device four-byte attempts returned successful WMI calls and repeated observed fan ramps, but FanMaxGet remained false after enable and restore; see the [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md). Four byte is preferred experimental evidence only, not a validated payload or reliable state readback. Matching enable/disable behavior, restore proof, and manual recovery proof remain incomplete.
 
 `DeviceValidatedInputLength` therefore remains unset and SetFanMax remains **NO-GO**.
 
@@ -65,4 +65,4 @@ The [manual experiment logger design](set-fan-max-manual-experiment-logger-desig
 
 The [first-write runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifies the implemented runner remains command-line-only, approval-gated, and unable to alter this NO-GO status.
 
-The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) defines a repeatable evidence protocol only. Its separate four-byte confirmation flag must accompany the original one-time four-byte approval, and it does not authorize a one-byte test, payload validation, or normal fan control.
+The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) repeats a physical response for the four-byte hypothesis, but retains NO-GO for normal control. The next safe work is report/log-only experimental status metadata, not another experiment, a one-byte test, payload validation, or UI control.

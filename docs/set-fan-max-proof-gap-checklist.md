@@ -25,7 +25,7 @@ The reviewed references consistently support the following metadata, but not thi
 
 Read-only success from `FanMaxGet`, `FanGetCount`, or `FanGetLevel` does not establish the write input length. Neither candidate is selected.
 
-The [first exact-device four-byte experiment](set-fan-max-first-4byte-experiment-result.md) produced an observed fan response, but post-enable FanMaxGet remained false. It is partial evidence only: the input ABI, readback semantics, restore behavior, and payload decision remain open.
+The [two exact-device four-byte experiments](set-fan-max-second-4byte-confirmation-result.md) produced repeated observed fan responses, but post-enable FanMaxGet remained false. Four byte is therefore preferred experimental evidence only: the input ABI, readback semantics, restore behavior, and payload decision remain open.
 
 ## Proven Read-Only Baseline
 
@@ -37,7 +37,7 @@ See the [exact-device baseline evidence](set-fan-max-exact-device-baseline-evide
 
 ## Remaining Proof Gaps
 
-- [ ] **Device input ABI:** one independently reviewable record selects exactly one input length for this exact model/SKU/BIOS, with no alternate-shape fallback. The first four-byte response is not sufficient because its state readback is inconclusive.
+- [ ] **Device input ABI:** one independently reviewable record selects exactly one input length for this exact model/SKU/BIOS, with no alternate-shape fallback. Two four-byte physical responses are not sufficient because their state readback is inconclusive.
 - [ ] **Restore behavior:** the same selected length restores max fan to disabled, proven by a reviewed readback/observation contract. FanMaxGet matched the disabled baseline but did not show the observed enabled response, so it is insufficient as the sole proof.
 - [ ] **Thermal observation:** a named independent source, baseline, stop thresholds, observer, and continuous availability through restore and recovery are reviewed.
 - [ ] **AC, battery, and power state:** stable AC, adequate battery reserve, and defined behavior for unplug, suspend, shutdown, or power transition are evidenced for the experiment. Existing policy requirements are not device proof.
@@ -61,9 +61,9 @@ No code should guess `1` or `4`, choose by repository count or model similarity,
 
 ## Recommended Next Safe Task
 
-Prepare a controlled second four-byte confirmation design with stronger manual observations and success criteria. Do not test one byte, select a payload, or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
+Add report/log-only experimental status metadata distinguishing repeated physical response from normal control validation. Do not test one byte, select a payload, or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
 
-The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) defines the needed observation and classification contract. It does not close any checkbox by itself.
+The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) strengthens experimental evidence but does not close any checkbox.
 
 Supporting detail: [payload-length final audit](set-fan-max-payload-length-final-audit.md), [recovery/restore proof plan](set-fan-max-recovery-restore-proof-plan.md), and [implementation gate](set-fan-max-implementation-go-no-go.md).
 

@@ -10,7 +10,7 @@
 - Read-only `SystemDesignData`, `FanGetCount`, `FanMaxGet`, and raw-only `FanGetLevel` succeeded.
 - Two elevated exact-device baseline records captured the same state: fan count `2`, `FanMaxGet=false`, and raw FanGetLevel prefix `22-25`; both kept `WriteExecuted=false` and `DeviceValidatedInputLength=null`.
 - References support `hpqBIOSInt0`, command `0x20008`, type `0x27`, enable byte `0x01`, and restore/disable byte `0x00`.
-- The first exact-device four-byte experiment returned success for enable and restore and produced an observed fan ramp, but post-enable/post-restore FanMaxGet remained `false`; see the [first four-byte result](set-fan-max-first-4byte-experiment-result.md).
+- Two exact-device four-byte experiments returned success for enable and restore and each produced an observed fan ramp, but FanMaxGet remained `false`; see the [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md). Four byte is preferred for limited developer-only experimental evidence only.
 
 ## Required GO Evidence
 
@@ -48,6 +48,4 @@ The dry-run and baseline commands remain write-disabled. The separate first-writ
 
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) confirms the implementation remains command-line-only and current-gate blocked; it does not change this NO-GO decision.
 
-The first four-byte result is partial success with inconclusive readback. It does not validate a payload, update `DeviceValidatedInputLength`, or permit one-byte testing or normal fan control.
-
-The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) is the only proposed follow-up. It preserves NO-GO until repeatable evidence and separate review justify a limited developer-only decision.
+The repeated four-byte results are partial experimental evidence with inconclusive readback. They do not validate a payload, update `DeviceValidatedInputLength`, permit one-byte testing, or authorize normal fan control. The next safe step is report/log-only status metadata separating observed physical response from normal control validation.

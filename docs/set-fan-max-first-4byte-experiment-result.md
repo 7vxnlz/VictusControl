@@ -36,6 +36,6 @@ The fan later stopping is consistent with the matching restore, firmware policy,
 - Normal fan control UI and normal fan writes remain **NO-GO**.
 - Do not test one-byte next: introducing a second payload shape would confound unresolved four-byte readback and restore evidence.
 
-## Recommended Next Safe Step
+## Follow-Up
 
-The [second four-byte confirmation design](set-fan-max-second-4byte-confirmation-experiment.md) defines the required observation record, classifications, and stop conditions. Do not execute it until separately authorized.
+The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) repeated the observed physical response while FanMaxGet again stayed `false`. Together, the records make four byte the preferred experimental candidate only; they do not validate payload length or normal fan control.
