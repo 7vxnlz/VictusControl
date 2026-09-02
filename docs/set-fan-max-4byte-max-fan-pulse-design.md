@@ -49,6 +49,6 @@ The command must not add one-byte fallback, fan curves, sliders, background cont
 
 Normal fan control still needs a selected and reviewed ABI, durable restore and recovery proof, a reliable success criterion beyond FanMaxGet, repeated thermal and power-transition evidence, and a separate product/UI decision. Until then normal/user-facing control remains **NO-GO**.
 
-## Recommended Next Implementation Step
+## Implementation Status
 
-Implement a separate command-line-only pulse parser and pure gate tests only after this design receives explicit review. It must reuse the existing bounded runner safeguards and remain absent from the Diagnostic UI and tray menu.
+The separate command-line-only pulse parser and pure gate tests are implemented, but the pulse command has not been run. It reuses the bounded runner safeguards, rejects payload-length overrides, and remains absent from the Diagnostic UI and tray menu.
