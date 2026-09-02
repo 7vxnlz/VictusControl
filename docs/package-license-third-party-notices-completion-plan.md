@@ -6,6 +6,7 @@
 - `README.md` credits G-Helper as the original application base and lists HP/Omen reference repositories.
 - A top-level `THIRD-PARTY-NOTICES.md` source-level draft is present; it records discovered package identities but deliberately leaves license conclusions pending.
 - [Third-Party Notices Audit](third-party-notices-audit.md), [Dependency Notice Inventory](dependency-notice-inventory.md), and [Package License Review Workflow](package-license-review-workflow.md) define the current evidence and review process.
+- [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) defines the exact per-runtime-package evidence required before the draft notices can become reviewed release evidence.
 - The package license/notice blocker remains open until authoritative package metadata and final package contents are reviewed together.
 
 This plan is not legal advice and does not modify license terms.
@@ -95,6 +96,7 @@ An acceptable preview package may ship only after:
 
 - `THIRD-PARTY-NOTICES.md` is draft-only and has not been reviewed against authoritative runtime package metadata or final artifact contents.
 - Direct and transitive runtime dependency licenses remain unreviewed from authoritative metadata.
+- The runtime dependency evidence checklist is present, but its required evidence has not been filled and reviewed.
 - Final package contents do not exist yet, so package notice matching cannot be completed.
 - Icon/app identity attribution cannot be finalized until the future icon asset is approved.
 - Signing/checksum and clean-machine validation remain open.
@@ -115,4 +117,4 @@ An acceptable preview package may ship only after:
 
 ## Recommended Next Safe Task
 
-Review the source-level `THIRD-PARTY-NOTICES.md` draft against authoritative runtime package metadata and a final package file list. Do not publish artifacts or fill legal conclusions from local project metadata alone.
+Review the source-level `THIRD-PARTY-NOTICES.md` draft using [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md), authoritative runtime package metadata, and a final package file list. Do not publish artifacts or fill legal conclusions from local project metadata alone.

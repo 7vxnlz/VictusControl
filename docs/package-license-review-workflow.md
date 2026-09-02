@@ -62,10 +62,12 @@ A future preview package should include:
 
 The [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) list the release-facing files, package contents, and verification checklist that must be satisfied after this workflow is completed.
 
+Use [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) as the per-runtime-package evidence record for this workflow.
+
 ## Fail-Closed Release Criteria
 
 Do not publish a preview if any runtime dependency has unreviewed license or notice status, if package contents do not match the reviewed inventory, if upstream attribution is missing, or if the review record is not tied to the release candidate source and artifact.
 
 ## Recommended Next Safe Task
 
-Review the existing source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) against authoritative metadata and final package contents; retain its pending status until the record is complete.
+Review the existing source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) against [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md), authoritative metadata, and final package contents; retain its pending status until the record is complete.

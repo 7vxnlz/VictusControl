@@ -34,6 +34,8 @@ The following dependencies are recorded by `app/VictusX.csproj` and the local re
 
 Before distribution, review each package from authoritative metadata, record the license evidence and required notice text, and compare the reviewed list with the final ZIP or installer contents. See [Dependency Notice Inventory](docs/dependency-notice-inventory.md) and [Package License Review Workflow](docs/package-license-review-workflow.md).
 
+See [Runtime Dependency License Review Evidence Checklist](docs/runtime-dependency-license-review-evidence-checklist.md) for the required evidence before this runtime dependency section can move from draft to reviewed.
+
 ## Test-Only Dependency Notice Review (Separate)
 
 The following packages are recorded only in the test project or its resolved test tooling graph. They are not assumed to be part of an HP Diagnostic preview package. Review them separately only if test tooling, a developer bundle, or another artifact containing them is distributed.

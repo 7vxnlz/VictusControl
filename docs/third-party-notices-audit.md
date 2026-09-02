@@ -21,6 +21,7 @@ This is a repository-evidence checkpoint for a future HP diagnostic preview. It 
 | Package lock | Not found | Keep a clean-restore comparison step before packaging. |
 | Resolved dependency inventory | Locally restored assets were inspected | See [Dependency Notice Inventory](dependency-notice-inventory.md); repeat from a clean restore before packaging. |
 | Package license evidence | Not stored in the repository | Follow [Package License Review Workflow](package-license-review-workflow.md) and verify each package's license, notice, and redistribution requirements from authoritative package metadata. |
+| Runtime dependency review evidence | Checklist now present | Use [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) to record the required per-package evidence before marking notices reviewed. |
 
 ## NuGet Considerations
 
@@ -39,10 +40,12 @@ Before a ZIP or installer is created, the release review should include:
 
 Use [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) as the checklist and starting record for turning the current audit and inventory into a reviewed package notice set.
 
+Use [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) for the exact evidence required before the runtime dependency section can be treated as reviewed.
+
 ## Still Blocked or Unknown
 
 The precise third-party license and notice requirements, transitive dependency inventory, package-runtime contents, and final source-distribution presentation remain unverified. The inherited icon, signing/checksum plan, and clean-machine packaged smoke test are also still incomplete. Release remains blocked; this audit does not authorize a publish.
 
 ## Recommended Next Safe Task
 
-Review the draft's runtime entries against authoritative package metadata and a final package file list; keep it marked draft until that work is complete.
+Review the draft's runtime entries using [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md), then compare the result against a final package file list. Keep the notices marked draft until that work is complete.

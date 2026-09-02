@@ -19,6 +19,7 @@
 - `docs/third-party-notices-audit.md` now records the repository evidence: GPLv3 text and README-level G-Helper credit exist, while a versioned third-party notice inventory and resolved package-license review remain outstanding.
 - `docs/dependency-notice-inventory.md` records the current local restore graph: 11 application packages and 13 test-only packages. It intentionally leaves license and notice status unreviewed pending authoritative metadata.
 - [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and the draft [Third-Party Notices](../THIRD-PARTY-NOTICES.md) define the source-only path to a reviewed package notice set; the draft is not release evidence and no artifact has been created.
+- [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) defines the per-package evidence still required before runtime dependency notices can be marked reviewed.
 
 ## Package and Installer Status
 
@@ -63,6 +64,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - Complete the signing/checksum workflow against the same final artifact used for clean-machine validation.
 - Review the third-party notices audit, preserve applicable upstream notices, and verify direct and transitive package attribution from authoritative metadata.
 - Review and complete the dependency notice inventory against a clean restore and the final package contents.
+- Complete the runtime dependency license review evidence checklist for every direct and resolved transitive runtime candidate.
 - Confirm no developer-only flags, symbols, logs, machine paths, or captured device data are shipped.
 - Execute the [Clean-Machine Validation Plan](clean-machine-validation-plan.md) against the final candidate package and retain the acceptance record.
 

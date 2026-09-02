@@ -50,6 +50,8 @@ Follow [Package License Review Workflow](package-license-review-workflow.md) bef
 
 Follow [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) when converting this inventory and the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) into a reviewed package notice file for a future HP Diagnostic preview.
 
+Use [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) to capture the authoritative per-dependency evidence that this inventory intentionally does not infer.
+
 Before a ZIP or installer is created, a maintainer should review authoritative package metadata for every application dependency above, record the applicable license and notice text in a versioned inventory, and confirm the final package contents against that inventory. The package should also include the applicable project license text and the G-Helper modified-project attribution described in [Third-Party Notices Audit](third-party-notices-audit.md).
 
 The test-only list should be reviewed separately if any test or developer tooling is distributed. A future clean restore should regenerate and compare the resolved application graph before the release decision.
@@ -60,4 +62,4 @@ This inventory does not establish any dependency's license, redistribution terms
 
 ## Recommended Next Safe Task
 
-Review each runtime entry in the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) with authoritative evidence, then record reviewer, date, required notice text, and final package-content confirmation. Do not publish until the review is complete.
+Review each runtime entry in the source-level [Third-Party Notices Draft](../THIRD-PARTY-NOTICES.md) using [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md), then record reviewer, date, required notice text, and final package-content confirmation. Do not publish until the review is complete.
