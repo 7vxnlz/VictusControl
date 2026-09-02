@@ -37,6 +37,8 @@ The research contracts represent only `FourByteMaxFanPulse`, fail-closed gates, 
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records a successful bounded developer pulse after that wiring. FanMaxGet remained inconclusive and `DeviceValidatedInputLength` remained unset, so the result does not alter normal-control **NO-GO**.
 
+The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) is the current source-of-truth for what remains missing before user-facing fan control can even be reconsidered.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked

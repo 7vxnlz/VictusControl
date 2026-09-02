@@ -41,6 +41,8 @@ The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) confirms that this
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) confirms that replacing inline pulse bytes with fixed four-byte contract metadata preserved this developer-only behavior. It does not change payload-selection or normal-control evidence.
 
+The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) keeps payload strategy separate from product readiness: four byte is operational for gated developer pulse research, while no payload is selected for normal fan control.
+
 The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) proposes a local-file-only dashboard summary for reviewing this evidence without adding a control path.
 
 ## Evidence Required Before Normal Control

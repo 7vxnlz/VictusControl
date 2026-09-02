@@ -42,6 +42,8 @@ Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline 
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records the same four-byte enable/restore behavior with observed response and restore. It is developer-only evidence, not normal-control validation.
 
+The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) defines the broader evidence threshold that must be met before any user-facing fan-control design can move out of NO-GO.
+
 ## Required Safety Gates
 
 Every future research operation must remain opt-in and fail closed:
