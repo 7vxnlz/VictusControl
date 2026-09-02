@@ -127,7 +127,7 @@ namespace GHelper
 
             try
             {
-                string path = HpFanMaxExperimentLogWriter.Write(HpFanMaxExperimentRunLogMapper.Create(result));
+                string path = HpFanMaxExperimentLogWriter.Write(HpFanMaxExperimentRunLogMapper.Create(result, command.ManualObservation));
                 Console.WriteLine("SetFanMax first-write experiment record written: " + path);
             }
             catch (Exception ex)

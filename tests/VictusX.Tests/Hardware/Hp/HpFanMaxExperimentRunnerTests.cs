@@ -77,6 +77,74 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     [Fact]
+    public void Parse_ObservationsDoNotBypassRequiredApproval()
+    {
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(
+        [
+            "--hp-victus",
+            "--hp-wmi-readonly-test",
+            "--hp-fan-write-experiment",
+            "--set-fan-max-payload-length=1",
+            "--i-understand-this-can-affect-fans",
+            "--physical-fan-response-observed=true",
+            "--restore-observed=true",
+            "--manual-observation-notes=Observed airflow increase"
+        ]);
+
+        Assert.False(result.IsValidRequest);
+        Assert.True(result.ManualObservation.PhysicalFanResponseObserved);
+        Assert.True(result.ManualObservation.RestoreObserved);
+        Assert.Contains(result.ValidationReasons, reason => reason.Contains(HpFanMaxExperimentRunnerCommand.OneTimeOneByteComparisonApprovalFlag, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Parse_LongManualNotes_AreSanitizedAndBounded()
+    {
+        string notes = new string('a', HpFanMaxExperimentManualObservation.MaximumNotesLength + 10) + "\nignored";
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(
+            [.. ValidArguments("4", includeFourByteApprovals: true), "--manual-observation-notes=" + notes]);
+
+        Assert.True(result.IsValidRequest);
+        string storedNotes = Assert.IsType<string>(result.ManualObservation.ManualObservationNotes);
+        Assert.Equal(HpFanMaxExperimentManualObservation.MaximumNotesLength, storedNotes.Length);
+        Assert.DoesNotContain('\n', storedNotes);
+    }
+
+    [Fact]
+    public void LogMapper_UsesManualResponseForInconclusiveReadbackClassification()
+    {
+        var transport = new RecordingTransport();
+        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(ValidCommand("4"), ApprovedGates());
+        HpFanMaxExperimentLogRecord record = HpFanMaxExperimentRunLogMapper.Create(
+            result,
+            new HpFanMaxExperimentManualObservation(true, true, "Fan ramp observed and restore observed.", [])) with
+            {
+                FanMaxGetConfirmedEnable = false,
+                PostEnableFanMaxGet = false
+            };
+
+        Assert.True(record.PhysicalFanResponseObserved);
+        Assert.True(record.RestoreObserved);
+        Assert.Equal(
+            HpFanMaxExperimentalOutcomeClassification.CommandSucceededPhysicalResponseObservedReadbackInconclusive,
+            record.ExperimentalOutcomeClassification);
+        Assert.Null(record.DeviceValidatedInputLength);
+    }
+
+    [Fact]
+    public void LogMapper_MissingManualObservations_LeavesPhysicalResponseUnknown()
+    {
+        var transport = new RecordingTransport();
+        HpFanMaxExperimentLogRecord record = HpFanMaxExperimentRunLogMapper.Create(
+            CreateRunner(transport).Run(ValidCommand("4"), ApprovedGates()));
+
+        Assert.Null(record.PhysicalFanResponseObserved);
+        Assert.Null(record.RestoreObserved);
+        Assert.Equal(HpFanMaxExperimentalOutcomeClassification.CommandSucceededNoPhysicalConfirmation, record.ExperimentalOutcomeClassification);
+        Assert.Null(record.DeviceValidatedInputLength);
+    }
+
+    [Fact]
     public void Run_ApprovedSecondFourByteConfirmation_PassesTheHumanApprovalGatesInTestDouble()
     {
         var transport = new RecordingTransport();

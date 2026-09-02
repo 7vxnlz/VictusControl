@@ -16,6 +16,7 @@ public sealed record HpFanMaxExperimentRunnerCommandResult(
     bool HasOneTimeFourByteApproval,
     bool HasSecondFourByteConfirmationApproval,
     bool HasOneTimeOneByteComparisonApproval,
+    HpFanMaxExperimentManualObservation ManualObservation,
     string[] ValidationReasons)
 {
     public bool ShouldExit => IsRequested;
@@ -42,10 +43,20 @@ public static class HpFanMaxExperimentRunnerCommand
         bool isRequested = args.Any(arg => string.Equals(arg, ExperimentFlag, StringComparison.OrdinalIgnoreCase));
         if (!isRequested)
         {
-            return new HpFanMaxExperimentRunnerCommandResult(false, false, null, false, false, false, []);
+            return new HpFanMaxExperimentRunnerCommandResult(
+                false,
+                false,
+                null,
+                false,
+                false,
+                false,
+                new HpFanMaxExperimentManualObservation(null, null, null, []),
+                []);
         }
 
         List<string> reasons = [];
+        HpFanMaxExperimentManualObservation manualObservation = HpFanMaxExperimentManualObservation.Parse(args);
+        reasons.AddRange(manualObservation.ValidationReasons);
         RequireFlag(args, HpVictusFlag, reasons);
         RequireFlag(args, ReadOnlyTestFlag, reasons);
         RequireFlag(args, AcknowledgementFlag, reasons);
@@ -101,6 +112,7 @@ public static class HpFanMaxExperimentRunnerCommand
             hasOneTimeFourByteApproval,
             hasSecondFourByteConfirmationApproval,
             hasOneTimeOneByteComparisonApproval,
+            manualObservation,
             reasons.ToArray());
     }
 

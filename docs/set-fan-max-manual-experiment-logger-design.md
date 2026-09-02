@@ -56,6 +56,8 @@ Abort before writing for any missing gate, unknown baseline, unstable AC/battery
 
 The operator must record fan noise, temperature trend, UI responsiveness, Windows crash/event-log findings, and whether the process exits cleanly. A successful WMI return alone is never a pass; final `FanMaxGet=false` and documented recovery are required after restore.
 
+The developer-only runner can persist explicitly supplied manual response metadata with `--physical-fan-response-observed=true|false`, `--restore-observed=true|false`, and `--manual-observation-notes="..."`. It does not infer a physical response when these arguments are absent. Notes are sanitized and capped at 512 characters; malformed or repeated observation arguments fail the experiment request closed before its write boundary.
+
 ## Fail-Closed Outcome
 
 Missing, conflicting, ambiguous, or untraceable logs are `unknown` and preserve **NO-GO**. The record cannot update `DeviceValidatedInputLength`, unlock a normal fan control UI, select an alternate payload, or approve further writes. Only independently reviewed exact-device evidence can support a later update to the [first-write decision gate](set-fan-max-first-write-decision-gate.md) and [proof gap checklist](set-fan-max-proof-gap-checklist.md).

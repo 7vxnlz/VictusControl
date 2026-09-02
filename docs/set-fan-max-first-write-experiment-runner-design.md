@@ -31,6 +31,8 @@ The future runner would require all of these flags:
 - `--i-approve-one-time-set-fan-max-4-byte-experiment` when, and only when, the selected hypothesis is `=4`
 - `--i-approve-second-set-fan-max-4-byte-confirmation` for the separately reviewed second four-byte confirmation only
 
+Optional observation metadata is accepted only with this developer experiment path: `--physical-fan-response-observed=true|false`, `--restore-observed=true|false`, and `--manual-observation-notes="..."`. Boolean values are strict and notes are sanitized and capped at 512 characters. These arguments annotate the append-only log after the runner result; they never bypass an approval, choose a payload, or initiate hardware activity.
+
 The original four-byte approval and the separate second-confirmation approval are both required for the documented confirmation. Either is rejected for `=1`; neither creates a fallback, selects a payload, or changes `DeviceValidatedInputLength`. The runner still requires exact model/SKU/BIOS match, an elevated Administrator process, confirmed AC power, and a same-session successful baseline. AC is checked through the local Windows power-line status API and unknown/offline power fails closed. That baseline must include all approved read-only probes, `FanGetCount=2`, `FanMaxGet=false`, and recorded raw FanGetLevel values. Any mismatch, unavailable reading, or missing approval blocks the run before a write.
 
 ## Future Run Sequence

@@ -24,6 +24,7 @@
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelReportDecoder.cs" Link="Hardware\Hp\HpFanGetLevelReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxDryRunReport.cs" Link="Hardware\Hp\HpFanMaxDryRunReport.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogRecord.cs" Link="Hardware\Hp\HpFanMaxExperimentLogRecord.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentManualObservation.cs" Link="Hardware\Hp\HpFanMaxExperimentManualObservation.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentOutcomeClassifier.cs" Link="Hardware\Hp\HpFanMaxExperimentOutcomeClassifier.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogFormatter.cs" Link="Hardware\Hp\HpFanMaxExperimentLogFormatter.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogWriter.cs" Link="Hardware\Hp\HpFanMaxExperimentLogWriter.cs" />

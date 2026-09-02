@@ -77,6 +77,26 @@ public sealed class HpFanMaxExperimentLogTests
     }
 
     [Fact]
+    public void Formatter_SerializesExplicitManualObservations()
+    {
+        HpFanMaxExperimentLogRecord record = HpFanMaxExperimentLogRecord.CreateBlocked() with
+        {
+            PhysicalFanResponseObserved = true,
+            RestoreObserved = true,
+            ManualObservationNotes = "Airflow increased; restore observed."
+        };
+
+        using JsonDocument document = JsonDocument.Parse(HpFanMaxExperimentLogFormatter.Format(record));
+        JsonElement root = document.RootElement;
+
+        Assert.True(root.GetProperty("PhysicalFanResponseObserved").GetBoolean());
+        Assert.True(root.GetProperty("RestoreObserved").GetBoolean());
+        Assert.Equal("Airflow increased; restore observed.", root.GetProperty("ManualObservationNotes").GetString());
+        Assert.False(root.GetProperty("WriteExecuted").GetBoolean());
+        Assert.Null(record.DeviceValidatedInputLength);
+    }
+
+    [Fact]
     public void WriterPath_StaysUnderVictusXLogsFanExperiments()
     {
         string appDataDirectory = HpDiagnosticPaths.BuildAppDataDirectory(Path.Combine("C:", "AppData", "Roaming"));

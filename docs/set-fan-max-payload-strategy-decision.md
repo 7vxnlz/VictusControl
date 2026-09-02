@@ -29,6 +29,8 @@ Normal/user-facing fan control remains **NO-GO**: no UI, sliders, automatic writ
 
 Experiment records now separately preserve enable/restore command success, FanMaxGet enable confirmation, optional human physical-response and restore observations, and a readback-reliability value. A record with successful commands, recorded physical response, and `FanMaxGet=false` classifies as `CommandSucceededPhysicalResponseObservedReadbackInconclusive`. This is experimental interpretation only, not payload validation. Missing manual observations remain `CommandSucceededNoPhysicalConfirmation`; restore failure and unsafe abort classifications remain failures.
 
+For a separately approved developer experiment only, the operator may record `--physical-fan-response-observed=true|false`, `--restore-observed=true|false`, and bounded `--manual-observation-notes="..."`. These log-only arguments do not pass an approval gate, select a payload, or trigger hardware behavior. Omitted observations remain unknown; they are never inferred from FanMaxGet or raw FanGetLevel values.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.

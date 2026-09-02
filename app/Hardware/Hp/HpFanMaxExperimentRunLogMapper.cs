@@ -2,7 +2,9 @@ namespace GHelper.Hardware.Hp;
 
 public static class HpFanMaxExperimentRunLogMapper
 {
-    public static HpFanMaxExperimentLogRecord Create(HpFanMaxExperimentRunResult result)
+    public static HpFanMaxExperimentLogRecord Create(
+        HpFanMaxExperimentRunResult result,
+        HpFanMaxExperimentManualObservation? manualObservation = null)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -33,13 +35,13 @@ public static class HpFanMaxExperimentRunLogMapper
             RestoreCommandSucceeded = result.RestoreWrite.Attempted ? result.RestoreWrite.Succeeded : null,
             PostRestoreFanMaxGet = result.PostRestoreReadback?.FanMaxGetEnabled,
             PostRestoreFanGetLevelRaw = result.PostRestoreReadback?.FanGetLevelRaw,
-            PhysicalFanResponseObserved = null,
-            RestoreObserved = null,
+            PhysicalFanResponseObserved = manualObservation?.PhysicalFanResponseObserved,
+            RestoreObserved = manualObservation?.RestoreObserved,
             UnsafeAbortObserved = false,
             ReadbackReliability = result.EnableWrite.Attempted && result.PostEnableReadback?.FanMaxGetEnabled == false
                 ? HpFanMaxExperimentReadbackReliability.Inconclusive
                 : HpFanMaxExperimentReadbackReliability.Unknown,
-            ManualObservationNotes = "No manual observations are collected automatically. Record physical response and restore observations separately; DeviceValidatedInputLength remains unset.",
+            ManualObservationNotes = manualObservation?.ManualObservationNotes ?? "No manual observations were supplied; physical response and restore state remain unknown. DeviceValidatedInputLength remains unset.",
             Outcome = result.Outcome,
             BlockedReasons = result.BlockedReasons,
             WriteExecuted = writeAttempted
