@@ -65,6 +65,6 @@ The [manual experiment logger design](set-fan-max-manual-experiment-logger-desig
 
 The [first-write runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifies the implemented runner remains command-line-only, approval-gated, and unable to alter this NO-GO status.
 
-The [one-byte comparison result](set-fan-max-1byte-comparison-result.md) shows a similar physical response to the two four-byte records, but retains NO-GO for normal control. Any future experiment still requires separate approval, append-only evidence logging, and matching restore; it is not payload validation or UI-control authorization. The next safe task is a developer-experiment versus normal-control payload strategy decision.
+The [one-byte comparison result](set-fan-max-1byte-comparison-result.md) shows a similar physical response to the two four-byte records, but retains NO-GO for normal control. The [payload strategy decision](set-fan-max-payload-strategy-decision.md) keeps four byte preferred for controlled confirmation and one byte comparison-only. Any future experiment still requires separate approval, append-only evidence logging, and matching restore; it is not payload validation or UI-control authorization.
 
 That metadata must explicitly retain unreliable readback, unvalidated normal control, and prohibited user-facing control. It records evidence; it cannot change a safety decision.

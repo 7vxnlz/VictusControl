@@ -45,4 +45,4 @@ This evidence is insufficient to change `DeviceValidatedInputLength` or implemen
 
 ## Recommendation
 
-Keep **NO-GO for normal control**. The next safe task is a payload strategy decision for bounded developer experiments versus normal control; it must not select a default, change `DeviceValidatedInputLength`, or authorize user-facing control.
+Keep **NO-GO for normal control**. The [payload strategy decision](set-fan-max-payload-strategy-decision.md) defines bounded developer-experiment handling without selecting a default, changing `DeviceValidatedInputLength`, or authorizing user-facing control.

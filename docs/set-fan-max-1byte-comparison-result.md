@@ -35,4 +35,4 @@ One byte now has one exact-device physical-response record; four byte has two. T
 
 ## Recommended Next Safe Step
 
-Define a payload strategy decision that separately governs bounded developer experiments and normal fan control. It must keep normal control disabled until a payload ABI, readback/restore contract, and recovery evidence are independently established.
+Follow the [payload strategy decision](set-fan-max-payload-strategy-decision.md): one byte remains comparison-only, four byte is preferred for further controlled confirmation, and normal control stays disabled.

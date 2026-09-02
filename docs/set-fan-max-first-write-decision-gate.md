@@ -53,4 +53,4 @@ The dry-run and baseline commands remain write-disabled. The separate first-writ
 
 The [runner safety audit](set-fan-max-first-write-runner-safety-audit.md) confirms the implementation remains command-line-only and current-gate blocked; it does not change this NO-GO decision.
 
-The one-byte and four-byte results are partial experimental evidence with inconclusive readback. They do not validate a payload, update `DeviceValidatedInputLength`, or authorize normal fan control. The next safe step is a payload strategy decision for bounded developer experiments versus normal control.
+The one-byte and four-byte results are partial experimental evidence with inconclusive readback. They do not validate a payload, update `DeviceValidatedInputLength`, or authorize normal fan control. The [payload strategy decision](set-fan-max-payload-strategy-decision.md) defines their bounded developer-experiment roles.

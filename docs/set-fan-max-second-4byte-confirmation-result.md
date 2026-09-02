@@ -39,4 +39,4 @@ Normal fan control UI remains **NO-GO**. User-facing control still requires a re
 
 ## Recommended Next Safe Step
 
-The [one-byte comparison result](set-fan-max-1byte-comparison-result.md) now records one similar exact-device physical response. Neither result selects a payload length or permits normal fan control. The next safe task is a developer-experiment versus normal-control payload strategy decision.
+The [one-byte comparison result](set-fan-max-1byte-comparison-result.md) now records one similar exact-device physical response. The [payload strategy decision](set-fan-max-payload-strategy-decision.md) keeps four byte preferred for controlled confirmation, one byte comparison-only, and normal control blocked.
