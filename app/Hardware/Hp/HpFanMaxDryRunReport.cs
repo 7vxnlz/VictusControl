@@ -26,6 +26,8 @@ public sealed record HpFanMaxDryRunReport
     public bool SetFanMaxPhysicalResponseObserved => true;
     public int SetFanMaxPhysicalResponseConfirmationCount => 2;
     public bool SetFanMaxReadbackReliable => false;
+    public bool SetFanMaxDeveloperExperimentAllowed => true;
+    public string SetFanMaxDeveloperExperimentPayload => "FourByte";
     public bool SetFanMaxNormalControlValidated => false;
     public bool SetFanMaxUserFacingControlAllowed => false;
     public bool SetFanMaxDryRunEvaluated { get; }

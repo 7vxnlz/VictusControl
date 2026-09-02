@@ -57,6 +57,8 @@ public sealed record HpDiagnosticDashboardInput
     public string? SetFanMaxPhysicalResponseObserved { get; init; }
     public string? SetFanMaxPhysicalResponseConfirmationCount { get; init; }
     public string? SetFanMaxReadbackReliable { get; init; }
+    public string? SetFanMaxDeveloperExperimentAllowed { get; init; }
+    public string? SetFanMaxDeveloperExperimentPayload { get; init; }
     public string? SetFanMaxNormalControlValidated { get; init; }
     public string? SetFanMaxUserFacingControlAllowed { get; init; }
     public string? SetFanMaxDeviceValidatedInputLength { get; init; }

@@ -628,6 +628,8 @@ namespace GHelper
                 SetFanMaxPhysicalResponseObserved = (snapshot?.SetFanMaxDryRun.SetFanMaxPhysicalResponseObserved ?? report?.GetBool("SetFanMaxPhysicalResponseObserved"))?.ToString(),
                 SetFanMaxPhysicalResponseConfirmationCount = snapshot?.SetFanMaxDryRun.SetFanMaxPhysicalResponseConfirmationCount.ToString() ?? report?.GetValue("SetFanMaxPhysicalResponseConfirmationCount"),
                 SetFanMaxReadbackReliable = (snapshot?.SetFanMaxDryRun.SetFanMaxReadbackReliable ?? report?.GetBool("SetFanMaxReadbackReliable"))?.ToString(),
+                SetFanMaxDeveloperExperimentAllowed = (snapshot?.SetFanMaxDryRun.SetFanMaxDeveloperExperimentAllowed ?? report?.GetBool("SetFanMaxDeveloperExperimentAllowed"))?.ToString(),
+                SetFanMaxDeveloperExperimentPayload = snapshot?.SetFanMaxDryRun.SetFanMaxDeveloperExperimentPayload ?? report?.GetValue("SetFanMaxDeveloperExperimentPayload"),
                 SetFanMaxNormalControlValidated = (snapshot?.SetFanMaxDryRun.SetFanMaxNormalControlValidated ?? report?.GetBool("SetFanMaxNormalControlValidated"))?.ToString(),
                 SetFanMaxUserFacingControlAllowed = (snapshot?.SetFanMaxDryRun.SetFanMaxUserFacingControlAllowed ?? report?.GetBool("SetFanMaxUserFacingControlAllowed"))?.ToString(),
                 SetFanMaxDeviceValidatedInputLength = snapshot?.SetFanMaxDryRun.SetFanMaxDeviceValidatedInputLength?.ToString() ?? report?.GetValue("SetFanMaxDeviceValidatedInputLength"),

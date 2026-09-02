@@ -192,6 +192,8 @@ public sealed class HpDiagnosticDashboardFormatterTests
                 SetFanMaxPhysicalResponseObserved = "True",
                 SetFanMaxPhysicalResponseConfirmationCount = "2",
                 SetFanMaxReadbackReliable = "False",
+                SetFanMaxDeveloperExperimentAllowed = "True",
+                SetFanMaxDeveloperExperimentPayload = "FourByte",
                 SetFanMaxNormalControlValidated = "False",
                 SetFanMaxUserFacingControlAllowed = "False"
             }),
@@ -201,8 +203,29 @@ public sealed class HpDiagnosticDashboardFormatterTests
         Assert.Contains(readiness.Rows, row => row.Label == "Physical response observed" && row.Value == "True - observed in two manual four-byte experiments; experimental only" && row.Status == HpDiagnosticDashboardStatus.Warning);
         Assert.Contains(readiness.Rows, row => row.Label == "Physical response confirmation count" && row.Value == "2 - manual four-byte confirmation records");
         Assert.Contains(readiness.Rows, row => row.Label == "Readback reliable" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxReadbackNotReliable && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "Developer-only experiment allowed" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxDeveloperExperimentAllowed && row.Status == HpDiagnosticDashboardStatus.Warning);
+        Assert.Contains(readiness.Rows, row => row.Label == "Developer-only experiment payload" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxDeveloperExperimentPayload && row.Status == HpDiagnosticDashboardStatus.Warning);
         Assert.Contains(readiness.Rows, row => row.Label == "Normal control validated" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxNormalControlNotValidated && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "User-facing control allowed" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxUserFacingControlNotAllowed && row.Status == HpDiagnosticDashboardStatus.Blocked);
+    }
+
+    [Fact]
+    public void Summary_StatesTheLimitedFourByteDeveloperExperimentAllowanceAndNormalControlNoGo()
+    {
+        string summary = HpDiagnosticDashboardFormatter.BuildSummary(new()
+        {
+            SetFanMaxDeveloperExperimentAllowed = "True",
+            SetFanMaxDeveloperExperimentPayload = "FourByte",
+            SetFanMaxReadbackReliable = "False",
+            SetFanMaxNormalControlValidated = "False",
+            SetFanMaxUserFacingControlAllowed = "False"
+        });
+
+        Assert.Contains("Developer-only experiment allowed: " + HpDiagnosticDashboardFormatter.SetFanMaxDeveloperExperimentAllowed, summary, StringComparison.Ordinal);
+        Assert.Contains("Developer-only experiment payload: " + HpDiagnosticDashboardFormatter.SetFanMaxDeveloperExperimentPayload, summary, StringComparison.Ordinal);
+        Assert.Contains("Readback reliable: " + HpDiagnosticDashboardFormatter.SetFanMaxReadbackNotReliable, summary, StringComparison.Ordinal);
+        Assert.Contains("Normal control validated: " + HpDiagnosticDashboardFormatter.SetFanMaxNormalControlNotValidated, summary, StringComparison.Ordinal);
+        Assert.Contains("User-facing control allowed: " + HpDiagnosticDashboardFormatter.SetFanMaxUserFacingControlNotAllowed, summary, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -215,6 +238,8 @@ public sealed class HpDiagnosticDashboardFormatterTests
                 SetFanMaxPhysicalResponseObserved = "True",
                 SetFanMaxPhysicalResponseConfirmationCount = "99",
                 SetFanMaxReadbackReliable = "True",
+                SetFanMaxDeveloperExperimentAllowed = "True",
+                SetFanMaxDeveloperExperimentPayload = "OneByte",
                 SetFanMaxNormalControlValidated = "True",
                 SetFanMaxUserFacingControlAllowed = "True"
             }),
@@ -223,6 +248,8 @@ public sealed class HpDiagnosticDashboardFormatterTests
         Assert.Contains(readiness.Rows, row => row.Label == "Experimental payload candidate" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxExperimentalPayloadUnknown && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "Physical response observed" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxPhysicalResponseUnknown && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "Readback reliable" && row.Value.Contains("failing closed", StringComparison.Ordinal) && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "Developer-only experiment allowed" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxDeveloperExperimentNotAllowed && row.Status == HpDiagnosticDashboardStatus.Blocked);
+        Assert.Contains(readiness.Rows, row => row.Label == "Developer-only experiment payload" && row.Value == HpDiagnosticDashboardFormatter.SetFanMaxDeveloperExperimentPayloadUnknown && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "Normal control validated" && row.Value.Contains("failing closed", StringComparison.Ordinal) && row.Status == HpDiagnosticDashboardStatus.Blocked);
         Assert.Contains(readiness.Rows, row => row.Label == "User-facing control allowed" && row.Value.Contains("failing closed", StringComparison.Ordinal) && row.Status == HpDiagnosticDashboardStatus.Blocked);
     }

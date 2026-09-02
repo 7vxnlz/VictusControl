@@ -10,6 +10,8 @@ public static class HpVictusCapabilityReportMetadata
         "SetFanMaxPhysicalResponseObserved",
         "SetFanMaxPhysicalResponseConfirmationCount",
         "SetFanMaxReadbackReliable",
+        "SetFanMaxDeveloperExperimentAllowed",
+        "SetFanMaxDeveloperExperimentPayload",
         "SetFanMaxNormalControlValidated",
         "SetFanMaxUserFacingControlAllowed"
     ];

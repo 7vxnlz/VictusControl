@@ -37,6 +37,8 @@ public static class HpDiagnosticReportSchemaV2Refresher
             report["SetFanMaxPhysicalResponseObserved"] = true;
             report["SetFanMaxPhysicalResponseConfirmationCount"] = 2;
             report["SetFanMaxReadbackReliable"] = false;
+            report["SetFanMaxDeveloperExperimentAllowed"] = true;
+            report["SetFanMaxDeveloperExperimentPayload"] = "FourByte";
             report["SetFanMaxNormalControlValidated"] = false;
             report["SetFanMaxUserFacingControlAllowed"] = false;
             report["SetFanMaxWriteImplemented"] = false;

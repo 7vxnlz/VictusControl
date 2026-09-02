@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**NO-GO for normal fan-write readiness and UI.** `DeviceValidatedInputLength` is unset. The developer-only runner accepts one additional, explicitly acknowledged four-byte experiment scope, but that narrow route does not validate a payload, change this decision for normal use, or authorize a fan-control UI.
+**NO-GO for normal fan-write readiness and UI.** `DeviceValidatedInputLength` is unset. The repeated exact-device response now supports a limited **developer-only experimental GO** for the four-byte hypothesis, subject to the existing explicit command-line approvals and all runtime gates. This narrow route does not validate a payload, change this decision for normal use, or authorize a fan-control UI.
 
 ## Known Evidence
 
@@ -32,9 +32,9 @@ The gate is currently **not satisfied**. No write code, payload selection, or ha
 
 The cached HP diagnostic report and dashboard expose this decision as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and a fail-closed reason. These fields are diagnostic-only and cannot authorize or execute a write.
 
-Separate experimental fields may record the repeated four-byte physical response, but they must keep `SetFanMaxReadbackReliable=false`, `SetFanMaxNormalControlValidated=false`, and `SetFanMaxUserFacingControlAllowed=false`. They are not a gate update or payload validation.
+Separate experimental fields record the repeated four-byte physical response and the narrow developer-only allowance: `SetFanMaxDeveloperExperimentAllowed=true` and `SetFanMaxDeveloperExperimentPayload=FourByte`. They must keep `SetFanMaxReadbackReliable=false`, `SetFanMaxNormalControlValidated=false`, and `SetFanMaxUserFacingControlAllowed=false`. They are not a normal-control gate update or payload validation.
 
-Schema-v2 report persistence includes those experimental fields so cached diagnostics can distinguish physical response evidence from normal-control validation. Missing schema-v2 fields remain old-report data and must fail closed.
+Schema-v2 report persistence includes those experimental fields so cached diagnostics can distinguish a controlled four-byte developer experiment from normal-control validation. Missing schema-v2 fields remain old-report data and must fail closed.
 
 Older cached reports that lack these fields must also display `NO-GO` / not satisfied with an explicit old-report missing-field reason. Cached optimistic values such as `GO` or `true` are treated as invalid for authorization and remain blocked.
 

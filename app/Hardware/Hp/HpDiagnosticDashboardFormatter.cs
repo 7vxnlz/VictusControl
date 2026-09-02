@@ -17,6 +17,10 @@ public static class HpDiagnosticDashboardFormatter
     public const string SetFanMaxExperimentalPayloadUnknown = "Unknown / not selected";
     public const string SetFanMaxPhysicalResponseUnknown = "Unknown - missing or unrecognized experimental evidence";
     public const string SetFanMaxReadbackNotReliable = "False - FanMaxGet is not a reliable sole success criterion";
+    public const string SetFanMaxDeveloperExperimentAllowed = "True - four-byte controlled developer experiments only";
+    public const string SetFanMaxDeveloperExperimentPayload = "FourByte - developer experiment only";
+    public const string SetFanMaxDeveloperExperimentNotAllowed = "False - developer experiment allowance is missing or invalid";
+    public const string SetFanMaxDeveloperExperimentPayloadUnknown = "Unknown - developer experiment payload is missing or invalid";
     public const string SetFanMaxNormalControlNotValidated = "False - normal control is not validated";
     public const string SetFanMaxUserFacingControlNotAllowed = "False - user-facing control is not allowed";
 
@@ -107,6 +111,12 @@ public static class HpDiagnosticDashboardFormatter
                     input.SetFanMaxPhysicalResponseObserved,
                     input.SetFanMaxPhysicalResponseConfirmationCount)),
                 Row("Readback reliable", FormatReadbackReliable(input.SetFanMaxReadbackReliable)),
+                Row("Developer-only experiment allowed", FormatDeveloperExperimentAllowed(
+                    input.SetFanMaxDeveloperExperimentAllowed,
+                    input.SetFanMaxDeveloperExperimentPayload)),
+                Row("Developer-only experiment payload", FormatDeveloperExperimentPayload(
+                    input.SetFanMaxDeveloperExperimentAllowed,
+                    input.SetFanMaxDeveloperExperimentPayload)),
                 Row("Normal control validated", FormatNormalControlValidated(input.SetFanMaxNormalControlValidated)),
                 Row("User-facing control allowed", FormatUserFacingControlAllowed(input.SetFanMaxUserFacingControlAllowed)),
                 Row("Fan write implemented", FormatEvidenceWriteImplemented(input.SetFanMaxWriteImplemented)),
@@ -230,6 +240,16 @@ public static class HpDiagnosticDashboardFormatter
             ? "False - unexpected reliable readback claim; failing closed"
             : SetFanMaxReadbackNotReliable;
 
+    public static string FormatDeveloperExperimentAllowed(string? allowed, string? payload) =>
+        HasRecognizedDeveloperExperimentAllowance(allowed, payload)
+            ? SetFanMaxDeveloperExperimentAllowed
+            : SetFanMaxDeveloperExperimentNotAllowed;
+
+    public static string FormatDeveloperExperimentPayload(string? allowed, string? payload) =>
+        HasRecognizedDeveloperExperimentAllowance(allowed, payload)
+            ? SetFanMaxDeveloperExperimentPayload
+            : SetFanMaxDeveloperExperimentPayloadUnknown;
+
     public static string FormatNormalControlValidated(string? value) =>
         string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
             ? "False - unexpected normal-control validation claim; failing closed"
@@ -260,6 +280,10 @@ public static class HpDiagnosticDashboardFormatter
         string.Equals(candidate, "FourByte", StringComparison.OrdinalIgnoreCase) &&
         string.Equals(observed, bool.TrueString, StringComparison.OrdinalIgnoreCase) &&
         string.Equals(confirmationCount, "2", StringComparison.Ordinal);
+
+    private static bool HasRecognizedDeveloperExperimentAllowance(string? allowed, string? payload) =>
+        string.Equals(allowed, bool.TrueString, StringComparison.OrdinalIgnoreCase) &&
+        string.Equals(payload, "FourByte", StringComparison.OrdinalIgnoreCase);
 
     public static string FormatReportSchemaVersion(string? value)
     {
@@ -319,7 +343,8 @@ public static class HpDiagnosticDashboardFormatter
         }
 
         if (value.StartsWith("FourByte", StringComparison.OrdinalIgnoreCase) ||
-            value.StartsWith("True - observed", StringComparison.OrdinalIgnoreCase))
+            value.StartsWith("True - observed", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("True - four-byte", StringComparison.OrdinalIgnoreCase))
         {
             return HpDiagnosticDashboardStatus.Warning;
         }

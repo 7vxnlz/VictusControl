@@ -70,6 +70,8 @@ public sealed class HpDiagnosticReportLoaderTests
             Assert.Equal("true", result.GetValue("SetFanMaxPhysicalResponseObserved"));
             Assert.Equal("2", result.GetValue("SetFanMaxPhysicalResponseConfirmationCount"));
             Assert.Equal("false", result.GetValue("SetFanMaxReadbackReliable"));
+            Assert.Equal("true", result.GetValue("SetFanMaxDeveloperExperimentAllowed"));
+            Assert.Equal("FourByte", result.GetValue("SetFanMaxDeveloperExperimentPayload"));
             Assert.Equal("false", result.GetValue("SetFanMaxNormalControlValidated"));
             Assert.Equal("false", result.GetValue("SetFanMaxUserFacingControlAllowed"));
             Assert.Equal("false", result.GetValue("SetFanMaxWriteImplemented"));

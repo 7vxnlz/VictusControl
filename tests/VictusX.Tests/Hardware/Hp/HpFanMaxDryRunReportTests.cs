@@ -65,6 +65,8 @@ public sealed class HpFanMaxDryRunReportTests
         Assert.True(root.GetProperty("SetFanMaxPhysicalResponseObserved").GetBoolean());
         Assert.Equal(2, root.GetProperty("SetFanMaxPhysicalResponseConfirmationCount").GetInt32());
         Assert.False(root.GetProperty("SetFanMaxReadbackReliable").GetBoolean());
+        Assert.True(root.GetProperty("SetFanMaxDeveloperExperimentAllowed").GetBoolean());
+        Assert.Equal("FourByte", root.GetProperty("SetFanMaxDeveloperExperimentPayload").GetString());
         Assert.False(root.GetProperty("SetFanMaxNormalControlValidated").GetBoolean());
         Assert.False(root.GetProperty("SetFanMaxUserFacingControlAllowed").GetBoolean());
         Assert.True(root.GetProperty("SetFanMaxDryRunEvaluated").GetBoolean());

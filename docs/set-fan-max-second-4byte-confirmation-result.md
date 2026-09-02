@@ -33,10 +33,10 @@ FanMaxGet is not a sufficient sole success criterion for this device/BIOS: it di
 
 The two observations provide repeatable, limited developer-only physical-response evidence for the four-byte hypothesis. They do not fully validate its ABI, semantics, restore timing, failure recovery, or normal control behavior. `DeviceValidatedInputLength` remains unset; one byte remains blocked and must not be tested as a fallback.
 
-Schema-v2 cached diagnostic reports identify this exact evidence as `SetFanMaxExperimentalPayloadCandidate=FourByte`, physical response observed twice, and readback not reliable. Those fields are experimental status only: normal-control validation and user-facing control remain explicitly `false`. Schema-v1 or missing cached reports must continue to render the physical-response state as unknown and normal control as blocked.
+Schema-v2 cached diagnostic reports identify this exact evidence as `SetFanMaxExperimentalPayloadCandidate=FourByte`, physical response observed twice, and readback not reliable. They also record `SetFanMaxDeveloperExperimentAllowed=true` and `SetFanMaxDeveloperExperimentPayload=FourByte`: this is a limited GO for further controlled, command-line-only developer experiments on this exact device. It neither validates the payload ABI nor changes `DeviceValidatedInputLength`. Normal-control validation and user-facing control remain explicitly `false`. Schema-v1 or missing cached reports must continue to render the physical-response and developer-experiment state as unknown/blocked.
 
 Normal fan control UI remains **NO-GO**. User-facing control still requires a reliable state/readback contract, independently reviewed restore and recovery proof, bounded thermal/power evidence, repeated safety observations, and a separate product-level lifecycle/UI review.
 
 ## Recommended Next Safe Step
 
-Add explicit experimental status fields that distinguish **physical response observed** from **normal control validated**. They must remain report/log metadata only and cannot authorize another experiment, select a payload length, or enable UI controls.
+Use the limited developer-only four-byte experimental status only for separately reviewed controlled experiments. Do not test one byte, select a payload length, or expose normal fan control until the remaining proof gaps are closed.
