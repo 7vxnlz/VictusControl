@@ -13,7 +13,7 @@ These results prove diagnostic visibility only. They do not validate any write c
 
 ## 2. Why SetFanMax Is Blocked
 
-SetFanMax (`0x27`) remains blocked because its device-specific input length is unknown. Two exact-device four-byte attempts returned successful WMI calls and repeated observed fan ramps, but FanMaxGet remained false after enable and restore; see the [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md). Four byte is preferred experimental evidence only, not a validated payload or reliable state readback. Matching enable/disable behavior, restore proof, and manual recovery proof remain incomplete.
+SetFanMax (`0x27`) remains blocked because its device-specific input length is unknown. Two exact-device four-byte attempts and one one-byte comparison returned successful calls and observed fan response, but FanMaxGet remained false after enable and restore; see the [one-byte comparison result](set-fan-max-1byte-comparison-result.md). Four byte has more repeated experimental evidence, but neither is a validated payload or reliable state readback. Matching enable/disable behavior, restore proof, and manual recovery proof remain incomplete.
 
 `DeviceValidatedInputLength` therefore remains unset and normal SetFanMax control remains **NO-GO**. The repeated four-byte physical response permits only separately approved, command-line-only developer experiments. One byte may be used only for one separately approved comparison experiment; neither path permits normal writes or UI control.
 
@@ -65,6 +65,6 @@ The [manual experiment logger design](set-fan-max-manual-experiment-logger-desig
 
 The [first-write runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifies the implemented runner remains command-line-only, approval-gated, and unable to alter this NO-GO status.
 
-The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) repeats a physical response for the four-byte hypothesis and supports limited developer-only experiments, but retains NO-GO for normal control. The one-byte comparison route has its own approval and all the same runtime gates. Any run still requires separate approval, append-only evidence logging, and matching restore; it is not payload validation or UI-control authorization.
+The [one-byte comparison result](set-fan-max-1byte-comparison-result.md) shows a similar physical response to the two four-byte records, but retains NO-GO for normal control. Any future experiment still requires separate approval, append-only evidence logging, and matching restore; it is not payload validation or UI-control authorization. The next safe task is a developer-experiment versus normal-control payload strategy decision.
 
 That metadata must explicitly retain unreliable readback, unvalidated normal control, and prohibited user-facing control. It records evidence; it cannot change a safety decision.

@@ -6,7 +6,7 @@
 
 ## Target and Common Metadata
 
-VictusX has read-only proof of V1, two fans, and `FanMaxGet`, but no write proof. All payload-relevant implementations use command `0x20008`, type `0x27`, `hpqBIOSInt0` (directly or through an output-size-derived method name), enable byte `0x01`, and disable byte `0x00`.
+VictusX has read-only proof of V1, two fans, and `FanMaxGet`. It now also has bounded exact-device physical-response records for both shapes, while their write semantics remain unresolved. All payload-relevant implementations use command `0x20008`, type `0x27`, `hpqBIOSInt0` (directly or through an output-size-derived method name), enable byte `0x01`, and disable byte `0x00`.
 
 ## Priority Evidence
 
@@ -37,7 +37,7 @@ OmenXHub states that it is based primarily on OmenSuperHub. Their agreement ther
 - **Four bytes:** two generic implementations agree; omencore also has the closest `8BD4` / V1 / F.30 cohort. That cohort is explicitly unverified and its target-SKU records concern keyboard/RGB, not SetFanMax. Confidence: near-device context, not payload validation.
 - **Exact-device:** no reference hit proves a SetFanMax input length for `16-s0035nt`, `7Z5Z2EA#AB8`, BIOS F.31, System family `103C_5335M7`, or the supplied HP VICTUS family string.
 
-There is no independent majority or consensus capable of selecting either length. The one-byte and four-byte shapes remain competing research hypotheses, not future defaults.
+Exact-device experiments now show one observed one-byte response and two observed four-byte responses; see the [one-byte comparison result](set-fan-max-1byte-comparison-result.md) and [second four-byte result](set-fan-max-second-4byte-confirmation-result.md). FanMaxGet remained false throughout, so this is not a payload-selection consensus. The one-byte and four-byte shapes remain competing research hypotheses, not future defaults.
 
 ## Consequences
 
@@ -45,4 +45,4 @@ This evidence is insufficient to change `DeviceValidatedInputLength` or implemen
 
 ## Recommendation
 
-Keep **NO-GO for normal control**. A separately approved, one-time one-byte comparison may collect bounded exact-device evidence only; it must not select a default, change `DeviceValidatedInputLength`, or authorize user-facing control.
+Keep **NO-GO for normal control**. The next safe task is a payload strategy decision for bounded developer experiments versus normal control; it must not select a default, change `DeviceValidatedInputLength`, or authorize user-facing control.

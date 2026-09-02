@@ -20,12 +20,12 @@ The reviewed references consistently support the following metadata, but not thi
 
 | Candidate | Existing evidence | Missing exact-device proof |
 | --- | --- | --- |
-| 1 byte | OmenSuperHub and OmenXHub use the state byte alone. | No validated SetFanMax trace for Victus `16-s0035nt`, SKU `7Z5Z2EA#AB8`, BIOS `F.31`. |
-| 4 bytes | ghelper-omen and omencore use `{ state, 0, 0, 0 }`; omencore has the closest V1 Victus 16-s0xxx cohort. | The closest cohort is BIOS `F.30` and `UserVerified=false`; no exact F.31 validation exists. |
+| 1 byte | OmenSuperHub and OmenXHub use the state byte alone; one exact-device comparison produced an observed response. | Input ABI, reliable success readback, restore semantics, thermal/power, and recovery proof remain unvalidated. |
+| 4 bytes | ghelper-omen and omencore use `{ state, 0, 0, 0 }`; two exact-device experiments produced observed responses. | Input ABI, reliable success readback, restore semantics, thermal/power, and recovery proof remain unvalidated. |
 
 Read-only success from `FanMaxGet`, `FanGetCount`, or `FanGetLevel` does not establish the write input length. Neither candidate is selected.
 
-The [two exact-device four-byte experiments](set-fan-max-second-4byte-confirmation-result.md) produced repeated observed fan responses, but post-enable FanMaxGet remained false. Four byte is therefore preferred for limited, separately approved developer-only experiments only. One byte is allowed only as one separately approved comparison experiment, using its own explicit approval flag and no fallback. The input ABI, readback semantics, restore behavior, and payload decision remain open.
+The [two exact-device four-byte experiments](set-fan-max-second-4byte-confirmation-result.md) and [one one-byte comparison](set-fan-max-1byte-comparison-result.md) produced observed fan responses, but post-enable FanMaxGet remained false in every case. Four byte has more repeated physical-response evidence, but neither length is selected. The input ABI, readback semantics, restore behavior, and payload decision remain open.
 
 Cached experimental-status fields can preserve that distinction, including `SetFanMaxDeveloperExperimentAllowed=true` for four byte only, but cannot mark input ABI, readback, restore, or UI proof as complete.
 
@@ -39,7 +39,7 @@ See the [exact-device baseline evidence](set-fan-max-exact-device-baseline-evide
 
 ## Remaining Proof Gaps
 
-- [ ] **Device input ABI:** one independently reviewable record selects exactly one input length for this exact model/SKU/BIOS, with no alternate-shape fallback. Two four-byte physical responses are not sufficient because their state readback is inconclusive.
+- [ ] **Device input ABI:** one independently reviewable strategy selects exactly one input length for normal control on this exact model/SKU/BIOS, with no alternate-shape fallback. Two four-byte and one one-byte physical responses are not sufficient because their state readback is inconclusive.
 - [ ] **Restore behavior:** the same selected length restores max fan to disabled, proven by a reviewed readback/observation contract. FanMaxGet matched the disabled baseline but did not show the observed enabled response, so it is insufficient as the sole proof.
 - [ ] **Thermal observation:** a named independent source, baseline, stop thresholds, observer, and continuous availability through restore and recovery are reviewed.
 - [ ] **AC, battery, and power state:** stable AC, adequate battery reserve, and defined behavior for unplug, suspend, shutdown, or power transition are evidenced for the experiment. Existing policy requirements are not device proof.
@@ -63,7 +63,7 @@ No code should guess `1` or `4`, choose by repository count or model similarity,
 
 ## Recommended Next Safe Task
 
-Maintain the limited four-byte evidence and collect only separately reviewed evidence. A one-time one-byte comparison may be run only under its separate approval and every existing gate; do not select a payload or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
+Define a payload strategy decision that distinguishes bounded developer experiments from normal control. Do not select a payload for normal use or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
 
 The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) strengthens experimental evidence but does not close any checkbox.
 

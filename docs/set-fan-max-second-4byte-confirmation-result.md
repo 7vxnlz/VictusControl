@@ -39,4 +39,4 @@ Normal fan control UI remains **NO-GO**. User-facing control still requires a re
 
 ## Recommended Next Safe Step
 
-Use the limited developer-only four-byte experimental status only for separately reviewed controlled experiments. Do not test one byte, select a payload length, or expose normal fan control until the remaining proof gaps are closed.
+The [one-byte comparison result](set-fan-max-1byte-comparison-result.md) now records one similar exact-device physical response. Neither result selects a payload length or permits normal fan control. The next safe task is a developer-experiment versus normal-control payload strategy decision.
