@@ -128,7 +128,7 @@ namespace GHelper
                     HasReviewedHumanApproval: true,
                     HasSecondFourByteConfirmationApproval: true,
                     HasOneTimeOneByteComparisonApproval: false);
-                result = runner.Run(command.CreateRunnerCommand(), gates);
+                result = runner.Run(command, gates);
             }
 
             try

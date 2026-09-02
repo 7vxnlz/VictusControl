@@ -51,4 +51,4 @@ Normal fan control still needs a selected and reviewed ABI, durable restore and 
 
 ## Implementation Status
 
-The separate command-line-only pulse parser and pure gate tests are implemented. The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) records one successful bounded developer run with observed physical response and restore. It reuses the runner safeguards, rejects payload-length overrides, and remains absent from the Diagnostic UI and tray menu.
+The separate command-line-only pulse parser and pure gate tests are implemented. It now carries the internal `FourByteMaxFanPulse` research operation contract into a pulse-specific runner overload. This preserves the existing flags, gates, four-byte pair, single attempt, matching restore, append-only logging, and absent Diagnostic UI/tray route. The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) records one successful bounded developer run with observed physical response and restore.

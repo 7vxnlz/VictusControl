@@ -36,9 +36,9 @@ The pure, unwired `HpFanResearchContracts` layer now records these narrow roles 
 - `IHpFanResearchLogSink`: appends an immutable research record under `%APPDATA%\VictusX\Logs\FanExperiments\`.
 - `IHpFanResearchOutcomeClassifier`: separates command return, manually observed physical response, observed restore, and readback reliability without declaring product readiness.
 
-`HpFanResearchOperationKind` has only `FourByteMaxFanPulse`. The associated operation descriptor keeps `DeviceValidatedInputLength` null. `IHpFanResearchOperation` and `IHpFanMaxPulseResearchOperation` describe fixed pulse metadata only; neither exposes execution or generic fan-control methods.
+`HpFanResearchOperationKind` has only `FourByteMaxFanPulse`. The associated operation descriptor keeps `DeviceValidatedInputLength` null. `IHpFanResearchOperation` and `IHpFanMaxPulseResearchOperation` describe fixed pulse metadata only; neither exposes execution or generic fan-control methods. The pulse parser now carries that operation and the existing runner accepts it through a behavior-preserving pulse-specific overload.
 
-Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. The contracts are not wired into startup, UI, tray, or runtime transport. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
+Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. The pulse-specific contract wiring changes no flags, gates, bytes, retries, fallback behavior, restore path, log location, UI, or tray route. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
 
 ## Required Safety Gates
 

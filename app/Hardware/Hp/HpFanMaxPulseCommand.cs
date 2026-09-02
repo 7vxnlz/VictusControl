@@ -7,10 +7,13 @@ public sealed record HpFanMaxPulseCommandResult(
     string[] ValidationReasons)
 {
     public bool ShouldExit => IsRequested;
+    public IHpFanMaxPulseResearchOperation Operation { get; } = new FourByteMaxFanPulseResearchOperation();
 
     public HpFanMaxExperimentRunnerCommandResult CreateRunnerCommand()
     {
-        if (!IsValidRequest)
+        if (!IsValidRequest ||
+            Operation.Descriptor.Kind != HpFanResearchOperationKind.FourByteMaxFanPulse ||
+            Operation.Descriptor.Status != HpFanResearchOperationStatus.DeveloperOnlyResearch)
         {
             throw new InvalidOperationException("An invalid Max Fan Pulse request cannot create a runner command.");
         }
@@ -20,8 +23,8 @@ public sealed record HpFanMaxPulseCommandResult(
             true,
             new HpFanMaxExperimentPayload(
                 HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis,
-                [0x01, 0x00, 0x00, 0x00],
-                [0x00, 0x00, 0x00, 0x00]),
+                Operation.EnablePayload.ToArray(),
+                Operation.RestorePayload.ToArray()),
             true,
             true,
             false,

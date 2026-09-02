@@ -70,6 +70,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest pulse history/Quit checkpoint note: final checkpoint added for read-only pulse history and HP Diagnostic full-process Quit behavior; normal fan control remains NO-GO.
 - Latest HP fan research abstraction note: internal architecture design added around the gated developer-only four-byte pulse path; no normal fan-control API or UI route is authorized.
 - Latest HP fan research contract note: pure, unwired contracts now represent only the four-byte developer pulse and fail-closed research evidence; no runtime or UI behavior changed.
+- Latest HP fan research refactor note: the command-line-only four-byte pulse now consumes the narrow research contract through a behavior-preserving runner overload; no UI route or normal-control permission changed.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

@@ -69,13 +69,20 @@ public interface IHpFanResearchOperation
 
 public interface IHpFanMaxPulseResearchOperation : IHpFanResearchOperation
 {
+    ReadOnlyMemory<byte> EnablePayload { get; }
+    ReadOnlyMemory<byte> RestorePayload { get; }
     string EnablePayloadHex { get; }
     string RestorePayloadHex { get; }
 }
 
 public sealed class FourByteMaxFanPulseResearchOperation : IHpFanMaxPulseResearchOperation
 {
+    private static readonly byte[] EnablePayloadBytes = [0x01, 0x00, 0x00, 0x00];
+    private static readonly byte[] RestorePayloadBytes = [0x00, 0x00, 0x00, 0x00];
+
     public HpFanResearchOperationDescriptor Descriptor => HpFanResearchOperationDescriptor.FourByteMaxFanPulse;
+    public ReadOnlyMemory<byte> EnablePayload => EnablePayloadBytes;
+    public ReadOnlyMemory<byte> RestorePayload => RestorePayloadBytes;
     public string EnablePayloadHex => "01-00-00-00";
     public string RestorePayloadHex => "00-00-00-00";
 }

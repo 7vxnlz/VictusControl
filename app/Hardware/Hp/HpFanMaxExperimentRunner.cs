@@ -68,6 +68,28 @@ public sealed class HpFanMaxExperimentRunner(
     private const int TargetThermalPolicyVersion = 1;
 
     public HpFanMaxExperimentRunResult Run(
+        HpFanMaxPulseCommandResult command,
+        HpFanMaxExperimentRuntimeGates gates)
+    {
+        ArgumentNullException.ThrowIfNull(command);
+        ArgumentNullException.ThrowIfNull(gates);
+
+        if (!command.IsValidRequest)
+        {
+            return Blocked(null, null, false, command.ValidationReasons);
+        }
+
+        IHpFanMaxPulseResearchOperation operation = command.Operation;
+        if (operation.Descriptor.Kind != HpFanResearchOperationKind.FourByteMaxFanPulse ||
+            operation.Descriptor.Status != HpFanResearchOperationStatus.DeveloperOnlyResearch)
+        {
+            return Blocked(null, null, false, ["Max Fan Pulse is not an allowed developer-only research operation."]);
+        }
+
+        return Run(command.CreateRunnerCommand(), gates);
+    }
+
+    public HpFanMaxExperimentRunResult Run(
         HpFanMaxExperimentRunnerCommandResult command,
         HpFanMaxExperimentRuntimeGates gates)
     {

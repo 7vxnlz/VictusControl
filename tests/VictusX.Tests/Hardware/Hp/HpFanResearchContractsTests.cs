@@ -22,6 +22,8 @@ public sealed class HpFanResearchContractsTests
 
         Assert.Equal("01-00-00-00", operation.EnablePayloadHex);
         Assert.Equal("00-00-00-00", operation.RestorePayloadHex);
+        Assert.Equal(new byte[] { 0x01, 0x00, 0x00, 0x00 }, operation.EnablePayload.ToArray());
+        Assert.Equal(new byte[] { 0x00, 0x00, 0x00, 0x00 }, operation.RestorePayload.ToArray());
         Assert.Null(operation.Descriptor.DeviceValidatedInputLength);
     }
 

@@ -33,7 +33,7 @@ The [pulse history and Quit checkpoint](set-fan-max-pulse-history-quit-checkpoin
 
 The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) keeps any future internal extraction limited to the developer-only pulse boundary; it must not create a generic fan-control API or a user-facing route.
 
-The new pure research contracts represent only `FourByteMaxFanPulse`, fail-closed gates, snapshots, outcomes, and append-only log requests. They are not wired to the runner or UI and do not alter normal-control **NO-GO**.
+The research contracts represent only `FourByteMaxFanPulse`, fail-closed gates, snapshots, outcomes, and append-only log requests. The pulse parser and runner now use the fixed four-byte contract metadata without changing flags, gates, payloads, restore behavior, logging, or UI. This does not alter normal-control **NO-GO**.
 
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 

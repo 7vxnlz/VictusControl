@@ -31,6 +31,9 @@ public sealed class HpFanMaxPulseCommandTests
         HpFanMaxPulseCommandResult accepted = HpFanMaxPulseCommand.Parse(ValidArguments());
 
         Assert.False(rejected.IsValidRequest);
+        Assert.Equal(HpFanResearchOperationKind.FourByteMaxFanPulse, accepted.Operation.Descriptor.Kind);
+        Assert.Equal(HpFanResearchOperationStatus.DeveloperOnlyResearch, accepted.Operation.Descriptor.Status);
+        Assert.Null(accepted.Operation.Descriptor.DeviceValidatedInputLength);
         HpFanMaxExperimentPayload payload = accepted.CreateRunnerCommand().Payload!;
         Assert.Equal(HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis, payload.Candidate);
         Assert.Equal("01-00-00-00", payload.EnableBytesHex);
@@ -61,8 +64,9 @@ public sealed class HpFanMaxPulseCommandTests
     {
         var transport = new RecordingTransport();
         var runner = new HpFanMaxExperimentRunner(new FixedReadOnlyProvider(), transport, new NoDelay());
+        HpFanMaxPulseCommandResult command = HpFanMaxPulseCommand.Parse(ValidArguments());
         HpFanMaxExperimentRunResult result = runner.Run(
-            HpFanMaxPulseCommand.Parse(ValidArguments()).CreateRunnerCommand(),
+            command,
             new HpFanMaxExperimentRuntimeGates(true, true, true, true, true, false));
 
         HpFanMaxExperimentLogRecord record = HpFanMaxExperimentRunLogMapper.Create(
@@ -79,8 +83,9 @@ public sealed class HpFanMaxPulseCommandTests
     {
         var transport = new RecordingTransport();
         var runner = new HpFanMaxExperimentRunner(new FixedReadOnlyProvider(), transport, new NoDelay());
+        HpFanMaxPulseCommandResult command = HpFanMaxPulseCommand.Parse(ValidArguments());
         HpFanMaxExperimentRunResult result = runner.Run(
-            HpFanMaxPulseCommand.Parse(ValidArguments()).CreateRunnerCommand(),
+            command,
             new HpFanMaxExperimentRuntimeGates(false, true, true, true, true, false));
 
         HpFanMaxExperimentLogRecord record = HpFanMaxExperimentRunLogMapper.Create(result);
