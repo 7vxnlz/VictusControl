@@ -34,6 +34,7 @@ Normal/user-facing fan control remains **NO-GO**. No fan sliders, toggles, autom
 - `DeviceValidatedInputLength` is still unset.
 - No payload shape is fully validated for normal control.
 - FanMaxGet is inconclusive and cannot prove fan state alone.
+- The [DeviceValidatedInputLength and readback proof design](device-validated-input-length-readback-proof-design.md) keeps physical fan response separate from payload validation and readback reliability.
 - Restore behavior is not proven across failures, power transitions, service conflicts, or long-running sessions.
 - Thermal, AC/battery, sleep/resume, and crash/recovery evidence is incomplete.
 - SetFanMode, SetFanLevel, `0x37`, EC writes, and fan curves remain unsupported and must not be used as fallback paths.

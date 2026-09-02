@@ -74,6 +74,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest HP fan research runtime note: manual post-refactor four-byte pulse verification preserved observed response and restore with inconclusive FanMaxGet; normal control remains NO-GO and DeviceValidatedInputLength remains unset.
 - Latest normal fan-control note: go/no-go evidence matrix added; developer-only four-byte pulse remains operational, but user-facing fan control remains NO-GO.
 - Latest normal fan-control proof note: blocker priority plan added; next safe task is read-only proof design for DeviceValidatedInputLength and readback reliability.
+- Latest input-length/readback note: read-only proof design added; DeviceValidatedInputLength stays null, FanMaxGet inconclusive, FanGetLevel raw-only.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

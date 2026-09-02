@@ -41,6 +41,8 @@ The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-ev
 
 The [normal fan control proof priority plan](normal-fan-control-proof-priority-plan.md) ranks the blockers. `DeviceValidatedInputLength`, readback reliability, restore proof, thermal/power safety, and recovery behavior must be proven before normal fan control can move out of **NO-GO**.
 
+The [DeviceValidatedInputLength and readback proof design](device-validated-input-length-readback-proof-design.md) defines fail-closed proof criteria for the top blockers. It keeps physical fan response separate from payload validation, treats FanMaxGet as inconclusive, and keeps FanGetLevel raw-only.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked
