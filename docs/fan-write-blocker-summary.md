@@ -25,7 +25,11 @@ The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) 
 
 The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) now records a successful bounded developer run. It makes the developer pulse operational, not normal fan control.
 
-The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) is read-only local-log research support only. It cannot execute a pulse or change normal-control NO-GO.
+The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) is implemented as read-only local-log research support only. It cannot execute a pulse or change normal-control NO-GO.
+
+HP Diagnostic Quit now cleans up the diagnostic tray shell and exits its UI loop. This lifecycle fix does not add a pulse route, fan-control UI, or hardware action.
+
+The [pulse history and Quit checkpoint](set-fan-max-pulse-history-quit-checkpoint.md) records the stabilized read-only dashboard history behavior and explicit HP Diagnostic process termination guarantee.
 
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 

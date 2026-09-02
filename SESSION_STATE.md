@@ -65,6 +65,9 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest pulse implementation note: four-byte Max Fan Pulse command added behind its own flags and existing runner gates; it was not run and normal control remains NO-GO.
 - Latest pulse result note: four-byte Max Fan Pulse completed with observed response and restore; it is operational only for the gated developer path, while normal control remains NO-GO.
 - Latest pulse history note: read-only local-log pulse history/status dashboard design added; no control route or hardware action was added.
+- Latest pulse history implementation note: HP Diagnostic dashboard now summarizes the latest valid local pulse/experiment log; it remains local-file-only and has no pulse or fan-control action.
+- Latest HP shell quit note: HP Diagnostic Quit now disposes the diagnostic tray resources and exits the UI message loop; pulse history remains local-file-only.
+- Latest pulse history/Quit checkpoint note: final checkpoint added for read-only pulse history and HP Diagnostic full-process Quit behavior; normal fan control remains NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

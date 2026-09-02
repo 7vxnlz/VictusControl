@@ -31,4 +31,6 @@ Local history makes bounded developer results easier to compare across sessions,
 
 ## Recommended Next Implementation Step
 
-Add a pure local-log reader and dashboard formatter with fixture-based tests for valid, missing, malformed, and old records. Keep the UI labels-only and leave all command-line pulse execution outside the dashboard.
+The pure local-log reader and dashboard formatter are implemented with fixture-based coverage for valid, missing, and malformed records. The dashboard remains labels-only; reloading reads local files only and all pulse execution remains outside the dashboard. HP Diagnostic Quit now explicitly disposes its local shell resources and exits the UI message loop; the history loader has no shutdown or hardware role.
+
+The final [pulse history and HP Diagnostic Quit checkpoint](set-fan-max-pulse-history-quit-checkpoint.md) records the stabilized state: local-file-only history display, no pulse/run route, no normal fan-control UI, and full process termination on explicit HP Diagnostic Quit.
