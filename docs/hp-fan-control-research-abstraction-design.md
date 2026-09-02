@@ -24,9 +24,9 @@ This abstraction must not grow into normal fan control. The following remain uns
 - EC writes, performance control, and power-limit writes
 - background, scheduled, automatic, retrying, or fallback fan actions
 
-## Proposed Internal Roles
+## Internal Contracts
 
-No new code is required by this design. A future refactor may make the existing pulse path easier to audit through these narrow roles:
+The pure, unwired `HpFanResearchContracts` layer now records these narrow roles without changing runner behavior:
 
 - `IHpFanResearchOperation`: one named, bounded research operation; it has no generic speed, curve, or mode input.
 - `HpFanResearchRequest`: immutable operation identity, explicitly approved payload hypothesis, and manual-observation metadata. It must never represent a UI command or persisted user preference.
@@ -36,7 +36,9 @@ No new code is required by this design. A future refactor may make the existing 
 - `IHpFanResearchLogSink`: appends an immutable research record under `%APPDATA%\VictusX\Logs\FanExperiments\`.
 - `IHpFanResearchOutcomeClassifier`: separates command return, manually observed physical response, observed restore, and readback reliability without declaring product readiness.
 
-Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
+`HpFanResearchOperationKind` has only `FourByteMaxFanPulse`. The associated operation descriptor keeps `DeviceValidatedInputLength` null. `IHpFanResearchOperation` and `IHpFanMaxPulseResearchOperation` describe fixed pulse metadata only; neither exposes execution or generic fan-control methods.
+
+Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. The contracts are not wired into startup, UI, tray, or runtime transport. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
 
 ## Required Safety Gates
 
@@ -70,4 +72,4 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 ## Recommended Next Implementation Step
 
-If implementation work is later authorized, first extract the existing developer-pulse gate, baseline, transport, logging, and classification boundaries behind internal interfaces with behavior-preserving pure tests. Do not expose them to UI, configuration, tray, or background services.
+If a behavior-preserving refactor is later authorized, adapt the existing developer-pulse gate, baseline, transport, logging, and classification code to these contracts with pure tests. Do not expose them to UI, configuration, tray, or background services.

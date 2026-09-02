@@ -36,6 +36,7 @@
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentRunnerCommand.cs" Link="Hardware\Hp\HpFanMaxExperimentRunnerCommand.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentRunner.cs" Link="Hardware\Hp\HpFanMaxExperimentRunner.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentRunLogMapper.cs" Link="Hardware\Hp\HpFanMaxExperimentRunLogMapper.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanResearchContracts.cs" Link="Hardware\Hp\HpFanResearchContracts.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxDeviceValidationDecision.cs" Link="Hardware\Hp\HpFanMaxDeviceValidationDecision.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxDeviceValidationEvaluator.cs" Link="Hardware\Hp\HpFanMaxDeviceValidationEvaluator.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxGetDecoder.cs" Link="Hardware\Hp\HpFanMaxGetDecoder.cs" />
