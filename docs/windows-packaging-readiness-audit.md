@@ -18,6 +18,7 @@
 - GPLv3 is present, but a preview package still needs clear source, attribution, modified-project, and third-party notice handling.
 - `docs/third-party-notices-audit.md` now records the repository evidence: GPLv3 text and README-level G-Helper credit exist, while a versioned third-party notice inventory and resolved package-license review remain outstanding.
 - `docs/dependency-notice-inventory.md` records the current local restore graph: 11 application packages and 13 test-only packages. It intentionally leaves license and notice status unreviewed pending authoritative metadata.
+- [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) defines the source-only path to a reviewed package notice set; no notice file or release artifact has been created yet.
 
 ## Package and Installer Status
 
@@ -70,6 +71,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 Keep the explicit VictusX metadata aligned with the future artifact version, then replace the inherited icon and complete the packaged smoke-test checklist before any release work.
 
 See [Third-Party Notices Audit](third-party-notices-audit.md) for the source-attribution and package-notice distribution gate.
+See [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) before drafting or reviewing package notices for a preview candidate.
 See [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) for the future HP-preview-only visual identity work.
 See [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) for the icon acceptance gate before replacing inherited visual assets.
 See [VictusX Icon and App Identity Implementation Plan](victusx-icon-app-identity-implementation-plan.md) before changing executable, tray, or window icon integration.

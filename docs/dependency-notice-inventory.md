@@ -48,6 +48,8 @@ The test project's three direct packages resolve ten additional test tooling pac
 
 Follow [Package License Review Workflow](package-license-review-workflow.md) before using this inventory for any preview release decision.
 
+Follow [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) when converting this inventory into a reviewed package notice file for a future HP Diagnostic preview.
+
 Before a ZIP or installer is created, a maintainer should review authoritative package metadata for every application dependency above, record the applicable license and notice text in a versioned inventory, and confirm the final package contents against that inventory. The package should also include the applicable project license text and the G-Helper modified-project attribution described in [Third-Party Notices Audit](third-party-notices-audit.md).
 
 The test-only list should be reviewed separately if any test or developer tooling is distributed. A future clean restore should regenerate and compare the resolved application graph before the release decision.

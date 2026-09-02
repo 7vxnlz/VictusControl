@@ -37,6 +37,8 @@ See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness
 
 Use [Third-Party Notices Audit](third-party-notices-audit.md), [Dependency Notice Inventory](dependency-notice-inventory.md), and [Package License Review Workflow](package-license-review-workflow.md) as the current source material. The blocker remains open until direct and transitive package notices are reviewed against authoritative package metadata and matched to final package contents.
 
+The [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) defines the package-facing checklist for source attribution, dependency notices, inherited G-Helper attribution, HP/OMEN wording constraints, package contents, and verification.
+
 The future ZIP/installer must include applicable license text, upstream G-Helper modified-project attribution, and reviewed third-party notices.
 
 ## Icon/App Identity Blocker

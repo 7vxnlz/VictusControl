@@ -37,10 +37,12 @@ Before a ZIP or installer is created, the release review should include:
 - confirmation that no upstream notices were removed and that the package contents match the reviewed notice inventory;
 - review of the final artifact by a maintainer qualified to make the distribution decision.
 
+Use [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) as the source-only checklist for turning the current audit and inventory into a reviewed package notice set.
+
 ## Still Blocked or Unknown
 
 The precise third-party license and notice requirements, transitive dependency inventory, package-runtime contents, and final source-distribution presentation remain unverified. The inherited icon, signing/checksum plan, and clean-machine packaged smoke test are also still incomplete. Release remains blocked; this audit does not authorize a publish.
 
 ## Recommended Next Safe Task
 
-Create a source-only third-party notice inventory template, then populate it from authoritative package metadata and the exact resolved dependency graph. Do not publish, alter license terms, or bundle an artifact during that work.
+Create a source-only `THIRD-PARTY-NOTICES.md` draft with placeholder entries for each runtime dependency, keeping all license conclusions marked pending review.

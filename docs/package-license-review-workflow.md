@@ -60,6 +60,8 @@ A future preview package should include:
 - icon attribution if the future icon requires it;
 - source location and source revision for the packaged build.
 
+The [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) lists the release-facing files, package contents, and verification checklist that must be satisfied after this workflow is completed.
+
 ## Fail-Closed Release Criteria
 
 Do not publish a preview if any runtime dependency has unreviewed license or notice status, if package contents do not match the reviewed inventory, if upstream attribution is missing, or if the review record is not tied to the release candidate source and artifact.
