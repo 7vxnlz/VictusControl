@@ -21,7 +21,7 @@ Experiment logs may classify a successful command plus manually observed fan res
 
 The [clean classified four-byte result](set-fan-max-4byte-clean-classified-result.md) records this mapping on the exact device. It supports a limited developer-only pulse-design discussion, not a normal control path.
 
-The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) has a separately gated command-line implementation, but it remains unexecuted and has no normal UI route. It does not alter normal control readiness.
+The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) has a separately gated command-line implementation and a recorded bounded developer result, but it has no normal UI route. It does not alter normal control readiness.
 
 The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) now records a successful bounded developer run. It makes the developer pulse operational, not normal fan control.
 
@@ -30,6 +30,8 @@ The [pulse history/status view design](set-fan-max-pulse-history-status-view-des
 HP Diagnostic Quit now cleans up the diagnostic tray shell and exits its UI loop. This lifecycle fix does not add a pulse route, fan-control UI, or hardware action.
 
 The [pulse history and Quit checkpoint](set-fan-max-pulse-history-quit-checkpoint.md) records the stabilized read-only dashboard history behavior and explicit HP Diagnostic process termination guarantee.
+
+The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) keeps any future internal extraction limited to the developer-only pulse boundary; it must not create a generic fan-control API or a user-facing route.
 
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 

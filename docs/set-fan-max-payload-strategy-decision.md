@@ -51,4 +51,4 @@ The [pulse history/status view design](set-fan-max-pulse-history-status-view-des
 
 ## Recommended Next Safe Step
 
-Design the evidence and review protocol for repeated controlled sessions and an independent success/restore criterion. Do not add normal controls or change `DeviceValidatedInputLength`.
+The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) defines a narrow internal boundary around the developer-only pulse path. Any future extraction must preserve explicit gates, single-attempt restore, append-only evidence, and the normal-control **NO-GO** state.
