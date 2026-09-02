@@ -131,3 +131,5 @@ Not acceptable: using any unsupported command as a fallback, retry path, UI opti
 ## Recommended Next Safe Task
 
 The [DeviceValidatedInputLength and readback proof design](device-validated-input-length-readback-proof-design.md) now has a read-only local evidence analyzer. It reports the top gaps from valid local logs and cached reports without WMI, experiment execution, or controls. The next safe work is a restore/recovery proof design based on that fail-closed summary.
+
+The [HP fan proof gap analyzer checkpoint](hp-fan-proof-gap-analyzer-checkpoint.md) captures the current local-only analyzer status and the expected HP Diagnostic close-to-tray versus explicit Quit behavior.

@@ -45,6 +45,8 @@ The [DeviceValidatedInputLength and readback proof design](device-validated-inpu
 
 The HP Diagnostic dashboard now includes a read-only proof-gap analyzer over local append-only experiment logs and the cached capability report. Missing or invalid evidence stays fail-closed; it cannot invoke WMI, run a pulse, or enable fan control.
 
+The [HP fan proof gap analyzer checkpoint](hp-fan-proof-gap-analyzer-checkpoint.md) records that this analyzer is visible in dashboard, copy, and export output, keeps `DeviceValidatedInputLength` unset, treats FanMaxGet as inconclusive and FanGetLevel as raw-only, and documents that normal window close hides to tray while explicit Quit is the full process-termination path.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked

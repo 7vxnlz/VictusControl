@@ -130,3 +130,5 @@ Fail-closed rule: one missing criterion keeps normal/user-facing fan control **N
 ## Recommended Next Safe Implementation Task
 
 The read-only HP fan proof-gap analyzer now aggregates valid local experiment logs and the already cached capability report for dashboard, copy, and export text. It ignores missing or invalid evidence, preserves `DeviceValidatedInputLength` as unset, treats FanMaxGet as inconclusive and FanGetLevel as raw-only, and cannot invoke WMI, run experiments, expose controls, add pulse buttons, or update a safety decision.
+
+The [HP fan proof gap analyzer checkpoint](hp-fan-proof-gap-analyzer-checkpoint.md) records the current analyzer behavior and clarifies that normal window close hides to tray while explicit Quit is the full process-termination path.
