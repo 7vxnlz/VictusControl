@@ -39,6 +39,8 @@ The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) 
 
 The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) confirms that this bounded four-byte developer path is operational on the exact device. It does not select a normal-control ABI or change one-byte's comparison-only role.
 
+The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) proposes a local-file-only dashboard summary for reviewing this evidence without adding a control path.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.

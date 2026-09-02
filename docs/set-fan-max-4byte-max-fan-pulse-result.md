@@ -25,4 +25,4 @@ This validates only the bounded developer pulse path. It does not fully validate
 
 ## Recommended Next Safe Step
 
-Design either a read-only developer pulse history/status view in the Diagnostic UI or a limited internal service abstraction for future research, without adding user-facing controls.
+The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) defines a read-only local-log summary for the Diagnostic dashboard. It has no pulse execution or user-facing control route.

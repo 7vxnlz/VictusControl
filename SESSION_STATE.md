@@ -64,6 +64,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest pulse-design note: four-byte Max Fan Pulse is documented as a separately approved developer-only design; no implementation or normal control path was added.
 - Latest pulse implementation note: four-byte Max Fan Pulse command added behind its own flags and existing runner gates; it was not run and normal control remains NO-GO.
 - Latest pulse result note: four-byte Max Fan Pulse completed with observed response and restore; it is operational only for the gated developer path, while normal control remains NO-GO.
+- Latest pulse history note: read-only local-log pulse history/status dashboard design added; no control route or hardware action was added.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation
