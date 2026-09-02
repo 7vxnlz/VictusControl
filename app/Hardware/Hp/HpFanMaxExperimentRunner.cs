@@ -28,7 +28,8 @@ public sealed record HpFanMaxExperimentRuntimeGates(
     bool IsAcPowerOnline,
     bool IsFirstWriteGateApproved,
     bool HasReviewedHumanApproval,
-    bool HasSecondFourByteConfirmationApproval);
+    bool HasSecondFourByteConfirmationApproval,
+    bool HasOneTimeOneByteComparisonApproval);
 
 public sealed record HpFanMaxExperimentRunResult(
     HpFanMaxExperimentPayload? Payload,
@@ -78,15 +79,20 @@ public sealed class HpFanMaxExperimentRunner(
             return Blocked(command.Payload, null, false, command.ValidationReasons);
         }
 
-        if (command.Payload.Candidate != HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis ||
-            !command.HasOneTimeFourByteApproval ||
-            !command.HasSecondFourByteConfirmationApproval)
+        bool isApprovedFourByteConfirmation =
+            command.Payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis &&
+            command.HasOneTimeFourByteApproval &&
+            command.HasSecondFourByteConfirmationApproval;
+        bool isApprovedOneByteComparison =
+            command.Payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.OneByteHypothesis &&
+            command.HasOneTimeOneByteComparisonApproval;
+        if (!isApprovedFourByteConfirmation && !isApprovedOneByteComparison)
         {
             return Blocked(
                 command.Payload,
                 null,
                 false,
-                ["Only the explicitly approved second 4-byte SetFanMax confirmation may cross the first-write approval gate."]);
+                ["Only the explicitly approved second 4-byte confirmation or one-byte comparison may cross the developer experiment approval gate."]);
         }
 
         List<string> earlyFailures = [];
@@ -126,9 +132,16 @@ public sealed class HpFanMaxExperimentRunner(
             gateFailures.Add("Separate reviewed human approval is not present.");
         }
 
-        if (!gates.HasSecondFourByteConfirmationApproval)
+        if (command.Payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis &&
+            !gates.HasSecondFourByteConfirmationApproval)
         {
             gateFailures.Add("Separate approval for the second 4-byte confirmation is not present.");
+        }
+
+        if (command.Payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.OneByteHypothesis &&
+            !gates.HasOneTimeOneByteComparisonApproval)
+        {
+            gateFailures.Add("Separate approval for the one-byte comparison experiment is not present.");
         }
 
         if (gateFailures.Count > 0)

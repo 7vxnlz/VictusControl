@@ -40,7 +40,8 @@ public sealed class HpFanMaxExperimentRunnerTests
     [InlineData("4", "01-00-00-00", "00-00-00-00")]
     public void Parse_PayloadHypotheses_MapOnlyMatchingPayloadPair(string length, string enable, string restore)
     {
-        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments(length, includeFourByteApprovals: length == "4"));
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(
+            ValidArguments(length, includeFourByteApprovals: length == "4", includeOneByteComparisonApproval: length == "1"));
 
         HpFanMaxExperimentPayload payload = Assert.IsType<HpFanMaxExperimentPayload>(result.Payload);
         Assert.True(result.IsValidRequest);
@@ -67,6 +68,15 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     [Fact]
+    public void Parse_OneByteWithoutComparisonApproval_FailsClosedWithExactReason()
+    {
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments("1"));
+
+        Assert.False(result.IsValidRequest);
+        Assert.Contains(result.ValidationReasons, reason => reason.Contains(HpFanMaxExperimentRunnerCommand.OneTimeOneByteComparisonApprovalFlag, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Run_ApprovedSecondFourByteConfirmation_PassesTheHumanApprovalGatesInTestDouble()
     {
         var transport = new RecordingTransport();
@@ -78,12 +88,47 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     [Fact]
+    public void Run_ApprovedOneByteComparison_PassesOnlyItsOwnApprovalGateInTestDouble()
+    {
+        var transport = new RecordingTransport();
+        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(ValidCommand("1"), ApprovedGates());
+
+        Assert.Equal(HpFanMaxExperimentOutcome.Pass, result.Outcome);
+        Assert.Equal(["01", "00"], transport.Payloads);
+        Assert.Null(HpFanMaxExperimentRunLogMapper.Create(result).DeviceValidatedInputLength);
+    }
+
+    [Fact]
     public void Parse_OneByteWithSecondFourByteApproval_FailsClosed()
     {
-        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(ValidArguments("1", includeSecondFourByteApproval: true));
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(
+            ValidArguments("1", includeSecondFourByteApproval: true, includeOneByteComparisonApproval: true));
 
         Assert.False(result.IsValidRequest);
         Assert.Contains(result.ValidationReasons, reason => reason.Contains("4-byte hypothesis only", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Run_OneByteComparisonWithoutRuntimeApproval_FailsClosedBeforeAnyWrite()
+    {
+        var transport = new RecordingTransport();
+        HpFanMaxExperimentRunResult result = CreateRunner(transport).Run(
+            ValidCommand("1"),
+            ApprovedGates() with { HasOneTimeOneByteComparisonApproval = false });
+
+        Assert.Equal(HpFanMaxExperimentOutcome.Unknown, result.Outcome);
+        Assert.Empty(transport.Payloads);
+        Assert.Contains(result.BlockedReasons, reason => reason.Contains("one-byte comparison", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Parse_FourByteWithOneByteComparisonApproval_FailsClosed()
+    {
+        HpFanMaxExperimentRunnerCommandResult result = HpFanMaxExperimentRunnerCommand.Parse(
+            ValidArguments("4", includeFourByteApprovals: true, includeOneByteComparisonApproval: true));
+
+        Assert.False(result.IsValidRequest);
+        Assert.Contains(result.ValidationReasons, reason => reason.Contains("one-byte comparison approval", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -197,13 +242,15 @@ public sealed class HpFanMaxExperimentRunnerTests
     }
 
     private static HpFanMaxExperimentRunnerCommandResult ValidCommand(string length) =>
-        HpFanMaxExperimentRunnerCommand.Parse(ValidArguments(length, includeFourByteApprovals: length == "4"));
+        HpFanMaxExperimentRunnerCommand.Parse(
+            ValidArguments(length, includeFourByteApprovals: length == "4", includeOneByteComparisonApproval: length == "1"));
 
     private static string[] ValidArguments(
         string length,
         bool includeFirstFourByteApproval = false,
         bool includeSecondFourByteApproval = false,
-        bool includeFourByteApprovals = false)
+        bool includeFourByteApprovals = false,
+        bool includeOneByteComparisonApproval = false)
     {
         var arguments = new List<string>
         {
@@ -224,10 +271,15 @@ public sealed class HpFanMaxExperimentRunnerTests
             arguments.Add(HpFanMaxExperimentRunnerCommand.SecondFourByteConfirmationApprovalFlag);
         }
 
+        if (includeOneByteComparisonApproval)
+        {
+            arguments.Add(HpFanMaxExperimentRunnerCommand.OneTimeOneByteComparisonApprovalFlag);
+        }
+
         return arguments.ToArray();
     }
 
-    private static HpFanMaxExperimentRuntimeGates ApprovedGates() => new(true, true, true, true, true);
+    private static HpFanMaxExperimentRuntimeGates ApprovedGates() => new(true, true, true, true, true, true);
 
     private static HpFanMaxExperimentBaseline CreateBaseline() =>
         new(true, "Victus by HP Gaming Laptop 16-s0xxx", "7Z5Z2EA#AB8", "F.31", 1, 2, false, "22-25", true, []);

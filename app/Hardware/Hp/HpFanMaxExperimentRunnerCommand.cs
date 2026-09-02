@@ -15,6 +15,7 @@ public sealed record HpFanMaxExperimentRunnerCommandResult(
     HpFanMaxExperimentPayload? Payload,
     bool HasOneTimeFourByteApproval,
     bool HasSecondFourByteConfirmationApproval,
+    bool HasOneTimeOneByteComparisonApproval,
     string[] ValidationReasons)
 {
     public bool ShouldExit => IsRequested;
@@ -28,6 +29,7 @@ public static class HpFanMaxExperimentRunnerCommand
     public const string AcknowledgementFlag = "--i-understand-this-can-affect-fans";
     public const string OneTimeFourByteApprovalFlag = "--i-approve-one-time-set-fan-max-4-byte-experiment";
     public const string SecondFourByteConfirmationApprovalFlag = "--i-approve-second-set-fan-max-4-byte-confirmation";
+    public const string OneTimeOneByteComparisonApprovalFlag = "--i-approve-one-time-set-fan-max-1-byte-comparison";
     public const string PayloadLengthPrefix = "--set-fan-max-payload-length=";
     private const string DryRunFlag = "--hp-fan-write-experiment-dry-run";
     private const string BaselineCaptureFlag = "--hp-fan-write-experiment-baseline";
@@ -40,7 +42,7 @@ public static class HpFanMaxExperimentRunnerCommand
         bool isRequested = args.Any(arg => string.Equals(arg, ExperimentFlag, StringComparison.OrdinalIgnoreCase));
         if (!isRequested)
         {
-            return new HpFanMaxExperimentRunnerCommandResult(false, false, null, false, false, []);
+            return new HpFanMaxExperimentRunnerCommandResult(false, false, null, false, false, false, []);
         }
 
         List<string> reasons = [];
@@ -58,6 +60,7 @@ public static class HpFanMaxExperimentRunnerCommand
         HpFanMaxExperimentPayload? payload = null;
         bool hasOneTimeFourByteApproval = args.Any(arg => string.Equals(arg, OneTimeFourByteApprovalFlag, StringComparison.OrdinalIgnoreCase));
         bool hasSecondFourByteConfirmationApproval = args.Any(arg => string.Equals(arg, SecondFourByteConfirmationApprovalFlag, StringComparison.OrdinalIgnoreCase));
+        bool hasOneTimeOneByteComparisonApproval = args.Any(arg => string.Equals(arg, OneTimeOneByteComparisonApprovalFlag, StringComparison.OrdinalIgnoreCase));
         if (payloadArguments.Length != 1)
         {
             reasons.Add("First-write experiment request rejected: specify exactly one --set-fan-max-payload-length=1 or =4 hypothesis.");
@@ -77,6 +80,14 @@ public static class HpFanMaxExperimentRunnerCommand
             {
                 reasons.Add("Second 4-byte confirmation request rejected: " + SecondFourByteConfirmationApprovalFlag + " is required.");
             }
+            else if (payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.FourByteHypothesis && hasOneTimeOneByteComparisonApproval)
+            {
+                reasons.Add("First-write experiment request rejected: one-byte comparison approval authorizes the 1-byte hypothesis only.");
+            }
+            else if (payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.OneByteHypothesis && !hasOneTimeOneByteComparisonApproval)
+            {
+                reasons.Add("One-byte comparison experiment request rejected: " + OneTimeOneByteComparisonApprovalFlag + " is required.");
+            }
             else if (payload.Candidate == HpFanMaxExperimentPayloadLengthCandidate.OneByteHypothesis && (hasOneTimeFourByteApproval || hasSecondFourByteConfirmationApproval))
             {
                 reasons.Add("First-write experiment request rejected: four-byte approval flags authorize the 4-byte hypothesis only.");
@@ -89,6 +100,7 @@ public static class HpFanMaxExperimentRunnerCommand
             payload,
             hasOneTimeFourByteApproval,
             hasSecondFourByteConfirmationApproval,
+            hasOneTimeOneByteComparisonApproval,
             reasons.ToArray());
     }
 

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**NO-GO for normal fan-write readiness and UI.** `DeviceValidatedInputLength` is unset. The repeated exact-device response now supports a limited **developer-only experimental GO** for the four-byte hypothesis, subject to the existing explicit command-line approvals and all runtime gates. This narrow route does not validate a payload, change this decision for normal use, or authorize a fan-control UI.
+**NO-GO for normal fan-write readiness and UI.** `DeviceValidatedInputLength` is unset. The repeated exact-device response supports a limited **developer-only experimental GO** for four byte. A separate one-time approval can now permit one bounded one-byte comparison experiment, based on generic-family reference evidence and reported external behavior, but neither route validates a payload, changes this decision for normal use, or authorizes a fan-control UI.
 
 ## Known Evidence
 
@@ -32,7 +32,7 @@ The gate is currently **not satisfied**. No write code, payload selection, or ha
 
 The cached HP diagnostic report and dashboard expose this decision as `SetFanMaxFirstWriteGateStatus=NO-GO`, `SetFanMaxFirstWriteGateSatisfied=false`, and a fail-closed reason. These fields are diagnostic-only and cannot authorize or execute a write.
 
-Separate experimental fields record the repeated four-byte physical response and the narrow developer-only allowance: `SetFanMaxDeveloperExperimentAllowed=true` and `SetFanMaxDeveloperExperimentPayload=FourByte`. They must keep `SetFanMaxReadbackReliable=false`, `SetFanMaxNormalControlValidated=false`, and `SetFanMaxUserFacingControlAllowed=false`. They are not a normal-control gate update or payload validation.
+Separate experimental fields record the repeated four-byte physical response and the narrow developer-only allowance: `SetFanMaxDeveloperExperimentAllowed=true` and `SetFanMaxDeveloperExperimentPayload=FourByte`. The separate one-byte comparison requires `--i-approve-one-time-set-fan-max-1-byte-comparison` and all existing runtime gates; it is not represented as a validated report payload. Both paths must keep `SetFanMaxReadbackReliable=false`, `SetFanMaxNormalControlValidated=false`, and `SetFanMaxUserFacingControlAllowed=false`. They are not a normal-control gate update or payload validation.
 
 Schema-v2 report persistence includes those experimental fields so cached diagnostics can distinguish a controlled four-byte developer experiment from normal-control validation. Missing schema-v2 fields remain old-report data and must fail closed.
 

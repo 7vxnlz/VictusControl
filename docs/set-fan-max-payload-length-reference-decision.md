@@ -41,8 +41,8 @@ There is no independent majority or consensus capable of selecting either length
 
 ## Consequences
 
-This evidence is insufficient to change `DeviceValidatedInputLength`, begin a developer-only first-write experiment design, or implement SetFanMax. A future design may cite the competing hypotheses only after an exact-device, independently reviewable record proves one input size plus matched enable, restore/readback, thermal/power, recovery, and human-review evidence. Normal fan control UI remains out of scope.
+This evidence is insufficient to change `DeviceValidatedInputLength` or implement normal SetFanMax control. The repeated exact-device four-byte response supports limited controlled developer experiments for four byte. One-byte has only generic-family reference evidence plus user-reported external behavior, so it is permitted only through the separate one-time comparison approval: `--i-approve-one-time-set-fan-max-1-byte-comparison`, alongside every existing experiment, elevation, AC, identity, baseline, and restore gate. This comparison route is not validation, has no fallback, and does not expose normal fan control UI.
 
 ## Recommendation
 
-Keep **NO-GO**. The next safe task is documentation-only review of an existing sanitized exact-device field record; do not generate missing evidence through VictusX or by trying either payload shape.
+Keep **NO-GO for normal control**. A separately approved, one-time one-byte comparison may collect bounded exact-device evidence only; it must not select a default, change `DeviceValidatedInputLength`, or authorize user-facing control.

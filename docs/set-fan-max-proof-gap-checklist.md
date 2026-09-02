@@ -25,7 +25,7 @@ The reviewed references consistently support the following metadata, but not thi
 
 Read-only success from `FanMaxGet`, `FanGetCount`, or `FanGetLevel` does not establish the write input length. Neither candidate is selected.
 
-The [two exact-device four-byte experiments](set-fan-max-second-4byte-confirmation-result.md) produced repeated observed fan responses, but post-enable FanMaxGet remained false. Four byte is therefore preferred for limited, separately approved developer-only experiments only: the input ABI, readback semantics, restore behavior, and payload decision remain open.
+The [two exact-device four-byte experiments](set-fan-max-second-4byte-confirmation-result.md) produced repeated observed fan responses, but post-enable FanMaxGet remained false. Four byte is therefore preferred for limited, separately approved developer-only experiments only. One byte is allowed only as one separately approved comparison experiment, using its own explicit approval flag and no fallback. The input ABI, readback semantics, restore behavior, and payload decision remain open.
 
 Cached experimental-status fields can preserve that distinction, including `SetFanMaxDeveloperExperimentAllowed=true` for four byte only, but cannot mark input ABI, readback, restore, or UI proof as complete.
 
@@ -63,7 +63,7 @@ No code should guess `1` or `4`, choose by repository count or model similarity,
 
 ## Recommended Next Safe Task
 
-Maintain the limited four-byte developer-experiment record and collect only separately reviewed evidence. Do not test one byte, select a payload, or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
+Maintain the limited four-byte evidence and collect only separately reviewed evidence. A one-time one-byte comparison may be run only under its separate approval and every existing gate; do not select a payload or expose normal control until the remaining ABI, readback, restore, thermal/power, recovery, rollback, and approval gaps close.
 
 The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) strengthens experimental evidence but does not close any checkbox.
 
