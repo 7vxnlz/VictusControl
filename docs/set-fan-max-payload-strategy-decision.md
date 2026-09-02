@@ -25,6 +25,10 @@ The two shapes appear behaviorally similar so far only in observed short-term fa
 
 Normal/user-facing fan control remains **NO-GO**: no UI, sliders, automatic writes, background control, or `DeviceValidatedInputLength` update. Experimental response evidence is not a normal-control contract.
 
+## Experiment Outcome Classification
+
+Experiment records now separately preserve enable/restore command success, FanMaxGet enable confirmation, optional human physical-response and restore observations, and a readback-reliability value. A record with successful commands, recorded physical response, and `FanMaxGet=false` classifies as `CommandSucceededPhysicalResponseObservedReadbackInconclusive`. This is experimental interpretation only, not payload validation. Missing manual observations remain `CommandSucceededNoPhysicalConfirmation`; restore failure and unsafe abort classifications remain failures.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.

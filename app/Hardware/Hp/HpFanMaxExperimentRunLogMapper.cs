@@ -23,12 +23,23 @@ public static class HpFanMaxExperimentRunLogMapper
             BaselineCaptureResult = result.BaselineCapturePerformed ? "Approved read-only baseline capture completed." : "Baseline capture was blocked before WMI or hardware action.",
             BaselineReadOnlyProbeSummary = baseline?.ReadOnlyProbeSummary ?? [],
             EnableResult = FormatResult(result.EnableWrite),
+            EnableCommandSucceeded = result.EnableWrite.Attempted ? result.EnableWrite.Succeeded : null,
             PostEnableFanMaxGet = result.PostEnableReadback?.FanMaxGetEnabled,
+            FanMaxGetConfirmedEnable = result.PostEnableReadback?.FanMaxGetEnabled is bool maxFanEnabled
+                ? maxFanEnabled
+                : null,
             PostEnableFanGetLevelRaw = result.PostEnableReadback?.FanGetLevelRaw,
             RestoreResult = FormatResult(result.RestoreWrite),
+            RestoreCommandSucceeded = result.RestoreWrite.Attempted ? result.RestoreWrite.Succeeded : null,
             PostRestoreFanMaxGet = result.PostRestoreReadback?.FanMaxGetEnabled,
             PostRestoreFanGetLevelRaw = result.PostRestoreReadback?.FanGetLevelRaw,
-            ManualObservationNotes = "No manual observations are collected automatically. DeviceValidatedInputLength remains unset.",
+            PhysicalFanResponseObserved = null,
+            RestoreObserved = null,
+            UnsafeAbortObserved = false,
+            ReadbackReliability = result.EnableWrite.Attempted && result.PostEnableReadback?.FanMaxGetEnabled == false
+                ? HpFanMaxExperimentReadbackReliability.Inconclusive
+                : HpFanMaxExperimentReadbackReliability.Unknown,
+            ManualObservationNotes = "No manual observations are collected automatically. Record physical response and restore observations separately; DeviceValidatedInputLength remains unset.",
             Outcome = result.Outcome,
             BlockedReasons = result.BlockedReasons,
             WriteExecuted = writeAttempted

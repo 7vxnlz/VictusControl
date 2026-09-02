@@ -57,7 +57,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest second confirmation approval note: the second four-byte confirmation now requires a separate explicit command-line approval in addition to the original four-byte approval; it remains unexecuted and NO-GO for normal use.
 - Latest second four-byte result note: a second exact-device four-byte experiment repeated the observed fan response with no abnormal noise, overheating, or crash; FanMaxGet remained false, so four byte is preferred experimental evidence only and normal control remains NO-GO.
 - Latest experimental-status note: HP diagnostic report/dashboard/copy/export distinguish two observed four-byte physical responses from unvalidated normal control; all control permission fields remain fail-closed false.
-- Latest payload strategy note: four byte is preferred for controlled developer confirmation, one byte is comparison-only, and neither payload is validated for normal control.
+- Latest outcome-classification note: experiment logs separately classify command success, optional physical response, restore status, and inconclusive FanMaxGet readback; normal control remains NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

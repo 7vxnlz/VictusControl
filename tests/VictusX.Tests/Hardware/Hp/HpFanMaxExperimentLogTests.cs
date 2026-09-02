@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using GHelper.Hardware.Hp;
 using Xunit;
 
@@ -15,6 +16,7 @@ public sealed class HpFanMaxExperimentLogTests
         Assert.False(record.FirstWriteGateSatisfied);
         Assert.Null(record.DeviceValidatedInputLength);
         Assert.Equal(HpFanMaxExperimentOutcome.Unknown, record.Outcome);
+        Assert.Equal(HpFanMaxExperimentalOutcomeClassification.BlockedBeforeWrite, record.ExperimentalOutcomeClassification);
         Assert.NotEmpty(record.BlockedReasons);
         Assert.Contains("NO-GO", record.BlockedReasons[0], StringComparison.Ordinal);
     }
@@ -70,6 +72,7 @@ public sealed class HpFanMaxExperimentLogTests
         Assert.Equal("Approved read-only baseline capture completed.", root.GetProperty("BaselineCaptureResult").GetString());
         Assert.Equal(JsonValueKind.Array, root.GetProperty("BaselineReadOnlyProbeSummary").ValueKind);
         Assert.Equal("Unknown", root.GetProperty("Outcome").GetString());
+        Assert.Equal("BlockedBeforeWrite", root.GetProperty("ExperimentalOutcomeClassification").GetString());
         Assert.Equal(JsonValueKind.Array, root.GetProperty("BlockedReasons").ValueKind);
     }
 
@@ -83,11 +86,25 @@ public sealed class HpFanMaxExperimentLogTests
     }
 
     [Fact]
+    public void OlderLogWithoutOutcomeFields_DeserializesToBlockedSafeDefaults()
+    {
+        HpFanMaxExperimentLogRecord record = Assert.IsType<HpFanMaxExperimentLogRecord>(
+            JsonSerializer.Deserialize<HpFanMaxExperimentLogRecord>(
+                "{\"WriteExecuted\":false,\"Outcome\":\"Unknown\",\"BlockedReasons\":[\"legacy record\"]}",
+                new JsonSerializerOptions { Converters = { new JsonStringEnumConverter() } }));
+
+        Assert.Equal(HpFanMaxExperimentalOutcomeClassification.BlockedBeforeWrite, record.ExperimentalOutcomeClassification);
+        Assert.Equal(HpFanMaxExperimentReadbackReliability.Unknown, record.ReadbackReliability);
+        Assert.Null(record.DeviceValidatedInputLength);
+    }
+
+    [Fact]
     public void Infrastructure_HasNoWmiDependencyOrInvocationSurface()
     {
         Type[] types =
         [
             typeof(HpFanMaxExperimentLogRecord),
+            typeof(HpFanMaxExperimentOutcomeClassifier),
             typeof(HpFanMaxExperimentLogFormatter),
             typeof(HpFanMaxExperimentLogWriter)
         ];

@@ -29,6 +29,8 @@ The [two four-byte experiments](set-fan-max-second-4byte-confirmation-result.md)
 
 Both raw FanGetLevel results remain raw-only and inconclusive: `32-00` for one byte and `31-00`/`33-00` across the second four-byte record do not prove RPM, percentage, latch state, payload ABI, or restore semantics. FanMaxGet is not reliable as the sole success criterion for this device/BIOS because it remained `false` for every observed response.
 
+Future logs can record this result as `CommandSucceededPhysicalResponseObservedReadbackInconclusive` when the physical response is manually recorded. That classification does not validate one byte or alter the runner's normal-control NO-GO state.
+
 ## Safety And Decision
 
 One byte now has one exact-device physical-response record; four byte has two. This does not select either payload, validate either input length, or update `DeviceValidatedInputLength`. Normal fan control UI remains **NO-GO** pending a reviewed strategy, reliable success/restore criteria, thermal/power evidence, recovery proof, and product-level UI safety review.

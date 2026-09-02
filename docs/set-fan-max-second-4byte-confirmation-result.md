@@ -29,6 +29,8 @@ Like the [first four-byte result](set-fan-max-first-4byte-experiment-result.md),
 
 FanMaxGet is not a sufficient sole success criterion for this device/BIOS: it did not reflect either observed response. Its semantics are unresolved, rather than disproven. The raw FanGetLevel transitions (`33-00`, then `31-00`/`33-00`) are recorded as raw bytes only; they do not establish RPM, percent, a control level, or a max-fan latch.
 
+Future logs can preserve this combination as `CommandSucceededPhysicalResponseObservedReadbackInconclusive` only when the physical response is manually recorded. It is an experimental classification, not a payload or normal-control validation.
+
 ## Safety And Readiness
 
 The two observations provide repeatable, limited developer-only physical-response evidence for the four-byte hypothesis. They do not fully validate its ABI, semantics, restore timing, failure recovery, or normal control behavior. `DeviceValidatedInputLength` remains unset; one byte remains blocked and must not be tested as a fallback.

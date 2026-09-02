@@ -17,6 +17,8 @@ SetFanMax (`0x27`) remains blocked because its device-specific input length is u
 
 `DeviceValidatedInputLength` therefore remains unset and normal SetFanMax control remains **NO-GO**. The repeated four-byte physical response permits only separately approved, command-line-only developer experiments. One byte may be used only for one separately approved comparison experiment; neither path permits normal writes or UI control.
 
+Experiment logs may classify a successful command plus manually observed fan response and `FanMaxGet=false` as readback-inconclusive. That distinction does not validate a payload, recover a reliable latch readback, or permit normal fan control.
+
 ## 3. Why SetFanMode Is Blocked
 
 SetFanMode (`0x1A`) changes thermal-policy state rather than a simple fan flag. References disagree between two-byte and four-byte inputs, and mode values vary by thermal-policy generation. Reference flows also show that a successful return may not mean the hardware completed the transition. VictusX has no validated mode readback, baseline mode, restore sequence, or exact-device payload contract.

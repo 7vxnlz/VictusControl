@@ -13,6 +13,24 @@ public enum HpFanMaxExperimentOutcome
     Fail
 }
 
+public enum HpFanMaxExperimentReadbackReliability
+{
+    Unknown,
+    Inconclusive,
+    Reliable
+}
+
+public enum HpFanMaxExperimentalOutcomeClassification
+{
+    Unknown,
+    BlockedBeforeWrite,
+    CommandSucceededPhysicalResponseObservedReadbackInconclusive,
+    CommandSucceededNoPhysicalConfirmation,
+    CommandFailed,
+    RestoreFailed,
+    UnsafeAbort
+}
+
 public sealed record HpFanMaxExperimentLogRecord
 {
     public const string GateStatus = "NO-GO";
@@ -35,11 +53,18 @@ public sealed record HpFanMaxExperimentLogRecord
     public string BaselineCaptureResult { get; init; } = "Not captured.";
     public string[] BaselineReadOnlyProbeSummary { get; init; } = [];
     public string? EnableResult { get; init; }
+    public bool? EnableCommandSucceeded { get; init; }
     public bool? PostEnableFanMaxGet { get; init; }
+    public bool? FanMaxGetConfirmedEnable { get; init; }
     public string? PostEnableFanGetLevelRaw { get; init; }
     public string? RestoreResult { get; init; }
+    public bool? RestoreCommandSucceeded { get; init; }
     public bool? PostRestoreFanMaxGet { get; init; }
     public string? PostRestoreFanGetLevelRaw { get; init; }
+    public bool? PhysicalFanResponseObserved { get; init; }
+    public bool? RestoreObserved { get; init; }
+    public bool UnsafeAbortObserved { get; init; }
+    public HpFanMaxExperimentReadbackReliability ReadbackReliability { get; init; } = HpFanMaxExperimentReadbackReliability.Unknown;
     public string? ManualObservationNotes { get; init; }
     public HpFanMaxExperimentOutcome Outcome { get; init; } = HpFanMaxExperimentOutcome.Unknown;
     public string[] BlockedReasons { get; init; } = [];
@@ -47,6 +72,8 @@ public sealed record HpFanMaxExperimentLogRecord
     public bool WriteExecuted { get; internal init; }
     public bool FirstWriteGateSatisfied => false;
     public int? DeviceValidatedInputLength => null;
+    public HpFanMaxExperimentalOutcomeClassification ExperimentalOutcomeClassification =>
+        HpFanMaxExperimentOutcomeClassifier.Classify(this);
 
     public static HpFanMaxExperimentLogRecord CreateBlocked(
         HpFanMaxExperimentPayloadLengthCandidate? payloadLengthCandidate = null,
