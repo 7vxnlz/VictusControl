@@ -54,10 +54,12 @@
 - `app/Program.cs` for an `--hp-victus`-only tray icon selection.
 - Future shortcut/launcher/package metadata for the preview artifact.
 
+See [VictusX Icon and App Identity Implementation Plan](victusx-icon-app-identity-implementation-plan.md) for the concrete source integration and verification sequence after an approved icon asset exists.
+
 ## Release Blocker Status
 
 Icon/app identity remains a preview release blocker. No icon, image, or binary asset has been created, generated, replaced, or modified by this requirements document.
 
 ## Recommended Next Safe Task
 
-Create a source-only `THIRD-PARTY-NOTICES.md` draft from the dependency inventory, keeping unresolved license decisions marked for review and publishing blocked.
+Create or approve an original VictusX diagnostic icon asset with documented license/provenance and size coverage. Do not integrate it until the asset satisfies this checklist.

@@ -29,6 +29,8 @@ See [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) for th
 
 ## Future Integration Plan
 
+See [VictusX Icon and App Identity Implementation Plan](victusx-icon-app-identity-implementation-plan.md) for the implementation sequence, source integration points, verification steps, and rollback plan.
+
 1. Approve the icon source, license/provenance record, and required resolutions before adding any asset.
 2. Add the new `.ico` and an HP-specific resource entry without replacing the shared inherited resources.
 3. Override `ApplicationIcon` only in the HP diagnostic preview publish configuration so the default build remains visually unchanged.
@@ -48,4 +50,4 @@ The inherited executable and tray identity remain a release blocker. Replacement
 
 ## Recommended Next Safe Task
 
-Review and approve an original, license-documented multi-resolution VictusX diagnostic icon, then perform a separate asset-only integration task with HP-mode-only tray selection and packaged visual verification.
+Review and approve an original, license-documented multi-resolution VictusX diagnostic icon, then perform a separate asset-only integration task using the implementation plan.

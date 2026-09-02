@@ -43,6 +43,8 @@ The future ZIP/installer must include applicable license text, upstream G-Helper
 
 Use [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) and [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md). The inherited icon remains a release blocker until an original or properly licensed VictusX icon is added and verified for executable properties, Explorer, shortcuts, tray, and window display.
 
+The [VictusX Icon and App Identity Implementation Plan](victusx-icon-app-identity-implementation-plan.md) defines the future asset integration, HP-mode tray handling, verification, and rollback sequence. It does not change assets or executable metadata.
+
 Default ASUS/G-Helper behavior and shared resources must not be broken while preparing HP diagnostic preview identity.
 
 ## Signing/Checksum Blocker
