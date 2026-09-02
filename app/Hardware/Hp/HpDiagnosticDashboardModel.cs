@@ -53,6 +53,12 @@ public sealed record HpDiagnosticDashboardInput
     public string? SetFanMaxFirstWriteGateStatus { get; init; }
     public string? SetFanMaxFirstWriteGateSatisfied { get; init; }
     public string? SetFanMaxFirstWriteGateReason { get; init; }
+    public string? SetFanMaxExperimentalPayloadCandidate { get; init; }
+    public string? SetFanMaxPhysicalResponseObserved { get; init; }
+    public string? SetFanMaxPhysicalResponseConfirmationCount { get; init; }
+    public string? SetFanMaxReadbackReliable { get; init; }
+    public string? SetFanMaxNormalControlValidated { get; init; }
+    public string? SetFanMaxUserFacingControlAllowed { get; init; }
     public string? SetFanMaxDeviceValidatedInputLength { get; init; }
     public string? SetFanMaxBlockedReason { get; init; }
     public string? SetFanMaxNextRequiredProof { get; init; }

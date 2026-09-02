@@ -27,6 +27,8 @@ Read-only success from `FanMaxGet`, `FanGetCount`, or `FanGetLevel` does not est
 
 The [two exact-device four-byte experiments](set-fan-max-second-4byte-confirmation-result.md) produced repeated observed fan responses, but post-enable FanMaxGet remained false. Four byte is therefore preferred experimental evidence only: the input ABI, readback semantics, restore behavior, and payload decision remain open.
 
+Cached experimental-status fields can preserve that distinction, but cannot mark input ABI, readback, restore, or UI proof as complete.
+
 ## Proven Read-Only Baseline
 
 - [x] Exact-device identity captured for SKU `7Z5Z2EA#AB8`, BIOS `F.31`, thermal policy V1.

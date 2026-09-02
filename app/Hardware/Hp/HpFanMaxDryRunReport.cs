@@ -22,6 +22,12 @@ public sealed record HpFanMaxDryRunReport
     public string SetFanMaxFirstWriteGateStatus => FirstWriteGateStatus;
     public bool SetFanMaxFirstWriteGateSatisfied => false;
     public string SetFanMaxFirstWriteGateReason => FirstWriteGateReason;
+    public string SetFanMaxExperimentalPayloadCandidate => "FourByte";
+    public bool SetFanMaxPhysicalResponseObserved => true;
+    public int SetFanMaxPhysicalResponseConfirmationCount => 2;
+    public bool SetFanMaxReadbackReliable => false;
+    public bool SetFanMaxNormalControlValidated => false;
+    public bool SetFanMaxUserFacingControlAllowed => false;
     public bool SetFanMaxDryRunEvaluated { get; }
     public int? SetFanMaxDeviceValidatedInputLength { get; }
     public string[] SetFanMaxDryRunBlockedReasons { get; }

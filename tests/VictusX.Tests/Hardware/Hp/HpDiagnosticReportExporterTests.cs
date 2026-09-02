@@ -50,6 +50,27 @@ public sealed class HpDiagnosticReportExporterTests
     }
 
     [Fact]
+    public void BuildMarkdown_PreservesExperimentalEvidenceAndNoControlStatusFromSummary()
+    {
+        string summary = HpDiagnosticDashboardFormatter.BuildSummary(new()
+        {
+            SetFanMaxExperimentalPayloadCandidate = "FourByte",
+            SetFanMaxPhysicalResponseObserved = "True",
+            SetFanMaxPhysicalResponseConfirmationCount = "2",
+            SetFanMaxReadbackReliable = "False",
+            SetFanMaxNormalControlValidated = "False",
+            SetFanMaxUserFacingControlAllowed = "False"
+        });
+
+        string content = HpDiagnosticReportExporter.BuildMarkdown(summary, DateTimeOffset.UnixEpoch);
+
+        Assert.Contains("Experimental payload candidate: FourByte - experimental only", content, StringComparison.Ordinal);
+        Assert.Contains("Physical response observed: True - observed in two manual four-byte experiments; experimental only", content, StringComparison.Ordinal);
+        Assert.Contains("Normal control validated: " + HpDiagnosticDashboardFormatter.SetFanMaxNormalControlNotValidated, content, StringComparison.Ordinal);
+        Assert.Contains("User-facing control allowed: " + HpDiagnosticDashboardFormatter.SetFanMaxUserFacingControlNotAllowed, content, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Exporter_HasNoWmiDependencyOrInvocationSurface()
     {
         Type exporterType = typeof(HpDiagnosticReportExporter);

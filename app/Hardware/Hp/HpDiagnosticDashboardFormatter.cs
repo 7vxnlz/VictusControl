@@ -14,6 +14,11 @@ public static class HpDiagnosticDashboardFormatter
     public const string SetFanMaxInputLengthUnset = "Unset / not validated";
     public const string SetFanMaxPayloadLengthNotSelected = "Not selected";
     public const string SetFanMaxEvidenceMissing = "Missing / not proven";
+    public const string SetFanMaxExperimentalPayloadUnknown = "Unknown / not selected";
+    public const string SetFanMaxPhysicalResponseUnknown = "Unknown - missing or unrecognized experimental evidence";
+    public const string SetFanMaxReadbackNotReliable = "False - FanMaxGet is not a reliable sole success criterion";
+    public const string SetFanMaxNormalControlNotValidated = "False - normal control is not validated";
+    public const string SetFanMaxUserFacingControlNotAllowed = "False - user-facing control is not allowed";
 
     public static HpDiagnosticDashboardHealthSummary BuildHealthSummary(HpDiagnosticDashboardInput input)
     {
@@ -92,6 +97,18 @@ public static class HpDiagnosticDashboardFormatter
                     input.SetFanMaxFirstWriteGateStatus,
                     input.SetFanMaxFirstWriteGateSatisfied,
                     input.SetFanMaxFirstWriteGateReason)),
+                Row("Experimental payload candidate", FormatExperimentalPayloadCandidate(input.SetFanMaxExperimentalPayloadCandidate)),
+                Row("Physical response observed", FormatPhysicalResponseObserved(
+                    input.SetFanMaxExperimentalPayloadCandidate,
+                    input.SetFanMaxPhysicalResponseObserved,
+                    input.SetFanMaxPhysicalResponseConfirmationCount)),
+                Row("Physical response confirmation count", FormatPhysicalResponseConfirmationCount(
+                    input.SetFanMaxExperimentalPayloadCandidate,
+                    input.SetFanMaxPhysicalResponseObserved,
+                    input.SetFanMaxPhysicalResponseConfirmationCount)),
+                Row("Readback reliable", FormatReadbackReliable(input.SetFanMaxReadbackReliable)),
+                Row("Normal control validated", FormatNormalControlValidated(input.SetFanMaxNormalControlValidated)),
+                Row("User-facing control allowed", FormatUserFacingControlAllowed(input.SetFanMaxUserFacingControlAllowed)),
                 Row("Fan write implemented", FormatEvidenceWriteImplemented(input.SetFanMaxWriteImplemented)),
                 Row("Fan write allowed", FormatEvidenceWriteAllowed(input.SetFanMaxWriteAllowed)),
                 Row("DeviceValidatedInputLength", FormatDeviceValidatedInputLength(input.SetFanMaxDeviceValidatedInputLength)),
@@ -193,6 +210,36 @@ public static class HpDiagnosticDashboardFormatter
         return reason;
     }
 
+    public static string FormatExperimentalPayloadCandidate(string? value) =>
+        string.Equals(value, "FourByte", StringComparison.OrdinalIgnoreCase)
+            ? "FourByte - experimental only"
+            : SetFanMaxExperimentalPayloadUnknown;
+
+    public static string FormatPhysicalResponseObserved(string? candidate, string? observed, string? confirmationCount) =>
+        HasRecognizedExperimentalPhysicalResponse(candidate, observed, confirmationCount)
+            ? "True - observed in two manual four-byte experiments; experimental only"
+            : SetFanMaxPhysicalResponseUnknown;
+
+    public static string FormatPhysicalResponseConfirmationCount(string? candidate, string? observed, string? value) =>
+        HasRecognizedExperimentalPhysicalResponse(candidate, observed, value)
+            ? "2 - manual four-byte confirmation records"
+            : "Unknown";
+
+    public static string FormatReadbackReliable(string? value) =>
+        string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
+            ? "False - unexpected reliable readback claim; failing closed"
+            : SetFanMaxReadbackNotReliable;
+
+    public static string FormatNormalControlValidated(string? value) =>
+        string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
+            ? "False - unexpected normal-control validation claim; failing closed"
+            : SetFanMaxNormalControlNotValidated;
+
+    public static string FormatUserFacingControlAllowed(string? value) =>
+        string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase)
+            ? "False - unexpected user-facing control claim; failing closed"
+            : SetFanMaxUserFacingControlNotAllowed;
+
     private static string FormatEvidenceWriteImplemented(string? value)
     {
         return string.Equals(value, "Implemented", StringComparison.OrdinalIgnoreCase) ||
@@ -208,6 +255,11 @@ public static class HpDiagnosticDashboardFormatter
             ? "Blocked - unexpected allowed state"
             : "False - blocked";
     }
+
+    private static bool HasRecognizedExperimentalPhysicalResponse(string? candidate, string? observed, string? confirmationCount) =>
+        string.Equals(candidate, "FourByte", StringComparison.OrdinalIgnoreCase) &&
+        string.Equals(observed, bool.TrueString, StringComparison.OrdinalIgnoreCase) &&
+        string.Equals(confirmationCount, "2", StringComparison.Ordinal);
 
     public static string FormatReportSchemaVersion(string? value)
     {
@@ -254,14 +306,22 @@ public static class HpDiagnosticDashboardFormatter
 
         if (value.StartsWith("Blocked", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("NO-GO", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("False -", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("False - blocked", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("False - not satisfied", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Missing", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("Unknown", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Cached report contains optimistic", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Unset", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("Not selected", StringComparison.OrdinalIgnoreCase))
         {
             return HpDiagnosticDashboardStatus.Blocked;
+        }
+
+        if (value.StartsWith("FourByte", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("True - observed", StringComparison.OrdinalIgnoreCase))
+        {
+            return HpDiagnosticDashboardStatus.Warning;
         }
 
         return HpDiagnosticDashboardStatus.Normal;

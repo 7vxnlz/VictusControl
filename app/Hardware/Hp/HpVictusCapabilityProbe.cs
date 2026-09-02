@@ -6,7 +6,7 @@ namespace GHelper.Hardware.Hp;
 
 public static class HpVictusCapabilityProbe
 {
-    private const int CapabilityReportSchemaVersion = 1;
+    private const int CapabilityReportSchemaVersion = 2;
     private const string CapabilityReportGeneratedBy = "VictusX";
     private const string CapabilityReportMode = "HP read-only diagnostic";
     private const string CapabilityReportSource = "Startup capability snapshot; explicit probe data is developer-only.";
@@ -293,6 +293,12 @@ public static class HpVictusCapabilityProbe
             snapshot.SetFanMaxDryRun.SetFanMaxFirstWriteGateStatus,
             snapshot.SetFanMaxDryRun.SetFanMaxFirstWriteGateSatisfied,
             snapshot.SetFanMaxDryRun.SetFanMaxFirstWriteGateReason,
+            snapshot.SetFanMaxDryRun.SetFanMaxExperimentalPayloadCandidate,
+            snapshot.SetFanMaxDryRun.SetFanMaxPhysicalResponseObserved,
+            snapshot.SetFanMaxDryRun.SetFanMaxPhysicalResponseConfirmationCount,
+            snapshot.SetFanMaxDryRun.SetFanMaxReadbackReliable,
+            snapshot.SetFanMaxDryRun.SetFanMaxNormalControlValidated,
+            snapshot.SetFanMaxDryRun.SetFanMaxUserFacingControlAllowed,
             snapshot.SetFanMaxDryRun.SetFanMaxDryRunEvaluated,
             snapshot.SetFanMaxDryRun.SetFanMaxDeviceValidatedInputLength,
             snapshot.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons,
@@ -573,6 +579,12 @@ public static class HpVictusCapabilityProbe
         string SetFanMaxFirstWriteGateStatus,
         bool SetFanMaxFirstWriteGateSatisfied,
         string SetFanMaxFirstWriteGateReason,
+        string SetFanMaxExperimentalPayloadCandidate,
+        bool SetFanMaxPhysicalResponseObserved,
+        int SetFanMaxPhysicalResponseConfirmationCount,
+        bool SetFanMaxReadbackReliable,
+        bool SetFanMaxNormalControlValidated,
+        bool SetFanMaxUserFacingControlAllowed,
         bool SetFanMaxDryRunEvaluated,
         int? SetFanMaxDeviceValidatedInputLength,
         string[] SetFanMaxDryRunBlockedReasons,

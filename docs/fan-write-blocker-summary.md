@@ -66,3 +66,5 @@ The [manual experiment logger design](set-fan-max-manual-experiment-logger-desig
 The [first-write runner safety audit](set-fan-max-first-write-runner-safety-audit.md) verifies the implemented runner remains command-line-only, approval-gated, and unable to alter this NO-GO status.
 
 The [second four-byte confirmation result](set-fan-max-second-4byte-confirmation-result.md) repeats a physical response for the four-byte hypothesis, but retains NO-GO for normal control. The next safe work is report/log-only experimental status metadata, not another experiment, a one-byte test, payload validation, or UI control.
+
+That metadata must explicitly retain unreliable readback, unvalidated normal control, and prohibited user-facing control. It records evidence; it cannot change a safety decision.

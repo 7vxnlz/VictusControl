@@ -623,6 +623,12 @@ namespace GHelper
                 SetFanMaxFirstWriteGateStatus = snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateStatus ?? report?.GetValue("SetFanMaxFirstWriteGateStatus"),
                 SetFanMaxFirstWriteGateSatisfied = (snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateSatisfied ?? report?.GetBool("SetFanMaxFirstWriteGateSatisfied"))?.ToString(),
                 SetFanMaxFirstWriteGateReason = snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateReason ?? report?.GetValue("SetFanMaxFirstWriteGateReason"),
+                SetFanMaxExperimentalPayloadCandidate = snapshot?.SetFanMaxDryRun.SetFanMaxExperimentalPayloadCandidate ?? report?.GetValue("SetFanMaxExperimentalPayloadCandidate"),
+                SetFanMaxPhysicalResponseObserved = (snapshot?.SetFanMaxDryRun.SetFanMaxPhysicalResponseObserved ?? report?.GetBool("SetFanMaxPhysicalResponseObserved"))?.ToString(),
+                SetFanMaxPhysicalResponseConfirmationCount = snapshot?.SetFanMaxDryRun.SetFanMaxPhysicalResponseConfirmationCount.ToString() ?? report?.GetValue("SetFanMaxPhysicalResponseConfirmationCount"),
+                SetFanMaxReadbackReliable = (snapshot?.SetFanMaxDryRun.SetFanMaxReadbackReliable ?? report?.GetBool("SetFanMaxReadbackReliable"))?.ToString(),
+                SetFanMaxNormalControlValidated = (snapshot?.SetFanMaxDryRun.SetFanMaxNormalControlValidated ?? report?.GetBool("SetFanMaxNormalControlValidated"))?.ToString(),
+                SetFanMaxUserFacingControlAllowed = (snapshot?.SetFanMaxDryRun.SetFanMaxUserFacingControlAllowed ?? report?.GetBool("SetFanMaxUserFacingControlAllowed"))?.ToString(),
                 SetFanMaxDeviceValidatedInputLength = snapshot?.SetFanMaxDryRun.SetFanMaxDeviceValidatedInputLength?.ToString() ?? report?.GetValue("SetFanMaxDeviceValidatedInputLength"),
                 SetFanMaxBlockedReason = GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxDryRunBlockedReasons is { Length: > 0 } reasons ? string.Join(" | ", reasons) : null, report, "SetFanMaxDryRunBlockedReasons"),
                 SetFanMaxNextRequiredProof = GetSnapshotOrReportValue(snapshot?.SetFanMaxDryRun.SetFanMaxNextRequiredProof, report, "SetFanMaxNextRequiredProof")
