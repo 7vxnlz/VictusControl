@@ -60,6 +60,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest outcome-classification note: experiment logs separately classify command success, optional physical response, restore status, and inconclusive FanMaxGet readback; normal control remains NO-GO.
 - Latest observation note: developer-only SetFanMax experiment logs accept bounded manual physical-response, restore, and note metadata; observations cannot bypass gates or trigger hardware.
 - Latest classified-result note: observed four-byte command success, physical response, and restore map to readback-inconclusive with legacy Outcome Unknown; normal control remains NO-GO.
+- Latest clean classified-result note: fresh four-byte run recorded Outcome Unknown with no blocked reasons and readback-inconclusive classification; normal control remains NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation

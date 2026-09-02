@@ -33,6 +33,8 @@ For a separately approved developer experiment only, the operator may record `--
 
 The [classified four-byte result](set-fan-max-4byte-classified-experiment-result.md) records command success, physical response, and observed restore with inconclusive FanMaxGet. Its legacy `Outcome` is `Unknown`, not plain `Fail`; the classification remains the authoritative experimental interpretation.
 
+The [clean classified four-byte result](set-fan-max-4byte-clean-classified-result.md) confirms that behavior on a fresh manually observed run. Four byte remains preferred for limited developer experiments only; it is not a normal-control payload selection.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.

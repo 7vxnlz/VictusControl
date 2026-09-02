@@ -19,6 +19,8 @@ SetFanMax (`0x27`) remains blocked because its device-specific input length is u
 
 Experiment logs may classify a successful command plus manually observed fan response and `FanMaxGet=false` as readback-inconclusive. In that narrow case, legacy `Outcome` is `Unknown` rather than a misleading plain `Fail`, and the FanMaxGet-only failure reason is omitted. This distinction does not validate a payload, recover a reliable latch readback, or permit normal fan control.
 
+The [clean classified four-byte result](set-fan-max-4byte-clean-classified-result.md) records this mapping on the exact device. It supports a limited developer-only pulse-design discussion, not a normal control path.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked

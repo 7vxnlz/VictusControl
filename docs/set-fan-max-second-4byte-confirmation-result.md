@@ -31,6 +31,8 @@ FanMaxGet is not a sufficient sole success criterion for this device/BIOS: it di
 
 Future logs preserve this combination as `CommandSucceededPhysicalResponseObservedReadbackInconclusive` when the physical response is manually recorded. For that classification, the legacy `Outcome` is normalized to `Unknown` and the FanMaxGet-only failure reason is removed; the classification remains experimental interpretation, not payload or normal-control validation. See the [classified four-byte result](set-fan-max-4byte-classified-experiment-result.md).
 
+The [clean classified four-byte result](set-fan-max-4byte-clean-classified-result.md) records this corrected mapping with explicitly observed physical response and restore.
+
 ## Safety And Readiness
 
 The two observations provide repeatable, limited developer-only physical-response evidence for the four-byte hypothesis. They do not fully validate its ABI, semantics, restore timing, failure recovery, or normal control behavior. `DeviceValidatedInputLength` remains unset; one byte remains blocked and must not be tested as a fallback.
