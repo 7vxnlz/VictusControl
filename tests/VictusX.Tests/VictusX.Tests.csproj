@@ -14,8 +14,10 @@
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticDashboardModel.cs" Link="Hardware\Hp\HpDiagnosticDashboardModel.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticDashboardFormatter.cs" Link="Hardware\Hp\HpDiagnosticDashboardFormatter.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticReportLoader.cs" Link="Hardware\Hp\HpDiagnosticReportLoader.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticReportSchemaV2Refresher.cs" Link="Hardware\Hp\HpDiagnosticReportSchemaV2Refresher.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticPaths.cs" Link="Hardware\Hp\HpDiagnosticPaths.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpDiagnosticStatusText.cs" Link="Hardware\Hp\HpDiagnosticStatusText.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpVictusCapabilityReportMetadata.cs" Link="Hardware\Hp\HpVictusCapabilityReportMetadata.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountDecoder.cs" Link="Hardware\Hp\HpFanGetCountDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetCountReportDecoder.cs" Link="Hardware\Hp\HpFanGetCountReportDecoder.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanGetLevelDecoder.cs" Link="Hardware\Hp\HpFanGetLevelDecoder.cs" />

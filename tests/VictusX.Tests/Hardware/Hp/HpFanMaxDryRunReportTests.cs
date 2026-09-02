@@ -52,6 +52,10 @@ public sealed class HpFanMaxDryRunReportTests
         using JsonDocument document = JsonDocument.Parse(json);
         JsonElement root = document.RootElement;
 
+        Assert.Equal(2, HpVictusCapabilityReportMetadata.SchemaVersion);
+        Assert.All(
+            HpVictusCapabilityReportMetadata.SetFanMaxSchemaV2ExperimentalStatusFields,
+            field => Assert.True(root.TryGetProperty(field, out _), field));
         Assert.False(root.GetProperty("SetFanMaxWriteImplemented").GetBoolean());
         Assert.False(root.GetProperty("SetFanMaxWriteAllowed").GetBoolean());
         Assert.Equal("NO-GO", root.GetProperty("SetFanMaxFirstWriteGateStatus").GetString());

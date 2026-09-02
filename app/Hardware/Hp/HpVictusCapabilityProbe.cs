@@ -6,7 +6,7 @@ namespace GHelper.Hardware.Hp;
 
 public static class HpVictusCapabilityProbe
 {
-    private const int CapabilityReportSchemaVersion = 2;
+    private const int CapabilityReportSchemaVersion = HpVictusCapabilityReportMetadata.SchemaVersion;
     private const string CapabilityReportGeneratedBy = "VictusX";
     private const string CapabilityReportMode = "HP read-only diagnostic";
     private const string CapabilityReportSource = "Startup capability snapshot; explicit probe data is developer-only.";
@@ -230,8 +230,18 @@ public static class HpVictusCapabilityProbe
     public static string WriteReport(HpVictusCapabilitySnapshot snapshot)
     {
         Directory.CreateDirectory(HpDiagnosticPaths.AppDataDirectory);
+        File.WriteAllText(ReportPath, BuildReportJson(snapshot));
+        return ReportPath;
+    }
 
-        var report = new HpVictusCapabilityReport(
+    public static string BuildReportJson(HpVictusCapabilitySnapshot snapshot)
+    {
+        return JsonSerializer.Serialize(CreateReport(snapshot), ReportJsonOptions);
+    }
+
+    private static HpVictusCapabilityReport CreateReport(HpVictusCapabilitySnapshot snapshot)
+    {
+        return new HpVictusCapabilityReport(
             CapabilityReportSchemaVersion,
             CapabilityReportGeneratedBy,
             CapabilityReportMode,
@@ -321,9 +331,6 @@ public static class HpVictusCapabilityProbe
             snapshot.IsHpManufacturer,
             snapshot.IsVictusModel,
             snapshot.Errors);
-
-        File.WriteAllText(ReportPath, JsonSerializer.Serialize(report, ReportJsonOptions));
-        return ReportPath;
     }
 
     private static Dictionary<string, string> QueryFirst(string scopePath, string query, List<string> errors, string sourceName)

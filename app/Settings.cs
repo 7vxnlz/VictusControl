@@ -545,6 +545,7 @@ namespace GHelper
 
         private void ReloadHpCachedDiagnosticReport()
         {
+            HpDiagnosticReportSchemaV2Refresher.TryRefreshExistingReport(HpVictusCapabilityProbe.ReportPath);
             hpCachedDiagnosticReport = HpDiagnosticReportLoader.Load(HpVictusCapabilityProbe.ReportPath);
             if (hpReadOnlyTelemetrySource is not null)
             {

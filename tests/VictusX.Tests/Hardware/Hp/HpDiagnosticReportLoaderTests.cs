@@ -54,6 +54,56 @@ public sealed class HpDiagnosticReportLoaderTests
     }
 
     [Fact]
+    public void RefreshExistingReport_UpgradesSchemaV1WithSetFanMaxExperimentalFieldsWithoutChangingInvocationFlags()
+    {
+        string reportPath = WriteTemporaryReport(
+            "{\"ReportSchemaVersion\":1,\"ReportGeneratedBy\":\"VictusX\",\"ReportMode\":\"HP read-only diagnostic\",\"SystemDesignDataInvocationAttempted\":false,\"FanGetCountInvocationAttempted\":false,\"FanMaxGetInvocationAttempted\":false,\"FanGetLevelInvocationAttempted\":false}");
+        try
+        {
+            Assert.True(HpDiagnosticReportSchemaV2Refresher.TryRefreshExistingReport(reportPath));
+
+            HpDiagnosticReportLoadResult result = HpDiagnosticReportLoader.Load(reportPath);
+
+            Assert.Equal(HpDiagnosticReportLoadStatus.Loaded, result.Status);
+            Assert.Equal("2", result.GetValue("ReportSchemaVersion"));
+            Assert.Equal("FourByte", result.GetValue("SetFanMaxExperimentalPayloadCandidate"));
+            Assert.Equal("true", result.GetValue("SetFanMaxPhysicalResponseObserved"));
+            Assert.Equal("2", result.GetValue("SetFanMaxPhysicalResponseConfirmationCount"));
+            Assert.Equal("false", result.GetValue("SetFanMaxReadbackReliable"));
+            Assert.Equal("false", result.GetValue("SetFanMaxNormalControlValidated"));
+            Assert.Equal("false", result.GetValue("SetFanMaxUserFacingControlAllowed"));
+            Assert.Equal("false", result.GetValue("SetFanMaxWriteImplemented"));
+            Assert.Equal("false", result.GetValue("SetFanMaxWriteAllowed"));
+            Assert.Null(result.GetValue("SetFanMaxDeviceValidatedInputLength"));
+            Assert.Equal("false", result.GetValue("SystemDesignDataInvocationAttempted"));
+            Assert.Equal("false", result.GetValue("FanGetCountInvocationAttempted"));
+            Assert.Equal("false", result.GetValue("FanMaxGetInvocationAttempted"));
+            Assert.Equal("false", result.GetValue("FanGetLevelInvocationAttempted"));
+        }
+        finally
+        {
+            File.Delete(reportPath);
+            File.Delete(reportPath + ".bak");
+        }
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("{\"ReportSchemaVersion\":1")]
+    public void RefreshExistingReport_InvalidOrEmptyReportFailsClosed(string contents)
+    {
+        string reportPath = WriteTemporaryReport(contents);
+        try
+        {
+            Assert.False(HpDiagnosticReportSchemaV2Refresher.TryRefreshExistingReport(reportPath));
+        }
+        finally
+        {
+            File.Delete(reportPath);
+        }
+    }
+
+    [Fact]
     public void Loader_HasNoWmiDependencyOrInvocationSurface()
     {
         Type[] types = [typeof(HpDiagnosticReportLoader), typeof(HpDiagnosticReportLoadResult)];

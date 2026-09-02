@@ -34,6 +34,8 @@ The cached HP diagnostic report and dashboard expose this decision as `SetFanMax
 
 Separate experimental fields may record the repeated four-byte physical response, but they must keep `SetFanMaxReadbackReliable=false`, `SetFanMaxNormalControlValidated=false`, and `SetFanMaxUserFacingControlAllowed=false`. They are not a gate update or payload validation.
 
+Schema-v2 report persistence includes those experimental fields so cached diagnostics can distinguish physical response evidence from normal-control validation. Missing schema-v2 fields remain old-report data and must fail closed.
+
 Older cached reports that lack these fields must also display `NO-GO` / not satisfied with an explicit old-report missing-field reason. Cached optimistic values such as `GO` or `true` are treated as invalid for authorization and remain blocked.
 
 Test coverage for these fail-closed dashboard, report, and copy/export summary paths is tracked in [set-fan-max-gate-test-coverage-checkpoint.md](set-fan-max-gate-test-coverage-checkpoint.md).

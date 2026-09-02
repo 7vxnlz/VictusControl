@@ -285,6 +285,12 @@ namespace GHelper
             bool explicitUnsupportedHardwareMode = args.Any(arg => string.Equals(arg, UnsupportedHardwareFlag, StringComparison.OrdinalIgnoreCase));
             hpVictusMode = args.Any(arg => string.Equals(arg, HpVictusHardwareFlag, StringComparison.OrdinalIgnoreCase));
             hpWmiReadOnlyTestMode = args.Any(arg => string.Equals(arg, HpWmiReadOnlyTestFlag, StringComparison.OrdinalIgnoreCase));
+
+            // Normalize against the live command line so launch profiles and UI gating use the same HP-mode decision.
+            AppConfig.SetHpVictusHardwareMode(hpVictusMode);
+            AppConfig.SetHpWmiReadOnlyTestMode(hpWmiReadOnlyTestMode);
+            hpVictusMode = AppConfig.IsHpVictusHardwareMode();
+            hpWmiReadOnlyTestMode = AppConfig.IsHpWmiReadOnlyTestMode();
             unsupportedHardwareMode = explicitUnsupportedHardwareMode || hpVictusMode;
             AppConfig.SetHpVictusHardwareMode(hpVictusMode);
             AppConfig.SetHpWmiReadOnlyTestMode(hpWmiReadOnlyTestMode);

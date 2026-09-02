@@ -33,7 +33,7 @@ FanMaxGet is not a sufficient sole success criterion for this device/BIOS: it di
 
 The two observations provide repeatable, limited developer-only physical-response evidence for the four-byte hypothesis. They do not fully validate its ABI, semantics, restore timing, failure recovery, or normal control behavior. `DeviceValidatedInputLength` remains unset; one byte remains blocked and must not be tested as a fallback.
 
-The cached diagnostic report may identify this exact evidence as `SetFanMaxExperimentalPayloadCandidate=FourByte`, physical response observed twice, and readback not reliable. Those fields are experimental status only: normal-control validation and user-facing control remain explicitly `false`.
+Schema-v2 cached diagnostic reports identify this exact evidence as `SetFanMaxExperimentalPayloadCandidate=FourByte`, physical response observed twice, and readback not reliable. Those fields are experimental status only: normal-control validation and user-facing control remain explicitly `false`. Schema-v1 or missing cached reports must continue to render the physical-response state as unknown and normal control as blocked.
 
 Normal fan control UI remains **NO-GO**. User-facing control still requires a reliable state/readback contract, independently reviewed restore and recovery proof, bounded thermal/power evidence, repeated safety observations, and a separate product-level lifecycle/UI review.
 
