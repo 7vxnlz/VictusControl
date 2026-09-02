@@ -35,6 +35,8 @@ The [classified four-byte result](set-fan-max-4byte-classified-experiment-result
 
 The [clean classified four-byte result](set-fan-max-4byte-clean-classified-result.md) confirms that behavior on a fresh manually observed run. Four byte remains preferred for limited developer experiments only; it is not a normal-control payload selection.
 
+The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) scopes a possible one-shot developer experiment. It preserves the four-byte-only, no-fallback policy and does not alter normal-control NO-GO.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.

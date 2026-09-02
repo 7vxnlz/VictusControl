@@ -25,4 +25,4 @@ This repeated response keeps four byte as the preferred developer-experiment pay
 
 ## Recommended Next Safe Step
 
-Design, but do not execute, a limited developer-only "Max Fan Pulse" command using the four-byte hypothesis, one explicit approval scope, matching restore, and required manual observation logging. It must remain separate from normal fan control.
+The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) now defines a separately approved, command-line-only proposal with matching restore and manual observation logging. It remains design-only and separate from normal fan control.
