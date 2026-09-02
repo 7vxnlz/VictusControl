@@ -39,6 +39,8 @@ The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor
 
 The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) is the current source-of-truth for what remains missing before user-facing fan control can even be reconsidered.
 
+The [normal fan control proof priority plan](normal-fan-control-proof-priority-plan.md) ranks the blockers. `DeviceValidatedInputLength`, readback reliability, restore proof, thermal/power safety, and recovery behavior must be proven before normal fan control can move out of **NO-GO**.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked

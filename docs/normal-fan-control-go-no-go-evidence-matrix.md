@@ -40,4 +40,4 @@ Normal/user-facing fan control remains **NO-GO**. No fan sliders, toggles, autom
 
 ## Recommended Next Safe Task
 
-Keep work in internal research or read-only diagnostic evidence review. The next safe implementation task, if needed, is to strengthen local log review and normal-control blocker reporting, not to add user-facing fan controls.
+Keep work in internal research or read-only diagnostic evidence review. The [normal fan control proof priority plan](normal-fan-control-proof-priority-plan.md) ranks the blocker evidence and recommends a read-only proof design for `DeviceValidatedInputLength` and readback reliability before any further experiment or UI work.
