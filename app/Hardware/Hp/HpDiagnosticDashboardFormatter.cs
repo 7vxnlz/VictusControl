@@ -23,6 +23,8 @@ public static class HpDiagnosticDashboardFormatter
     public const string SetFanMaxDeveloperExperimentPayloadUnknown = "Unknown - developer experiment payload is missing or invalid";
     public const string SetFanMaxNormalControlNotValidated = "False - normal control is not validated";
     public const string SetFanMaxUserFacingControlNotAllowed = "False - user-facing control is not allowed";
+    public const string PulseHistoryNotAvailable = "No pulse history available";
+    public const string PulseHistoryNormalControlDisabled = "Disabled - normal fan control remains NO-GO";
 
     public static HpDiagnosticDashboardHealthSummary BuildHealthSummary(HpDiagnosticDashboardInput input)
     {
@@ -91,6 +93,22 @@ public static class HpDiagnosticDashboardFormatter
                 Row("Fan 1 raw level byte", input.Fan1RawLevel),
                 Row("Fan 2 raw level byte", input.Fan2RawLevel),
                 Row("Raw level data", RawFanLevelWarning)
+            ]),
+            new("Latest SetFanMax pulse/history",
+            [
+                Row("Status", input.SetFanMaxPulseHistoryStatus ?? PulseHistoryNotAvailable),
+                Row("Latest pulse timestamp", input.SetFanMaxPulseTimestamp),
+                Row("Payload used", input.SetFanMaxPulsePayload),
+                Row("WriteExecuted", input.SetFanMaxPulseWriteExecuted),
+                Row("Enable command succeeded", input.SetFanMaxPulseEnableCommandSucceeded),
+                Row("Restore command succeeded", input.SetFanMaxPulseRestoreCommandSucceeded),
+                Row("Physical fan response observed", input.SetFanMaxPulsePhysicalFanResponseObserved),
+                Row("Restore observed", input.SetFanMaxPulseRestoreObserved),
+                Row("Readback reliability", input.SetFanMaxPulseReadbackReliability),
+                Row("Experimental outcome classification", input.SetFanMaxPulseOutcomeClassification),
+                Row("Notes summary", input.SetFanMaxPulseNotesSummary),
+                Row("Evidence scope", "Developer-only evidence - no pulse/run action is available"),
+                Row("Normal fan control", PulseHistoryNormalControlDisabled)
             ]),
             new("SetFanMax evidence readiness",
             [

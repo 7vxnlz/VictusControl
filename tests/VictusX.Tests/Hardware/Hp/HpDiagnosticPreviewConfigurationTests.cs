@@ -45,8 +45,23 @@ public sealed class HpDiagnosticPreviewConfigurationTests
     {
         string settings = ReadRepositoryFile("app", "Settings.cs");
 
-        Assert.DoesNotContain("HpFanMaxExperiment", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("HpFanMaxExperimentRunner", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("HpFanMaxExperimentWmiTransport", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("--hp-fan-write-experiment", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("HpFanMaxPulseCommand", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("--hp-fan-max-pulse", settings, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void HpDiagnosticQuit_UsesDedicatedUiThreadShellExit()
+    {
+        string settings = ReadRepositoryFile("app", "Settings.cs");
+        string program = ReadRepositoryFile("app", "Program.cs");
+
+        Assert.Contains("Program.ExitHpDiagnosticShell();", settings, StringComparison.Ordinal);
+        Assert.Contains("internal static void ExitHpDiagnosticShell()", program, StringComparison.Ordinal);
+        Assert.Contains("Application.ExitThread();", program, StringComparison.Ordinal);
+        Assert.Contains("if (!hpVictusMode)", program, StringComparison.Ordinal);
     }
 
     private static string ReadRepositoryFile(params string[] segments)

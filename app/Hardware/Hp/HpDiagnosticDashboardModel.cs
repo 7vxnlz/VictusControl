@@ -48,6 +48,17 @@ public sealed record HpDiagnosticDashboardInput
     public string? MaxFanState { get; init; }
     public string? Fan1RawLevel { get; init; }
     public string? Fan2RawLevel { get; init; }
+    public string? SetFanMaxPulseHistoryStatus { get; init; }
+    public string? SetFanMaxPulseTimestamp { get; init; }
+    public string? SetFanMaxPulsePayload { get; init; }
+    public string? SetFanMaxPulseWriteExecuted { get; init; }
+    public string? SetFanMaxPulseEnableCommandSucceeded { get; init; }
+    public string? SetFanMaxPulseRestoreCommandSucceeded { get; init; }
+    public string? SetFanMaxPulsePhysicalFanResponseObserved { get; init; }
+    public string? SetFanMaxPulseRestoreObserved { get; init; }
+    public string? SetFanMaxPulseReadbackReliability { get; init; }
+    public string? SetFanMaxPulseOutcomeClassification { get; init; }
+    public string? SetFanMaxPulseNotesSummary { get; init; }
     public string? SetFanMaxWriteImplemented { get; init; }
     public string? SetFanMaxWriteAllowed { get; init; }
     public string? SetFanMaxFirstWriteGateStatus { get; init; }

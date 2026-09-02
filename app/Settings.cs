@@ -32,6 +32,7 @@ namespace GHelper
         Label? hpReadOnlyTelemetryHealth;
         Label? hpReadOnlyTelemetryWarning;
         HpDiagnosticReportLoadResult? hpCachedDiagnosticReport;
+        HpFanMaxPulseHistoryLoadResult? hpPulseHistory;
 
         public GPUModeControl gpuControl;
         public AllyControl allyControl;
@@ -547,6 +548,7 @@ namespace GHelper
         {
             HpDiagnosticReportSchemaV2Refresher.TryRefreshExistingReport(HpVictusCapabilityProbe.ReportPath);
             hpCachedDiagnosticReport = HpDiagnosticReportLoader.Load(HpVictusCapabilityProbe.ReportPath);
+            hpPulseHistory = HpFanMaxPulseHistoryLoader.Load(HpFanMaxExperimentLogWriter.ExperimentDirectory);
             if (hpReadOnlyTelemetrySource is not null)
             {
                 hpReadOnlyTelemetrySource.Text = hpCachedDiagnosticReport.SourceDescription;
@@ -595,6 +597,7 @@ namespace GHelper
         {
             HpVictusCapabilitySnapshot? snapshot = Program.hpVictusCapabilitySnapshot;
             HpDiagnosticReportLoadResult? report = hpCachedDiagnosticReport;
+            HpFanMaxPulseHistoryEntry? pulse = hpPulseHistory?.Entry;
             return new HpDiagnosticDashboardInput
             {
                 ReportSchemaVersion = report?.GetValue("ReportSchemaVersion"),
@@ -619,6 +622,17 @@ namespace GHelper
                 MaxFanState = FormatMaxFanState(snapshot, report),
                 Fan1RawLevel = GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan1RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan1RawValue"),
                 Fan2RawLevel = GetSnapshotOrDecodedReportValue(snapshot?.FanGetLevelInvocationSucceeded == true && snapshot.FanGetLevelDecodeSucceeded, snapshot?.FanGetLevelDecoded?.Fan2RawValue, report, "FanGetLevelDecodeSucceeded", "FanGetLevelDecoded.Fan2RawValue"),
+                SetFanMaxPulseHistoryStatus = hpPulseHistory?.StatusText,
+                SetFanMaxPulseTimestamp = pulse?.TimestampUtc.ToString("yyyy-MM-dd HH:mm:ss zzz", System.Globalization.CultureInfo.InvariantCulture),
+                SetFanMaxPulsePayload = pulse is null ? null : (pulse.PayloadLengthCandidate ?? "Unknown") + " / " + (pulse.PayloadBytesHypothesis ?? "Unknown"),
+                SetFanMaxPulseWriteExecuted = pulse?.WriteExecuted?.ToString(),
+                SetFanMaxPulseEnableCommandSucceeded = pulse?.EnableCommandSucceeded?.ToString(),
+                SetFanMaxPulseRestoreCommandSucceeded = pulse?.RestoreCommandSucceeded?.ToString(),
+                SetFanMaxPulsePhysicalFanResponseObserved = pulse?.PhysicalFanResponseObserved?.ToString(),
+                SetFanMaxPulseRestoreObserved = pulse?.RestoreObserved?.ToString(),
+                SetFanMaxPulseReadbackReliability = pulse?.ReadbackReliability,
+                SetFanMaxPulseOutcomeClassification = pulse?.ExperimentalOutcomeClassification,
+                SetFanMaxPulseNotesSummary = pulse?.NotesSummary,
                 SetFanMaxWriteImplemented = HpDiagnosticDashboardFormatter.FormatWriteImplementationStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteImplemented ?? report?.GetBool("SetFanMaxWriteImplemented")),
                 SetFanMaxWriteAllowed = HpDiagnosticDashboardFormatter.FormatWriteAllowedStatus(snapshot?.SetFanMaxDryRun.SetFanMaxWriteAllowed ?? report?.GetBool("SetFanMaxWriteAllowed")),
                 SetFanMaxFirstWriteGateStatus = snapshot?.SetFanMaxDryRun.SetFanMaxFirstWriteGateStatus ?? report?.GetValue("SetFanMaxFirstWriteGateStatus"),
@@ -2057,8 +2071,7 @@ namespace GHelper
         {
             if (AppConfig.IsHpVictusHardwareMode())
             {
-                if (Program.trayIcon is not null) Program.trayIcon.Visible = false;
-                Application.Exit();
+                Program.ExitHpDiagnosticShell();
                 return;
             }
 

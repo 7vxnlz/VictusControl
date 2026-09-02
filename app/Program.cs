@@ -50,6 +50,7 @@ namespace GHelper
         private static long lastTheme;
         private static System.Windows.Forms.Timer? trayRetryTimer;
         private static int exitCleanupStarted;
+        private static int hpDiagnosticExitStarted;
         private static bool systemLifecycleHooksRegistered;
 
         public static InputDispatcher? inputDispatcher;
@@ -465,7 +466,10 @@ namespace GHelper
             trayIcon.MouseMove += TrayIcon_MouseMove;
 
 
-            inputDispatcher = new InputDispatcher();
+            if (!hpVictusMode)
+            {
+                inputDispatcher = new InputDispatcher();
+            }
 
             if (!unsupportedHardwareMode)
             {
@@ -892,6 +896,50 @@ namespace GHelper
             {
                 TryShutdownCleanup("peripheral device events", PeripheralsProvider.UnregisterForDeviceEvents);
             }
+        }
+
+        internal static void ExitHpDiagnosticShell()
+        {
+            if (!AppConfig.IsHpVictusHardwareMode())
+            {
+                Application.Exit();
+                return;
+            }
+
+            if (Interlocked.Exchange(ref hpDiagnosticExitStarted, 1) != 0) return;
+
+            void ExitOnUiThread()
+            {
+                TryShutdownCleanup("HP diagnostic tray retry timer", () =>
+                {
+                    trayRetryTimer?.Stop();
+                    trayRetryTimer?.Dispose();
+                    trayRetryTimer = null;
+                });
+
+                TryShutdownCleanup("HP diagnostic tray icon", () =>
+                {
+                    if (trayIcon is null) return;
+
+                    ContextMenuStrip? menu = trayIcon.ContextMenuStrip;
+                    trayIcon.ContextMenuStrip = null;
+                    trayIcon.Visible = false;
+                    trayIcon.Dispose();
+                    trayIcon = null!;
+                    menu?.Dispose();
+                });
+
+                Application.Exit();
+                Application.ExitThread();
+            }
+
+            if (settingsForm is not null && settingsForm.InvokeRequired && !settingsForm.IsDisposed && settingsForm.IsHandleCreated)
+            {
+                settingsForm.BeginInvoke((System.Windows.Forms.MethodInvoker)ExitOnUiThread);
+                return;
+            }
+
+            ExitOnUiThread();
         }
 
         private static void TryShutdownCleanup(string name, Action cleanup)
