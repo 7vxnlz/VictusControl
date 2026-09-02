@@ -23,6 +23,8 @@ The [clean classified four-byte result](set-fan-max-4byte-clean-classified-resul
 
 The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) has a separately gated command-line implementation, but it remains unexecuted and has no normal UI route. It does not alter normal control readiness.
 
+The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) now records a successful bounded developer run. It makes the developer pulse operational, not normal fan control.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked

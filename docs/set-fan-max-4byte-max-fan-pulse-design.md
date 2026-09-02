@@ -51,4 +51,4 @@ Normal fan control still needs a selected and reviewed ABI, durable restore and 
 
 ## Implementation Status
 
-The separate command-line-only pulse parser and pure gate tests are implemented, but the pulse command has not been run. It reuses the bounded runner safeguards, rejects payload-length overrides, and remains absent from the Diagnostic UI and tray menu.
+The separate command-line-only pulse parser and pure gate tests are implemented. The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) records one successful bounded developer run with observed physical response and restore. It reuses the runner safeguards, rejects payload-length overrides, and remains absent from the Diagnostic UI and tray menu.

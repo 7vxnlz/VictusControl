@@ -23,6 +23,8 @@ dotnet run --project app\VictusX.csproj -- --hp-victus --hp-wmi-readonly-test --
 
 This repeated response keeps four byte as the preferred developer-experiment payload only. It does not validate the payload ABI for normal use, set `DeviceValidatedInputLength`, or permit normal/user-facing fan control. FanMaxGet remains inconclusive and the normal UI remains **NO-GO**.
 
+The [Max Fan Pulse result](set-fan-max-4byte-max-fan-pulse-result.md) provides a separate operational record for the same bounded developer-only four-byte path.
+
 ## Recommended Next Safe Step
 
 The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) now defines a separately approved, command-line-only proposal with matching restore and manual observation logging. It remains design-only and separate from normal fan control.

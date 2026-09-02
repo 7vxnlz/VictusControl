@@ -37,6 +37,8 @@ The [clean classified four-byte result](set-fan-max-4byte-clean-classified-resul
 
 The [four-byte Max Fan Pulse design](set-fan-max-4byte-max-fan-pulse-design.md) now has a separately gated, command-line-only implementation. It preserves the four-byte-only, no-fallback policy and does not alter normal-control NO-GO.
 
+The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) confirms that this bounded four-byte developer path is operational on the exact device. It does not select a normal-control ABI or change one-byte's comparison-only role.
+
 ## Evidence Required Before Normal Control
 
 - Durable, reviewed restore semantics across repeated controlled sessions.
