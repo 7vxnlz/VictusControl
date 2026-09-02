@@ -8,6 +8,8 @@ No binaries or release artifacts should be published from the current state.
 
 See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the final source-only readiness summary.
 
+See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) for the post-proof-gap-analyzer preview state, including read-only fan proof status, close-to-tray behavior, and the remaining packaging blockers.
+
 ## Completed Prerequisites
 
 - HP diagnostic mode launches with `--hp-victus` and uses a Diagnostic/Quit-only shell.
@@ -19,6 +21,7 @@ See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-
 - Safety tests guard the launcher/profile from including `--hp-wmi-readonly-test`.
 - Project metadata is aligned to VictusX preview identity while keeping inherited default behavior intact.
 - Dependency notice inventory, icon/app identity plan, and clean-machine validation plan exist.
+- HP fan proof-gap analyzer and preview readiness checkpoints exist after dashboard stabilization.
 
 ## Blocking Items
 

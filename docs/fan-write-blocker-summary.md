@@ -47,6 +47,8 @@ The HP Diagnostic dashboard now includes a read-only proof-gap analyzer over loc
 
 The [HP fan proof gap analyzer checkpoint](hp-fan-proof-gap-analyzer-checkpoint.md) records that this analyzer is visible in dashboard, copy, and export output, keeps `DeviceValidatedInputLength` unset, treats FanMaxGet as inconclusive and FanGetLevel as raw-only, and documents that normal window close hides to tray while explicit Quit is the full process-termination path.
 
+The [HP Diagnostic preview readiness checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) confirms that packaging/release-prep may continue only as source/readiness work; normal fan control remains **NO-GO** and release packaging remains blocked by identity, notices, signing/checksum, clean-machine validation, and NU1900 warning disposition.
+
 Developer experiment observation arguments are log metadata only. They require the existing command-line experiment path and cannot approve a payload, bypass a one-byte or four-byte approval, or expose a user-facing control.
 
 ## 3. Why SetFanMode Is Blocked
