@@ -27,6 +27,8 @@ This tracker consolidates the current HP Diagnostic preview release blockers and
 
 HP mode preserves the designer-owned inherited shell while disabling unsupported performance, GPU, display, keyboard, battery, and fan interactions. Diagnostic is the only HP-specific footer addition and opens a vertically scrollable owned side panel using the inherited Updates-style secondary-window pattern without adding a control surface.
 
+The restored inherited shell, readable footer labels/icons, aligned disabled captions, and Diagnostic side-panel behavior are recorded in [HP Inherited Shell UI Final Checkpoint](hp-inherited-shell-ui-final-checkpoint.md).
+
 See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) for the final source-only readiness state before asset, license, and artifact-specific work.
 
 ## Recommended Next Safe Task

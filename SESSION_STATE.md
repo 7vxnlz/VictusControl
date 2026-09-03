@@ -90,9 +90,10 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest HP diagnostic layout note: dashboard content now scrolls within working-area-bounded HP mode; all diagnostic sections and safety boundaries remain read-only.
 - Latest HP diagnostic shell note: HP mode now keeps the designer-owned inherited shell directly; safety disabling and one Diagnostic footer action are the only HP-specific main-window overrides, while Diagnostic remains a scrollable owned side panel like Updates.
 - Latest HP caption note: disabled no-image shell tiles now keep the inherited centered caption alignment; image-before-text buttons keep the separate reserved icon lane.
+- Latest HP inherited-shell checkpoint note: final manual-visual checkpoint records the restored compact inherited shell, readable footer labels/icons, aligned disabled captions, and read-only Diagnostic side panel.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP mode visually close to the inherited shell while diagnostics remain read-only and secondary.
-- Last completed work: restored inherited centered caption drawing for disabled no-image HP shell tiles without changing shell geometry, side-panel navigation, or safety behavior.
+- Current objective: source-only preview readiness can continue while HP mode keeps the restored inherited shell and read-only Diagnostic side panel.
+- Last completed work: recorded the final HP inherited-shell UI checkpoint after manual visual confirmation; no runtime, fan-control, or packaging behavior changed.
 - Files touched recently: `app/Settings.cs`, `app/UI/RButton.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticPreviewConfigurationTests.cs`, `docs/hp-diagnostic-source-only-readiness-final-checkpoint.md`, `docs/hp-diagnostic-preview-final-blocker-tracker.md`, `docs/windows-packaging-readiness-audit.md`, `SESSION_STATE.md`
 - Known build/test status: standard build passed with 0 errors and 4 NU1900 warnings; 203/203 tests passed. Normal `--hp-victus` launch started responsively and closed cleanly, but Windows capture could not enumerate the elevated process for visual inspection.
 - Open questions: none for documentation handoff

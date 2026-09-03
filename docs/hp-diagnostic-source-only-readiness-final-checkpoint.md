@@ -13,6 +13,7 @@ This checkpoint does not authorize publishing, artifact creation, signing, check
 
 - `--hp-victus` keeps the designer-owned VictusX/G-Helper shell directly, with inherited performance, GPU, display, keyboard, and battery sections visible but disabled in HP mode.
 - Thank You, Updates, Diagnostic, and Quit remain in the inherited footer layout; Diagnostic is the only HP-specific addition and opens a report-backed, local-file-only owned side panel using the same secondary-window pattern as Updates.
+- [HP Inherited Shell UI Final Checkpoint](hp-inherited-shell-ui-final-checkpoint.md) records the manual visual confirmation that the compact inherited shell, footer labels/icons, disabled shell captions, and Diagnostic side panel now render correctly.
 - Safe local actions remain available only inside Diagnostic: copy summary, reload cached report, open report folder, and export diagnostic report.
 - SetFanMax readiness, first-write gate, experimental status, pulse history/status, and proof gap analyzer are visible as read-only diagnostic evidence.
 - The main shell preserves inherited panel ownership, order, tile geometry, and auto-size behavior; only the Diagnostic side panel scrolls when its read-only evidence content is long.
@@ -53,6 +54,7 @@ This checkpoint does not authorize publishing, artifact creation, signing, check
 - Signing/checksum: [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md).
 - Clean-machine validation: [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md).
 - Fan-control safety: [Fan Write Blocker Summary](fan-write-blocker-summary.md).
+- HP inherited-shell UI: [HP Inherited Shell UI Final Checkpoint](hp-inherited-shell-ui-final-checkpoint.md).
 
 ## What Can Continue Safely
 
