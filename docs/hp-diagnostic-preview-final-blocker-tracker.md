@@ -25,6 +25,8 @@ This tracker consolidates the current HP Diagnostic preview release blockers and
 - Normal/user-facing fan control: NO-GO.
 - Developer-only 4-byte Max Fan Pulse: operational under explicit command-line gates only.
 
+See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) for the final source-only readiness state before asset, license, and artifact-specific work.
+
 ## Recommended Next Safe Task
 
-Create a release-candidate evidence record template that ties this tracker to final package contents, reviewed notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without creating or publishing artifacts.
+Create a release-candidate evidence record template that ties this tracker and [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) to final package contents, reviewed notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without creating or publishing artifacts.

@@ -12,6 +12,8 @@ See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness
 
 See [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) for the consolidated current blocker table and required evidence.
 
+See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) for the final source-only readiness decision before asset, license, and artifact-specific work.
+
 ## Completed Prerequisites
 
 - HP diagnostic mode launches with `--hp-victus` and uses a Diagnostic/Quit-only shell.
@@ -100,4 +102,4 @@ These are intentional safety conditions, not release tasks to unblock.
 
 ## Recommended Next Safe Task
 
-Use [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) to drive the next release-candidate evidence record template without publishing artifacts.
+Use [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) and [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) to drive the next release-candidate evidence record template without publishing artifacts.

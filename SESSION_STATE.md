@@ -86,6 +86,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest signing evidence note: signing/checksum evidence plan added; no artifacts, signatures, or final checksums were created.
 - Latest clean-machine evidence note: clean-machine validation evidence plan added; no artifact exists and preview release remains blocked.
 - Latest final blocker tracker note: HP Diagnostic preview final blocker tracker added; source-only prep may continue, package publish remains NO-GO.
+- Latest source-only final checkpoint note: HP Diagnostic source-only readiness final checkpoint added; package publish and normal fan control remain NO-GO.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation
