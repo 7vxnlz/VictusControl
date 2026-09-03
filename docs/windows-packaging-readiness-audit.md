@@ -20,6 +20,7 @@
 - `docs/dependency-notice-inventory.md` records the current local restore graph: 11 application packages and 13 test-only packages. It intentionally leaves license and notice status unreviewed pending authoritative metadata.
 - [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) and the draft [Third-Party Notices](../THIRD-PARTY-NOTICES.md) define the source-only path to a reviewed package notice set; the draft is not release evidence and no artifact has been created.
 - [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md) defines the per-package evidence still required before runtime dependency notices can be marked reviewed.
+- [NU1900 Audit-Source Warning Disposition Plan](nu1900-audit-source-warning-disposition-plan.md) defines how the recurring package vulnerability audit-source warnings must be investigated before preview packaging.
 
 ## Package and Installer Status
 
@@ -65,6 +66,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - Review the third-party notices audit, preserve applicable upstream notices, and verify direct and transitive package attribution from authoritative metadata.
 - Review and complete the dependency notice inventory against a clean restore and the final package contents.
 - Complete the runtime dependency license review evidence checklist for every direct and resolved transitive runtime candidate.
+- Dispose the recurring `NU1900` audit-source warnings with clean restore/build/test and vulnerability-list evidence, or retain the release block with a documented maintainer decision.
 - Confirm no developer-only flags, symbols, logs, machine paths, or captured device data are shipped.
 - Execute the [Clean-Machine Validation Plan](clean-machine-validation-plan.md) against the final candidate package and retain the acceptance record.
 
@@ -82,6 +84,7 @@ See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the fu
 See [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) for the consolidated release blocker checklist.
 See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the current source-only package readiness decision.
 See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) for the stabilized HP Diagnostic preview state after proof-gap analyzer integration.
+See [NU1900 Audit-Source Warning Disposition Plan](nu1900-audit-source-warning-disposition-plan.md) before treating build/test success as package vulnerability audit evidence.
 
 ## Wait Until Later
 

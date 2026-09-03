@@ -29,6 +29,7 @@ See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness
 - Replace inherited G-Helper visual identity with approved VictusX icon/app assets.
 - Define and verify signing and checksum output for the final package.
 - Run the clean-machine validation plan against a final candidate package.
+- Dispose recurring `NU1900` package vulnerability audit-source warnings with documented evidence.
 - Confirm the final package contains no logs, captured device data, symbols, machine paths, or developer-only flags.
 - Confirm the release entry point always launches with only `--hp-victus`.
 - Include or link [HP Diagnostic Preview User Safety Notes](hp-diagnostic-preview-user-safety-notes.md) with the preview package.
@@ -52,6 +53,10 @@ Default ASUS/G-Helper behavior and shared resources must not be broken while pre
 ## Signing/Checksum Blocker
 
 A preview package needs at least a verified SHA-256 checksum. Authenticode signing should be added when a verified publisher identity is available. Follow [Signing and Checksum Workflow](signing-checksum-workflow.md); the checksum/signing process must be repeatable and must apply to the final package actually tested.
+
+## NU1900 Audit-Source Warning Blocker
+
+Follow [NU1900 Audit-Source Warning Disposition Plan](nu1900-audit-source-warning-disposition-plan.md). Build and test passing while `NU1900` appears is not enough to claim package vulnerability audit completion. The release remains blocked until clean restore/build/test and vulnerability-list evidence is recorded, or a maintainer documents an alternate vulnerability-review disposition for the release candidate.
 
 ## Clean-Machine Validation Blocker
 
@@ -77,6 +82,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - Confirmed absence of `--hp-wmi-readonly-test` and future write/control flags.
 - Build and test results from the release candidate source.
 - Dependency and notice review result following the package license review workflow.
+- `NU1900` disposition evidence from restore/build/test and vulnerability-list checks.
 - Icon/app identity verification result against the asset acceptance checklist.
 - SHA-256 checksum and signing status following the signing/checksum workflow.
 - Clean-machine validation record.

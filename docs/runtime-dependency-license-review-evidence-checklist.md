@@ -74,6 +74,8 @@ Project files and restore assets can identify package names, versions, and depen
 
 NuGet metadata may point to a license expression, license file, package readme, repository, or project site, but each source must be reviewed and recorded. If metadata is missing, contradictory, or inaccessible, the dependency remains blocked.
 
+Package vulnerability audit data is also a separate signal. If restore/build/test emits `NU1900`, follow [NU1900 Audit-Source Warning Disposition Plan](nu1900-audit-source-warning-disposition-plan.md) before treating package audit evidence as complete.
+
 ## Fail-Closed Rules
 
 - Unknown license evidence keeps the runtime dependency review blocked.
@@ -98,6 +100,8 @@ NuGet metadata may point to a license expression, license file, package readme, 
 ## Remaining Blocked Items
 
 Runtime dependency review is still incomplete. Final package contents are unavailable, authoritative package licenses and notices are not reviewed, icon attribution depends on a future approved VictusX icon asset, signing/checksum evidence is incomplete, and clean-machine validation has not been run against a package candidate.
+
+Recurring `NU1900` audit-source warnings also remain open until package vulnerability audit retrieval is verified or separately dispositioned.
 
 Normal/user-facing fan control also remains NO-GO and must not be presented as part of preview readiness.
 
