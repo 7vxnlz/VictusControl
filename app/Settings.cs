@@ -23,9 +23,15 @@ namespace GHelper
 {
     public partial class SettingsForm : RForm
     {
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string? pszSubIdList);
+
         ContextMenuStrip contextMenuStrip = new CustomContextMenu();
         ToolStripMenuItem menuEco, menuStandard, menuUltimate, menuOptimized;
         DonateControl donateControl;
+        Panel? hpMainShellPanel;
+        RForm? hpDiagnosticForm;
+        RButton? hpDiagnosticFooterButton;
         Panel? hpReadOnlyTelemetryPanel;
         TableLayoutPanel? hpReadOnlyTelemetryDetails;
         Label? hpReadOnlyTelemetrySource;
@@ -108,7 +114,7 @@ namespace GHelper
             buttonMatrix.Text = "Matrix";
             buttonQuit.Text = Properties.Strings.Quit;
             buttonUpdates.Text = Properties.Strings.Updates;
-            buttonDonate.Text = AppConfig.IsHpVictusHardwareMode() ? "Diagnostic" : Properties.Strings.Donate;
+            buttonDonate.Text = AppConfig.IsHpVictusHardwareMode() ? "Thank You" : Properties.Strings.Donate;
 
             buttonController.Text = Properties.Strings.Controller;
             labelAlly.Text = Properties.Strings.AllyController;
@@ -289,7 +295,7 @@ namespace GHelper
             buttonAutoTDP.BorderColor = colorTurbo;
 
             Text = AppConfig.IsHpVictusHardwareMode()
-                ? "VictusX Read-only Diagnostic"
+                ? "VictusX"
                 : "G-Helper " + (ProcessHelper.IsUserAdministrator() ? "—" : "-") + " " + AppConfig.GetModelShort();
             TopMost = AppConfig.Is("topmost");
 
@@ -307,10 +313,9 @@ namespace GHelper
 
             if (AppConfig.IsHpVictusHardwareMode())
             {
-                buttonDonate.AccessibleName = "Diagnostic";
+                buttonDonate.AccessibleName = "Thank You - unavailable in HP read-only mode";
                 buttonDonate.Badge = 0;
-                buttonDonate.Image = null;
-                buttonDonate.Click += ButtonHpDiagnostic_Click;
+                buttonDonate.Enabled = false;
             }
             else
             {
@@ -326,7 +331,7 @@ namespace GHelper
             if (AppConfig.IsHpVictusHardwareMode())
             {
                 ConfigureHpReadOnlyShell();
-                hpReadOnlyTelemetryPanel?.Focus();
+                hpMainShellPanel?.Focus();
             }
             else
             {
@@ -337,18 +342,44 @@ namespace GHelper
 
         private void ConfigureHpReadOnlyShell()
         {
-            foreach (Control control in new Control[]
+            Control[] hpShellSections =
             {
                 panelPerformance,
                 panelGPU,
                 panelScreen,
+                panelKeyboard,
+                panelBattery
+            };
+
+            foreach (Control section in hpShellSections)
+            {
+                section.Enabled = true;
+                section.Visible = true;
+                section.TabStop = false;
+                ConfigureHpReadOnlySection(section);
+            }
+
+            foreach (Control control in new Control[]
+            {
+                labelCPUFan,
+                labelGPUFan,
+                labelBattery,
+                labelCharge,
+                labelBacklight,
+                pictureGPU
+            })
+            {
+                control.Enabled = false;
+                control.TabStop = false;
+            }
+
+            foreach (Control control in new Control[]
+            {
                 panelGamma,
                 panelMatrix,
                 panelAlly,
                 panelRearLight,
-                panelKeyboard,
                 panelPeripherals,
-                panelBattery,
                 panelStartup,
                 panelVersion
             })
@@ -357,16 +388,86 @@ namespace GHelper
                 control.TabStop = false;
             }
 
-            buttonUpdates.Visible = false;
+            buttonUpdates.Enabled = false;
+            buttonUpdates.Visible = true;
             buttonUpdates.TabStop = false;
             checkStartup.Visible = false;
             checkStartup.TabStop = false;
 
+            hpMainShellPanel = panelPerformance;
+            AddHpDiagnosticFooterAction();
+        }
+
+        private void AddHpDiagnosticFooterAction()
+        {
+            tableButtons.SuspendLayout();
+            tableButtons.ColumnCount = 4;
+            tableButtons.ColumnStyles.Clear();
+            for (int column = 0; column < 4; column++)
+            {
+                tableButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            }
+
+            tableButtons.AutoSize = false;
+            tableButtons.MinimumSize = new Size(0, buttonQuit.Height + buttonQuit.Margin.Vertical);
+            tableButtons.Height = buttonQuit.Height + buttonQuit.Margin.Vertical;
+
+            hpDiagnosticFooterButton = new RButton
+            {
+                AccessibleName = "Diagnostic",
+                Activated = false,
+                BackColor = buttonSecond,
+                BorderColor = Color.Transparent,
+                BorderRadius = 2,
+                Dock = DockStyle.Top,
+                FlatStyle = FlatStyle.Flat,
+                ForeColor = foreMain,
+                Image = Properties.Resources.icons8_log_32,
+                Margin = new Padding(4, 5, 4, 5),
+                Secondary = true,
+                Text = "Diagnostic",
+                UseVisualStyleBackColor = false
+            };
+            hpDiagnosticFooterButton.FlatAppearance.BorderColor = borderSecond;
+            hpDiagnosticFooterButton.Click += ButtonHpDiagnostic_Click;
+
+            tableButtons.SetColumn(buttonDonate, 0);
+            tableButtons.SetColumn(buttonUpdates, 1);
+            tableButtons.Controls.Add(hpDiagnosticFooterButton, 2, 0);
+            tableButtons.SetColumn(buttonQuit, 3);
+            tableButtons.ResumeLayout();
+        }
+
+        private void ConfigureHpReadOnlySection(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                control.ForeColor = foreMain;
+
+                if (control is RButton or ComboBox or Slider or CheckBox or PictureBox)
+                {
+                    control.Enabled = false;
+                    control.TabStop = false;
+                }
+
+                ConfigureHpReadOnlySection(control);
+            }
         }
 
         private void AddHpReadOnlyTelemetryPanel()
         {
             if (!AppConfig.IsHpVictusHardwareMode()) return;
+
+            var scrollHost = new Panel
+            {
+                AccessibleName = "Diagnostic panel content",
+                AutoScroll = true,
+                BackColor = formBack,
+                Dock = DockStyle.Fill
+            };
+            ApplyHpDarkExplorerTheme(scrollHost);
+            scrollHost.HorizontalScroll.Visible = false;
+            scrollHost.VerticalScroll.Visible = false;
 
             var panel = new Panel
             {
@@ -375,7 +476,7 @@ namespace GHelper
                 BackColor = formBack,
                 Dock = DockStyle.Top,
                 Padding = new Padding(11, 5, 11, 5),
-                AccessibleName = "HP read-only diagnostic"
+                AccessibleName = "Diagnostic panel"
             };
 
             var heading = new Label
@@ -385,7 +486,7 @@ namespace GHelper
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = foreMain,
                 Padding = new Padding(10, 5, 10, 5),
-                Text = HpDiagnosticStatusText.Title
+                Text = "Diagnostic"
             };
 
             hpReadOnlyTelemetrySource = new Label
@@ -436,6 +537,7 @@ namespace GHelper
                 Padding = new Padding(10, 0, 10, 5),
                 WrapContents = true
             };
+            actions.Controls.Add(CreateHpDiagnosticActionButton("Main", ButtonHpDiagnosticMain_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Copy summary", ButtonHpDiagnosticCopy_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Reload cached report", ButtonHpDiagnosticReload_Click));
             actions.Controls.Add(CreateHpDiagnosticActionButton("Open diagnostic folder", ButtonHpDiagnosticOpenReportFolder_Click));
@@ -451,9 +553,8 @@ namespace GHelper
             panel.Controls.Add(hpReadOnlyTelemetryHealth);
             panel.Controls.Add(hpReadOnlyTelemetrySource);
             panel.Controls.Add(heading);
-            Controls.Add(panel);
-            hpReadOnlyTelemetryPanel = panel;
-            Controls.SetChildIndex(panel, Math.Min(Controls.GetChildIndex(panelFooter) + 1, Controls.Count - 1));
+            scrollHost.Controls.Add(panel);
+            hpReadOnlyTelemetryPanel = scrollHost;
         }
 
         private void ButtonHpDiagnostic_Click(object? sender, EventArgs e)
@@ -461,11 +562,42 @@ namespace GHelper
             ShowHpReadOnlyDiagnostic();
         }
 
+        private void ButtonHpDiagnosticMain_Click(object? sender, EventArgs e)
+        {
+            ShowHpReadOnlyMainShell();
+        }
+
         private void ShowHpReadOnlyDiagnostic()
         {
             if (hpReadOnlyTelemetryPanel is null) return;
 
-            hpReadOnlyTelemetryPanel.Visible = true;
+            EnsureHpDiagnosticForm();
+            if (hpDiagnosticForm is null) return;
+
+            if (hpDiagnosticForm.Visible)
+            {
+                hpDiagnosticForm.Hide();
+                hpMainShellPanel?.Focus();
+                return;
+            }
+
+            if (!Visible)
+            {
+                WindowState = FormWindowState.Normal;
+                Show();
+            }
+
+            PositionHpDiagnosticForm();
+            hpDiagnosticForm.Show();
+            hpDiagnosticForm.Activate();
+        }
+
+        private void ShowHpReadOnlyMainShell()
+        {
+            if (hpMainShellPanel is null) return;
+
+            hpDiagnosticForm?.Hide();
+            hpMainShellPanel.Visible = true;
             if (!Visible)
             {
                 WindowState = FormWindowState.Normal;
@@ -473,7 +605,69 @@ namespace GHelper
             }
 
             ShowAll();
-            hpReadOnlyTelemetryPanel.Focus();
+            hpMainShellPanel.Focus();
+        }
+
+        private void EnsureHpDiagnosticForm()
+        {
+            if (hpDiagnosticForm is not null && !hpDiagnosticForm.IsDisposed) return;
+            if (hpReadOnlyTelemetryPanel is null) return;
+
+            hpDiagnosticForm = new RForm
+            {
+                AutoScroll = false,
+                AutoSize = false,
+                BackColor = formBack,
+                ForeColor = foreMain,
+                MinimizeBox = false,
+                Name = "HpDiagnosticSidePanel",
+                ShowIcon = false,
+                ShowInTaskbar = false,
+                StartPosition = FormStartPosition.Manual,
+                Text = "VictusX Diagnostic"
+            };
+            hpDiagnosticForm.InitTheme(true);
+            hpDiagnosticForm.FormClosing += (_, e) =>
+            {
+                if (e.CloseReason == CloseReason.UserClosing)
+                {
+                    e.Cancel = true;
+                    hpDiagnosticForm.Hide();
+                }
+            };
+
+            hpReadOnlyTelemetryPanel.Visible = true;
+            hpDiagnosticForm.Controls.Add(hpReadOnlyTelemetryPanel);
+            AddOwnedForm(hpDiagnosticForm);
+        }
+
+        private void PositionHpDiagnosticForm()
+        {
+            if (hpDiagnosticForm is null) return;
+
+            Rectangle workingArea = Screen.FromControl(this).WorkingArea;
+            int availableWidth = Math.Max(1, workingArea.Width - 32);
+            int availableHeight = Math.Max(1, workingArea.Height - 32);
+            int preferredWidth = Math.Min(900, availableWidth);
+            int sideWidth = Math.Min(preferredWidth, Math.Max(640, availableWidth - Width - 24));
+            int sideHeight = Math.Min(Math.Max(Height, MinimumSize.Height), availableHeight);
+            int left = Left - sideWidth - 5;
+
+            if (left < workingArea.Left)
+            {
+                left = Right + 5;
+            }
+
+            if (left + sideWidth > workingArea.Right)
+            {
+                left = Math.Max(workingArea.Left, workingArea.Right - sideWidth);
+            }
+
+            int top = Math.Max(workingArea.Top, Math.Min(Top, workingArea.Bottom - sideHeight));
+            hpDiagnosticForm.MinimumSize = new Size(Math.Min(640, sideWidth), Math.Min(420, sideHeight));
+            hpDiagnosticForm.MaximumSize = new Size(sideWidth, availableHeight);
+            hpDiagnosticForm.Size = new Size(sideWidth, sideHeight);
+            hpDiagnosticForm.Location = new Point(left, top);
         }
 
         private RButton CreateHpDiagnosticActionButton(string text, EventHandler clickHandler)
@@ -482,7 +676,8 @@ namespace GHelper
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = SystemColors.ControlLight,
+                BackColor = buttonSecond,
+                FlatStyle = FlatStyle.Flat,
                 ForeColor = foreMain,
                 Margin = new Padding(0, 0, 6, 0),
                 Padding = new Padding(8, 3, 8, 3),
@@ -490,8 +685,23 @@ namespace GHelper
                 Text = text,
                 UseVisualStyleBackColor = false
             };
+            button.FlatAppearance.BorderColor = borderSecond;
             button.Click += clickHandler;
             return button;
+        }
+
+        private static void ApplyHpDarkExplorerTheme(Control control)
+        {
+            void applyTheme()
+            {
+                if (control.IsHandleCreated)
+                {
+                    SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
+                }
+            }
+
+            control.HandleCreated += (_, _) => applyTheme();
+            applyTheme();
         }
 
         private void ButtonHpDiagnosticCopy_Click(object? sender, EventArgs e)
@@ -1457,6 +1667,10 @@ namespace GHelper
             contextMenuStrip.ShowImageMargin = false;
             contextMenuStrip.ImageScalingSize = new Size(16, 16);
 
+            var main = new ToolStripMenuItem("Main");
+            main.Click += (sender, args) => ShowHpReadOnlyMainShell();
+            contextMenuStrip.Items.Add(main);
+
             var diagnostic = new ToolStripMenuItem("Diagnostic");
             diagnostic.Click += (sender, args) => ShowHpReadOnlyDiagnostic();
             contextMenuStrip.Items.Add(diagnostic);
@@ -2103,6 +2317,7 @@ namespace GHelper
             if (fansForm != null && fansForm.Text != "") fansForm.Close();
             if (extraForm != null && extraForm.Text != "") extraForm.Close();
             if (updatesForm != null && updatesForm.Text != "") updatesForm.Close();
+            if (hpDiagnosticForm != null && hpDiagnosticForm.Text != "") hpDiagnosticForm.Hide();
             if (matrixForm != null && matrixForm.Text != "") matrixForm.Close();
             if (slashForm != null && slashForm.Text != "") slashForm.Close();
             if (handheldForm != null && handheldForm.Text != "") handheldForm.Close();

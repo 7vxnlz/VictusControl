@@ -46,6 +46,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 ## Safety Status
 
 - HP mode is diagnostic-only and report-backed.
+- HP mode preserves the designer-owned inherited shell with unsupported controls disabled; its only HP-specific footer addition is Diagnostic, which opens the vertically scrollable read-only pulse-history and proof-gap sections as an owned side panel, analogous to the inherited Updates panel.
 - Fan and performance control are not implemented.
 - Fan writes are not implemented.
 - SetFanMax remains NO-GO/design-only.

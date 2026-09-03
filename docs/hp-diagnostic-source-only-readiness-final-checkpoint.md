@@ -11,10 +11,11 @@ This checkpoint does not authorize publishing, artifact creation, signing, check
 
 ## Current HP Diagnostic Feature Set
 
-- `--hp-victus` launches the VictusX read-only Diagnostic shell.
-- HP Diagnostic dashboard is report-backed and local-file-only.
-- Safe local actions remain available: copy summary, reload cached report, open report folder, and export diagnostic report.
+- `--hp-victus` keeps the designer-owned VictusX/G-Helper shell directly, with inherited performance, GPU, display, keyboard, and battery sections visible but disabled in HP mode.
+- Thank You, Updates, Diagnostic, and Quit remain in the inherited footer layout; Diagnostic is the only HP-specific addition and opens a report-backed, local-file-only owned side panel using the same secondary-window pattern as Updates.
+- Safe local actions remain available only inside Diagnostic: copy summary, reload cached report, open report folder, and export diagnostic report.
 - SetFanMax readiness, first-write gate, experimental status, pulse history/status, and proof gap analyzer are visible as read-only diagnostic evidence.
+- The main shell preserves inherited panel ownership, order, tile geometry, and auto-size behavior; only the Diagnostic side panel scrolls when its read-only evidence content is long.
 - Standard window close hides to tray by design; explicit Quit is expected to terminate the process.
 
 ## Read-Only Safety Boundaries

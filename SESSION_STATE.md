@@ -87,11 +87,14 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest clean-machine evidence note: clean-machine validation evidence plan added; no artifact exists and preview release remains blocked.
 - Latest final blocker tracker note: HP Diagnostic preview final blocker tracker added; source-only prep may continue, package publish remains NO-GO.
 - Latest source-only final checkpoint note: HP Diagnostic source-only readiness final checkpoint added; package publish and normal fan control remain NO-GO.
+- Latest HP diagnostic layout note: dashboard content now scrolls within working-area-bounded HP mode; all diagnostic sections and safety boundaries remain read-only.
+- Latest HP diagnostic shell note: HP mode now keeps the designer-owned inherited shell directly; safety disabling and one Diagnostic footer action are the only HP-specific main-window overrides, while Diagnostic remains a scrollable owned side panel like Updates.
+- Latest HP caption note: disabled no-image shell tiles now keep the inherited centered caption alignment; image-before-text buttons keep the separate reserved icon lane.
 - Branch: `main` tracking `origin/main`
-- Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
-- Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation
-- Files touched recently: `app/Hardware/Hp/HpFanMaxDryRunReport.cs`, `app/Hardware/Hp/HpVictusCapabilityProbe.cs`, `app/Hardware/Hp/HpDiagnosticDashboardModel.cs`, `app/Hardware/Hp/HpDiagnosticDashboardFormatter.cs`, `app/Settings.cs`, `tests/VictusX.Tests/Hardware/Hp/HpFanMaxDryRunReportTests.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticDashboardFormatterTests.cs`, `docs/set-fan-max-first-write-decision-gate.md`, `docs/set-fan-max-readiness-panel-audit.md`, `SESSION_STATE.md`
-- Known build/test status: build passed with 0 errors and 4 NU1900 audit-source warnings; 137/137 tests passed on 2026-09-02 after documenting the SetFanMax first-write runner design
+- Current objective: keep HP mode visually close to the inherited shell while diagnostics remain read-only and secondary.
+- Last completed work: restored inherited centered caption drawing for disabled no-image HP shell tiles without changing shell geometry, side-panel navigation, or safety behavior.
+- Files touched recently: `app/Settings.cs`, `app/UI/RButton.cs`, `tests/VictusX.Tests/Hardware/Hp/HpDiagnosticPreviewConfigurationTests.cs`, `docs/hp-diagnostic-source-only-readiness-final-checkpoint.md`, `docs/hp-diagnostic-preview-final-blocker-tracker.md`, `docs/windows-packaging-readiness-audit.md`, `SESSION_STATE.md`
+- Known build/test status: standard build passed with 0 errors and 4 NU1900 warnings; 203/203 tests passed. Normal `--hp-victus` launch started responsively and closed cleanly, but Windows capture could not enumerate the elevated process for visual inspection.
 - Open questions: none for documentation handoff
 - Next likely files: decoder tests or docs around `SystemDesignData`, if requested
 - Reference commits reviewed: OmenXHub `ca84cb011d1d3e5850445d19e45fbea06e83a8fd`; OmenSuperHub `a6ab6988c446ee5421466097fdf60c0d521e5c81`; omencore `b39b44978902606aa708cc0d78bcfd87e95fd88b`; ghelper-omen `1694844d2725e79a2b2065a0a1494fa1d143e3f4`; G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; ECC `5eddf1a3ffd311423be2d4ba7d26f7209c91b033`

@@ -25,6 +25,8 @@ This tracker consolidates the current HP Diagnostic preview release blockers and
 - Normal/user-facing fan control: NO-GO.
 - Developer-only 4-byte Max Fan Pulse: operational under explicit command-line gates only.
 
+HP mode preserves the designer-owned inherited shell while disabling unsupported performance, GPU, display, keyboard, battery, and fan interactions. Diagnostic is the only HP-specific footer addition and opens a vertically scrollable owned side panel using the inherited Updates-style secondary-window pattern without adding a control surface.
+
 See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) for the final source-only readiness state before asset, license, and artifact-specific work.
 
 ## Recommended Next Safe Task

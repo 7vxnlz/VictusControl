@@ -159,21 +159,44 @@ namespace GHelper.UI
 
             if (!Enabled && ForeColor != SystemColors.ControlText)
             {
-                var rect = pevent.ClipRectangle;
-                if (Image is not null)
+                var rect = ClientRectangle;
+                bool imageAboveText = Image is not null && TextImageRelation == TextImageRelation.ImageAboveText;
+                bool imageBeforeText = Image is not null && TextImageRelation == TextImageRelation.ImageBeforeText;
+                if (imageAboveText)
                 {
                     rect.Y += Image.Height;
                     rect.Height -= Image.Height;
                 }
-                else
+                else if (imageBeforeText)
+                {
+                    int horizontalImageReserve = Image.Width + Padding.Left + 6;
+                    rect.X += horizontalImageReserve;
+                    rect.Width -= horizontalImageReserve;
+                    using (var brush = new SolidBrush(BackColor))
+                        pevent.Graphics.FillRectangle(brush, ClientRectangle);
+
+                    var imageRect = new Rectangle(
+                        Padding.Left,
+                        Math.Max(0, (ClientSize.Height - Image.Height) / 2),
+                        Image.Width,
+                        Image.Height);
+                    pevent.Graphics.DrawImage(Image, imageRect);
+                }
+                else if (Image is null)
                 {
                     using (var brush = new SolidBrush(Parent.BackColor))
                         pevent.Graphics.FillRectangle(brush, rect);
                     using (var brush = new SolidBrush(BackColor))
                         pevent.Graphics.FillRectangle(brush, rect);
                 }
-                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
-                TextRenderer.DrawText(pevent.Graphics, Text, Font, rect, Color.Gray, flags);
+
+                Color disabledTextColor = Color.FromArgb(
+                    (ForeColor.R * 2 + BackColor.R) / 3,
+                    (ForeColor.G * 2 + BackColor.G) / 3,
+                    (ForeColor.B * 2 + BackColor.B) / 3);
+                TextFormatFlags flags = (imageBeforeText ? TextFormatFlags.Left : TextFormatFlags.HorizontalCenter) | TextFormatFlags.VerticalCenter;
+                flags |= imageAboveText ? TextFormatFlags.WordBreak : TextFormatFlags.SingleLine | TextFormatFlags.NoPadding;
+                TextRenderer.DrawText(pevent.Graphics, Text, Font, rect, disabledTextColor, flags);
             }
 
             if (!Enabled && !Borderless && activated && borderColor.A > 0)
