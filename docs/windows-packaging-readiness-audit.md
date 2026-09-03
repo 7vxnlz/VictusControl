@@ -28,6 +28,7 @@
 - Publish currently creates an unversioned `VictusX.zip`.
 - No installer/MSIX/WiX/Inno Setup project, release workflow, code signing, checksum generation, update channel, uninstall behavior, or packaged shortcut definition exists.
 - [Signing and Checksum Workflow](signing-checksum-workflow.md) defines the future evidence needed before distribution; no signing or checksum has been performed.
+- [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md) defines the artifact-specific evidence that must be recorded before a preview can be released.
 - Imported hardware-oriented resources and dependencies remain in the executable even though HP Diagnostic mode does not use their control paths.
 
 ## Required HP Diagnostic Runtime
@@ -63,6 +64,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - Run build/tests and a packaged smoke test with every explicit invocation field `Attempted=false`.
 - Add license/third-party notices, checksums, malware scan results, and a signing plan before public distribution.
 - Complete the signing/checksum workflow against the same final artifact used for clean-machine validation.
+- Record artifact name, version, source commit, signing status, certificate details when applicable, SHA-256 hash, reviewer, date, and final artifact validation in the signing/checksum evidence plan.
 - Review the third-party notices audit, preserve applicable upstream notices, and verify direct and transitive package attribution from authoritative metadata.
 - Review and complete the dependency notice inventory against a clean restore and the final package contents.
 - Complete the runtime dependency license review evidence checklist for every direct and resolved transitive runtime candidate.
@@ -80,6 +82,7 @@ See [VictusX Icon and App Identity Plan](victusx-icon-app-identity-plan.md) for 
 See [VictusX Icon Asset Requirements](victusx-icon-asset-requirements.md) for the icon acceptance gate before replacing inherited visual assets.
 See [VictusX Icon and App Identity Implementation Plan](victusx-icon-app-identity-implementation-plan.md) before changing executable, tray, or window icon integration.
 See [Signing and Checksum Workflow](signing-checksum-workflow.md) for future release integrity evidence.
+See [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md) for the exact artifact-level evidence required before release.
 See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the future portable-preview acceptance procedure.
 See [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) for the consolidated release blocker checklist.
 See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the current source-only package readiness decision.

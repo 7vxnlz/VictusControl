@@ -54,6 +54,8 @@ Default ASUS/G-Helper behavior and shared resources must not be broken while pre
 
 A preview package needs at least a verified SHA-256 checksum. Authenticode signing should be added when a verified publisher identity is available. Follow [Signing and Checksum Workflow](signing-checksum-workflow.md); the checksum/signing process must be repeatable and must apply to the final package actually tested.
 
+Use [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md) to record artifact name, version, source commit SHA, signing status, certificate/thumbprint when signed, SHA-256 hash, reviewer/date, and confirmation that the evidence matches the same artifact used for clean-machine validation.
+
 ## NU1900 Audit-Source Warning Blocker
 
 Follow [NU1900 Audit-Source Warning Disposition Plan](nu1900-audit-source-warning-disposition-plan.md). Build and test passing while `NU1900` appears is not enough to claim package vulnerability audit completion. The release remains blocked until clean restore/build/test and vulnerability-list evidence is recorded, or a maintainer documents an alternate vulnerability-review disposition for the release candidate.
@@ -84,7 +86,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - Dependency and notice review result following the package license review workflow.
 - `NU1900` disposition evidence from restore/build/test and vulnerability-list checks.
 - Icon/app identity verification result against the asset acceptance checklist.
-- SHA-256 checksum and signing status following the signing/checksum workflow.
+- SHA-256 checksum and signing status following the signing/checksum workflow and evidence plan.
 - Clean-machine validation record.
 - Report showing explicit read-only invocations remain `Attempted=false` during normal HP diagnostic mode.
 - Manual confirmation that no fan/performance/write UI is present.
@@ -92,4 +94,4 @@ These are intentional safety conditions, not release tasks to unblock.
 
 ## Recommended Next Safe Task
 
-Review the source-level `THIRD-PARTY-NOTICES.md` draft using [Runtime Dependency License Review Evidence Checklist](runtime-dependency-license-review-evidence-checklist.md), authoritative runtime package metadata, and the final package file list; retain the release block until that record is complete.
+Define a release-candidate evidence record template that brings together package contents, notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without publishing artifacts.

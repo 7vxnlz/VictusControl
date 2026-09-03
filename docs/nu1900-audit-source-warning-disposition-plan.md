@@ -87,6 +87,10 @@ Before preview packaging, repeat vulnerability-audit verification in:
 
 The clean-machine record should distinguish restore/build audit status from runtime smoke-test behavior.
 
+## Relationship To Signing And Checksums
+
+`NU1900` disposition must be tied to the same source revision and artifact candidate used for signing/checksum evidence. See [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md). A clean checksum does not prove vulnerability audit completion, and a clean vulnerability-audit result does not replace artifact signing/checksum evidence.
+
 ## Current Blocker Status
 
 `NU1900` disposition is open. Build and test currently pass with recurring audit-source warnings, so package vulnerability audit confidence is incomplete. This plan does not create a package, publish artifacts, change dependency versions, suppress warnings, or declare the warning fixed.

@@ -83,6 +83,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest third-party notices draft note: source-level THIRD-PARTY-NOTICES.md added with discovered dependency entries marked pending; final runtime package review and release remain blocked.
 - Latest runtime license checklist note: runtime dependency license review evidence checklist added; notices remain draft and release remains blocked.
 - Latest NU1900 note: audit-source warning disposition plan added; build/test pass does not close package vulnerability audit readiness.
+- Latest signing evidence note: signing/checksum evidence plan added; no artifacts, signatures, or final checksums were created.
 - Branch: `main` tracking `origin/main`
 - Current objective: keep HP diagnostics read-only while retaining SetFanMax experimentation as write-disabled infrastructure only
 - Last completed work: designed the developer-only SetFanMax first-write runner without any write implementation
