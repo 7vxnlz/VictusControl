@@ -6,6 +6,8 @@ Clean-machine validation remains open for the future VictusX HP Diagnostic previ
 
 This plan does not authorize publishing, artifact creation, signing, checksum generation, WMI probing, or release readiness.
 
+See [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) for the consolidated release-blocker status that clean-machine validation feeds into.
+
 ## Expected Validation Environments
 
 Use at least one clean Windows 10 or Windows 11 x64 machine or VM that has no development-only assumptions:
@@ -93,4 +95,4 @@ For each clean-machine validation run, record:
 
 ## Recommended Next Safe Task
 
-Create a release-candidate evidence record template that links package contents, notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without creating or publishing artifacts.
+Create a release-candidate evidence record template that links [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md), package contents, notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without creating or publishing artifacts.

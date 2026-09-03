@@ -6,6 +6,8 @@ Signing and checksum evidence remains open for the future VictusX HP Diagnostic 
 
 This plan does not authorize publishing, signing, checksum generation, or release readiness.
 
+See [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) for the consolidated release-blocker status that signing/checksum evidence feeds into.
+
 ## Expected Preview Artifact Types
 
 The expected future artifact types are:
@@ -133,6 +135,6 @@ For every released artifact, record:
 
 ## Recommended Next Safe Task
 
-Define a release-candidate evidence record template that combines package contents, `THIRD-PARTY-NOTICES.md` review status, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without publishing artifacts.
+Define a release-candidate evidence record template that combines [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md), package contents, `THIRD-PARTY-NOTICES.md` review status, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without publishing artifacts.
 
 See [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md) for the validation evidence that must match the signed/checksummed artifact.

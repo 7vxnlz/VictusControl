@@ -10,6 +10,8 @@ See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-
 
 See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) for the post-proof-gap-analyzer preview state, including read-only fan proof status, close-to-tray behavior, and the remaining packaging blockers.
 
+See [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) for the consolidated current blocker table and required evidence.
+
 ## Completed Prerequisites
 
 - HP diagnostic mode launches with `--hp-victus` and uses a Diagnostic/Quit-only shell.
@@ -24,6 +26,8 @@ See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness
 - HP fan proof-gap analyzer and preview readiness checkpoints exist after dashboard stabilization.
 
 ## Blocking Items
+
+Treat [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) as the concise source-of-truth table for current release blockers.
 
 - Complete package-license and notice review from authoritative package metadata.
 - Replace inherited G-Helper visual identity with approved VictusX icon/app assets.
@@ -96,4 +100,4 @@ These are intentional safety conditions, not release tasks to unblock.
 
 ## Recommended Next Safe Task
 
-Define a release-candidate evidence record template that brings together package contents, notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without publishing artifacts.
+Use [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) to drive the next release-candidate evidence record template without publishing artifacts.

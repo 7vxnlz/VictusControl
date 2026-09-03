@@ -53,6 +53,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 ## Pre-release Checklist
 
 - Treat [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) as the consolidated source-of-truth release gate before any preview package is published.
+- Use [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) as the current blocker/evidence table for source-only release prep.
 - Review [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) for the current read-only dashboard, proof-gap analyzer, close-to-tray behavior, and remaining blocker status.
 - Review [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) before selecting any package candidate.
 - Confirm the explicit product/version/publisher metadata in a packaged executable and add a distinct VictusX icon.
@@ -86,6 +87,7 @@ See [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md) for 
 See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the future portable-preview acceptance procedure.
 See [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md) for the artifact-specific clean-machine evidence required before release.
 See [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) for the consolidated release blocker checklist.
+See [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) for the concise blocker/evidence decision table.
 See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the current source-only package readiness decision.
 See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) for the stabilized HP Diagnostic preview state after proof-gap analyzer integration.
 See [NU1900 Audit-Source Warning Disposition Plan](nu1900-audit-source-warning-disposition-plan.md) before treating build/test success as package vulnerability audit evidence.
