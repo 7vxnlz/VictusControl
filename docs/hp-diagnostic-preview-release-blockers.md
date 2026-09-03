@@ -66,6 +66,8 @@ Use [Clean-Machine Validation Plan](clean-machine-validation-plan.md). This bloc
 
 Validation must confirm startup, report path behavior, export behavior, Diagnostic/Quit-only shell, clean shutdown, no remaining process, and no crash records.
 
+Use [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md) to record OS/build, machine type, artifact name/version, commit SHA, launch command, dashboard/tray observations, process termination, crash/event-log review, reviewer, and date for the exact artifact under release consideration.
+
 ## Safety Blockers That Must Remain Closed
 
 - Fan control must remain unimplemented.
@@ -87,7 +89,7 @@ These are intentional safety conditions, not release tasks to unblock.
 - `NU1900` disposition evidence from restore/build/test and vulnerability-list checks.
 - Icon/app identity verification result against the asset acceptance checklist.
 - SHA-256 checksum and signing status following the signing/checksum workflow and evidence plan.
-- Clean-machine validation record.
+- Clean-machine validation record following the clean-machine evidence plan.
 - Report showing explicit read-only invocations remain `Attempted=false` during normal HP diagnostic mode.
 - Manual confirmation that no fan/performance/write UI is present.
 - Final user-facing safety notes reviewed for the exact release candidate.

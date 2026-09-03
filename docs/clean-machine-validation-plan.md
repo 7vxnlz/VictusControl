@@ -4,6 +4,8 @@
 
 This plan defines acceptance checks for a future `VictusX-HP-Diagnostic-*-win-x64-portable.zip`. It does not authorize publishing, hardware control, or developer-only WMI probes.
 
+Use [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md) to record artifact-specific validation evidence before this plan can be treated as completed release validation.
+
 ## Target Environment
 
 - A clean Windows 10 or Windows 11 x64 virtual machine or separate standard-user profile.
@@ -65,6 +67,8 @@ This plan defines acceptance checks for a future `VictusX-HP-Diagnostic-*-win-x6
 
 Release remains blocked if any required item is absent, any explicit invocation is attempted, any control/write surface appears, report/export behavior is not local-only, the app crashes or leaves a process, package contents or notices cannot be verified, or signing/checksum review is incomplete. Passing this plan also does not authorize fan or performance control.
 
+Clean-machine validation also remains blocked until the final artifact name, version, source commit, launch command, observations, process termination result, crash/event-log review, reviewer, and date are recorded as described in [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md).
+
 ## Recommended Next Safe Task
 
-Create and review the source-only third-party notice template described by the dependency inventory. Do not package or publish until the notice, icon, signing, and clean-machine blockers are all closed by a maintainer.
+Create a release-candidate evidence record template that ties this validation plan to package contents, notices, `NU1900` disposition, and signing/checksum evidence. Do not package or publish until the notice, icon, signing, and clean-machine blockers are all closed by a maintainer.

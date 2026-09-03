@@ -70,7 +70,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - Complete the runtime dependency license review evidence checklist for every direct and resolved transitive runtime candidate.
 - Dispose the recurring `NU1900` audit-source warnings with clean restore/build/test and vulnerability-list evidence, or retain the release block with a documented maintainer decision.
 - Confirm no developer-only flags, symbols, logs, machine paths, or captured device data are shipped.
-- Execute the [Clean-Machine Validation Plan](clean-machine-validation-plan.md) against the final candidate package and retain the acceptance record.
+- Execute the [Clean-Machine Validation Plan](clean-machine-validation-plan.md) against the final candidate package and retain the evidence record described by [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md).
 
 ## Change Now
 
@@ -84,6 +84,7 @@ See [VictusX Icon and App Identity Implementation Plan](victusx-icon-app-identit
 See [Signing and Checksum Workflow](signing-checksum-workflow.md) for future release integrity evidence.
 See [Signing And Checksum Evidence Plan](signing-checksum-evidence-plan.md) for the exact artifact-level evidence required before release.
 See [Clean-Machine Validation Plan](clean-machine-validation-plan.md) for the future portable-preview acceptance procedure.
+See [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md) for the artifact-specific clean-machine evidence required before release.
 See [HP Diagnostic Preview Release Blockers](hp-diagnostic-preview-release-blockers.md) for the consolidated release blocker checklist.
 See [HP Diagnostic Preview Source Readiness Audit](hp-diagnostic-preview-source-readiness-audit.md) for the current source-only package readiness decision.
 See [HP Diagnostic Preview Readiness Checkpoint](hp-diagnostic-preview-readiness-checkpoint.md) for the stabilized HP Diagnostic preview state after proof-gap analyzer integration.

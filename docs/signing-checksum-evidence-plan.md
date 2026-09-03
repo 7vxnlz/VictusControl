@@ -104,6 +104,7 @@ For every released artifact, record:
 - checksum command/tool and verification result;
 - reviewer and review date;
 - confirmation that the artifact is the same one used for clean-machine validation;
+- reference to the clean-machine validation evidence record;
 - confirmation that release launcher behavior uses only `--hp-victus`;
 - confirmation that developer-only flags, logs, captured device data, and normal fan-control UI are absent.
 
@@ -133,3 +134,5 @@ For every released artifact, record:
 ## Recommended Next Safe Task
 
 Define a release-candidate evidence record template that combines package contents, `THIRD-PARTY-NOTICES.md` review status, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without publishing artifacts.
+
+See [Clean-Machine Validation Evidence Plan](clean-machine-validation-evidence-plan.md) for the validation evidence that must match the signed/checksummed artifact.
