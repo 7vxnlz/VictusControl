@@ -149,6 +149,31 @@ public sealed class HpDiagnosticPreviewConfigurationTests
         Assert.Contains("TextFormatFlags.SingleLine | TextFormatFlags.NoPadding", button, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void HpLiveTelemetry_HasOnlyOsQueriesAndCannotReachInheritedControls()
+    {
+        string source = ReadRepositoryFile("app", "Hardware", "Hp", "HpWindowsTelemetrySource.cs");
+        string provider = ReadRepositoryFile("app", "Hardware", "Hp", "HpReadOnlyTelemetry.cs");
+        foreach (string forbidden in new[] { "System.Management", "HpWmi", "hpqBIOSInt", "AsusACPI",
+            "HardwareControl", "IHardwareController", "DeviceSet", "Process.Start", "HpFanMaxExperiment", "DeviceValidatedInputLength" })
+        {
+            Assert.DoesNotContain(forbidden, source, StringComparison.Ordinal);
+            Assert.DoesNotContain(forbidden, provider, StringComparison.Ordinal);
+        }
+        Assert.Contains("GetSystemTimes", source, StringComparison.Ordinal);
+        Assert.Contains("GetSystemPowerStatus", source, StringComparison.Ordinal);
+
+        string settings = ReadRepositoryFile("app", "Settings.cs");
+        Assert.Contains("System.Windows.Forms.Timer(components)", settings, StringComparison.Ordinal);
+        Assert.Contains("hpLiveTelemetryTimer.Stop();", settings, StringComparison.Ordinal);
+        Assert.Contains("hpLiveTelemetryProvider?.Reset();", settings, StringComparison.Ordinal);
+        Assert.Contains("labelCPUFan.Click -= LabelCPUFan_Click;", settings, StringComparison.Ordinal);
+        Assert.Contains("labelGPUFan.Click -= LabelCPUFan_Click;", settings, StringComparison.Ordinal);
+        Assert.Contains("labelBattery.Click -= LabelBattery_Click;", settings, StringComparison.Ordinal);
+        Assert.Contains("label.AccessibleRole = AccessibleRole.StaticText;", settings, StringComparison.Ordinal);
+        Assert.Contains("if (AppConfig.IsHpVictusHardwareMode()) return;", settings, StringComparison.Ordinal);
+    }
+
     private static string ReadRepositoryFile(params string[] segments)
     {
         string repositoryRoot = FindRepositoryRoot();

@@ -48,7 +48,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 - HP mode is diagnostic-only and report-backed.
 - HP mode preserves the designer-owned inherited shell with unsupported controls disabled; its only HP-specific footer addition is Diagnostic, which opens the vertically scrollable read-only pulse-history and proof-gap sections as an owned side panel, analogous to the inherited Updates panel.
 - The HP inherited-shell UI visual blocker is resolved by manual confirmation; the compact shell, readable footer labels/icons, aligned disabled captions, and Diagnostic side-panel behavior are recorded in [HP Inherited Shell UI Final Checkpoint](hp-inherited-shell-ui-final-checkpoint.md).
-- The [HP UI/usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md) keeps the accepted visual restoration separate from the remaining live telemetry/capability gap. Read-only telemetry/status is the next implementation priority; preview package publish remains NO-GO.
+- The [HP UI/usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md) keeps the accepted visual restoration separate from capability proof. A narrow OS-only status provider now supplies CPU load and battery/presence/AC/charging state; device status uses existing snapshot/cached evidence. CPU/GPU temperature and fan RPM remain unavailable rather than guessed. This does not close package or control gates.
 - Normal HP fan and performance control remain unavailable; no active user-facing write route is exposed.
 - Developer-only four-byte SetFanMax Max Fan Pulse is operational under explicit CLI gates only; it is not a Diagnostic action or normal-control validation.
 - Normal fan control remains NO-GO, `DeviceValidatedInputLength` stays unset, FanMaxGet stays inconclusive, and FanGetLevel stays raw-only.
@@ -105,6 +105,6 @@ Defer automatic updates, startup registration, a production installer/store pack
 
 ## Recommended Next Safe Task
 
-The next product implementation priority is live read-only HP telemetry/status, scoped by the [usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md), with no HP WMI write/probe invocation. Packaging remains source-only: icon integration still needs an original/licensed asset, notices require evidence, and all remaining release gates stay open. Do not publish binaries or enable normal fan control.
+The next product task is a read-only source-validation design for CPU/GPU temperature and fan RPM, scoped by the [usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md), with no HP BIOS-method probe, EC, driver, or experiment invocation. Packaging remains source-only: icon integration still needs an original/licensed asset, notices require evidence, and all remaining release gates stay open. Do not publish binaries or enable normal fan control.
 
 See [HP Diagnostic Publish Profile Design](hp-diagnostic-publish-profile-design.md) for the proposed artifact name, dedicated launcher contract, deployment choice, and fail-closed pre-release checklist.

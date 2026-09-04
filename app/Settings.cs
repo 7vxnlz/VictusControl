@@ -40,6 +40,10 @@ namespace GHelper
         HpDiagnosticReportLoadResult? hpCachedDiagnosticReport;
         HpFanMaxPulseHistoryLoadResult? hpPulseHistory;
         HpFanProofGapAnalysis? hpFanProofGaps;
+        HpReadOnlyTelemetryProvider? hpLiveTelemetryProvider;
+        HpReadOnlyTelemetrySnapshot hpLiveTelemetry = HpReadOnlyTelemetrySnapshot.Unavailable;
+        System.Windows.Forms.Timer? hpLiveTelemetryTimer;
+        Label? hpLiveTelemetrySummary;
 
         public GPUModeControl gpuControl;
         public AllyControl allyControl;
@@ -266,7 +270,7 @@ namespace GHelper
 
             sensorTimer = new System.Timers.Timer(AppConfig.Get("sensor_timer", 1000));
             sensorTimer.Elapsed += OnTimedEvent;
-            sensorTimer.Enabled = sensorsAlways;
+            sensorTimer.Enabled = !AppConfig.IsHpVictusHardwareMode() && sensorsAlways;
 
             labelCharge.MouseEnter += PanelBattery_MouseEnter;
             labelCharge.MouseLeave += PanelBattery_MouseLeave;
@@ -331,6 +335,7 @@ namespace GHelper
             if (AppConfig.IsHpVictusHardwareMode())
             {
                 ConfigureHpReadOnlyShell();
+                InitializeHpLiveTelemetry();
                 hpMainShellPanel?.Focus();
             }
             else
@@ -438,6 +443,48 @@ namespace GHelper
             tableButtons.ResumeLayout();
         }
 
+        private void InitializeHpLiveTelemetry()
+        {
+            hpLiveTelemetryProvider = new HpReadOnlyTelemetryProvider(new HpWindowsTelemetrySource());
+            components ??= new System.ComponentModel.Container();
+            hpLiveTelemetryTimer = new System.Windows.Forms.Timer(components) { Interval = 1000 };
+            hpLiveTelemetryTimer.Tick += (_, _) => RefreshHpLiveTelemetry();
+
+            // These existing labels become status-only; remove their inherited action handlers.
+            labelCPUFan.Click -= LabelCPUFan_Click;
+            labelGPUFan.Click -= LabelCPUFan_Click;
+            labelBattery.Click -= LabelBattery_Click;
+            foreach (Label label in new[] { labelCPUFan, labelGPUFan, labelBattery, labelTipGPU })
+            {
+                label.Enabled = true;
+                label.Cursor = Cursors.Default;
+                label.AccessibleRole = AccessibleRole.StaticText;
+                label.ForeColor = foreMain;
+                label.TabStop = false;
+            }
+            ApplyHpLiveTelemetry();
+        }
+
+        private void RefreshHpLiveTelemetry()
+        {
+            if (!AppConfig.IsHpVictusHardwareMode() || !Visible || IsDisposed || Disposing || hpLiveTelemetryProvider is null) return;
+            hpLiveTelemetry = hpLiveTelemetryProvider.Capture(DateTimeOffset.UtcNow);
+            ApplyHpLiveTelemetry();
+        }
+
+        private void ApplyHpLiveTelemetry()
+        {
+            bool cachedIdentity = Program.hpVictusCapabilitySnapshot is null;
+            bool? detected = Program.hpVictusCapabilitySnapshot?.IsHpVictus ?? hpCachedDiagnosticReport?.GetHpVictusDetected();
+            HpReadOnlyTelemetryDisplay display = HpReadOnlyTelemetryFormatter.Format(
+                hpLiveTelemetry, DateTimeOffset.UtcNow, detected, cachedIdentity);
+            labelCPUFan.Text = display.Cpu;
+            labelGPUFan.Text = display.Gpu;
+            labelTipGPU.Text = display.FanAndDevice;
+            labelBattery.Text = display.Battery;
+            if (hpLiveTelemetrySummary is not null) hpLiveTelemetrySummary.Text = display.Summary;
+        }
+
         private void ConfigureHpReadOnlySection(Control parent)
         {
             foreach (Control control in parent.Controls)
@@ -517,6 +564,16 @@ namespace GHelper
                 Text = HpDiagnosticStatusText.SafetyWarning
             };
 
+            hpLiveTelemetrySummary = new Label
+            {
+                AutoSize = true,
+                Dock = DockStyle.Top,
+                ForeColor = foreMain,
+                MaximumSize = new Size(760, 0),
+                Padding = new Padding(10, 5, 10, 5),
+                AccessibleName = "Read-only OS telemetry sources and freshness"
+            };
+
             var details = new TableLayoutPanel
             {
                 AutoSize = true,
@@ -549,6 +606,7 @@ namespace GHelper
 
             panel.Controls.Add(actions);
             panel.Controls.Add(details);
+            panel.Controls.Add(hpLiveTelemetrySummary);
             panel.Controls.Add(hpReadOnlyTelemetryWarning);
             panel.Controls.Add(hpReadOnlyTelemetryHealth);
             panel.Controls.Add(hpReadOnlyTelemetrySource);
@@ -739,6 +797,7 @@ namespace GHelper
         {
             ReloadHpCachedDiagnosticReport();
             PopulateHpReadOnlyTelemetryPanel();
+            ApplyHpLiveTelemetry();
         }
 
         private void ButtonHpDiagnosticExport_Click(object? sender, EventArgs e)
@@ -1406,6 +1465,18 @@ namespace GHelper
         private void SettingsForm_VisibleChanged(object? sender, EventArgs e)
         {
             sensorTimer.Enabled = !AppConfig.IsHpVictusHardwareMode() && (this.Visible || sensorsAlways);
+            if (AppConfig.IsHpVictusHardwareMode() && hpLiveTelemetryTimer is not null)
+            {
+                hpLiveTelemetryTimer.Stop();
+                hpLiveTelemetryProvider?.Reset();
+                hpLiveTelemetry = HpReadOnlyTelemetrySnapshot.Unavailable;
+                ApplyHpLiveTelemetry();
+                if (Visible)
+                {
+                    RefreshHpLiveTelemetry();
+                    hpLiveTelemetryTimer.Start();
+                }
+            }
             if (this.Visible && !AppConfig.IsHpVictusHardwareMode())
             {
                 Task.Run((Action)RefreshPeripheralsBattery);

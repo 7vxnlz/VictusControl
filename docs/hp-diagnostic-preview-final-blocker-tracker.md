@@ -6,7 +6,7 @@ This tracker consolidates the current HP Diagnostic preview release blockers and
 
 ## Blocker Tracker
 
-The [HP UI/usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md) separates the resolved shell visual blocker from the remaining usefulness gap: live telemetry and truthful capability/status display are not yet implemented in HP mode. Its next implementation priority is read-only telemetry/status; unsupported controls remain disabled. This does not close any package evidence gate below.
+The [HP UI/usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md) separates the resolved shell visual blocker from the remaining usefulness gap. Its first status phase is implemented: the inherited shell displays read-only Windows CPU load and battery/presence/AC/charging status plus device detection, while unproven CPU/GPU temperature and fan RPM values fail closed as unavailable. Unsupported controls remain disabled, and this does not close any package evidence gate below.
 
 | Blocker | Current status | Required evidence | Owner/action | Related docs | Release decision |
 | --- | --- | --- | --- | --- | --- |
@@ -38,4 +38,4 @@ See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-
 
 ## Recommended Next Safe Task
 
-Implement live read-only HP telemetry/status using safe existing/local/OS sources as scoped by the [usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md), with unknown values where sources are unproven and no HP WMI write/probe invocation. Icon implementation still requires an original/licensed asset; license/notice and all other package evidence gates remain open. Preview package publish and normal fan control remain NO-GO.
+Design read-only source validation for CPU/GPU temperature and fan RPM as scoped by the [usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md). Unknown sensors must remain unavailable unless their identity and units are proven without HP BIOS-method probes, EC access, drivers, or experiments. Icon implementation still requires an original/licensed asset; license/notice and all other package evidence gates remain open. Preview package publish and normal fan control remain NO-GO.

@@ -4,6 +4,8 @@
 
 Audit date: 2026-09-04. This is a source-level audit and implementation roadmap only. No product code, control, telemetry polling, hardware behavior, or safety permission is changed. No app, probe, or experiment was run for this audit.
 
+Implementation update (2026-09-04): the first read-only telemetry phase is now implemented without changing the audit's control decisions. The compact HP shell samples CPU load through Windows `GetSystemTimes` and battery percentage/presence/AC/charging state through Windows `GetSystemPowerStatus`. Device detection comes from the existing startup capability snapshot, with cached diagnostic identity as a labeled fallback. CPU temperature, GPU temperature, and fan RPM remain `Unavailable` because no verified safe source exists; FanGetLevel is not used or interpreted as RPM. Polling runs on the UI thread only while the shell is visible, resets delta state when hidden, and marks samples stale after five seconds. Diagnostic shows the source and freshness summary as read-only text.
+
 The [inherited-shell checkpoint](hp-inherited-shell-ui-final-checkpoint.md) records the user's manual confirmation that HP mode looks good. Its compact geometry, aligned disabled captions, readable footer, and owned Diagnostic side panel are accepted. The remaining gap is usefulness: the familiar shell suggests live information and supported actions, but most inherited sections are deliberately unavailable in HP mode.
 
 The comparison baseline is the inherited G-Helper behavior already in this repository and the user's feedback. No sibling reference repository was read or copied; this is not a claim about the latest upstream feature set or HP support in another project. Existing attribution and licensing requirements remain intact. Target evidence is scoped to Victus 16-s0035nt / model 16-s0xxx / SKU 7Z5Z2EA#AB8 / BIOS F.31 / ThermalPolicyVersion 1, not all HP laptops.
@@ -32,19 +34,19 @@ Safety labels describe the proposed next action, not permission to enable an ent
 
 | Area | Current behavior | Desired useful behavior | Safety level | Current decision | Required evidence | Recommended next action |
 | --- | --- | --- | --- | --- | --- | --- |
-| Main shell and clarity | Accepted compact shell; many disabled sections | Concise real status and explicit unavailability | Safe read-only now | Preserve layout | Localized, accessible states; no action activation | Add status wording within telemetry work |
-| CPU load | OS sampling helper exists; HP refresh skipped | Live load with freshness | Safe read-only now | Candidate for read-only integration | Delta sampling, warm-up, resume, error handling | Use reviewed OS CPU-time reads |
-| CPU temperature/power | No live HP source wired | Identified CPU temperature; watts only when supported | Read-only possible with implementation | Availability conditional | Sensor identity, units, freshness, source initialization review | Use verified source or show unavailable |
+| Main shell and clarity | Accepted compact shell with live CPU load, battery/AC, device status, and explicit unavailable sensor values | Concise real status and explicit unavailability | Safe read-only now | Implemented read-only; preserve layout | Runtime visual confirmation where desktop automation can target the window | Keep controls disabled and details in Diagnostic |
+| CPU load | Live Windows `GetSystemTimes` delta with warm-up, stale, reset, and error handling | Live load with freshness | Safe read-only now | Implemented read-only | Runtime comparison remains useful; source/units are explicit | Preserve null rather than synthetic zero |
+| CPU temperature/power | No verified live HP source; shell shows temperature unavailable | Identified CPU temperature; watts only when supported | Read-only possible with implementation | Availability conditional | Sensor identity, units, freshness, source initialization review | Keep unavailable until a source is proven |
 | Fan count/history | Cached probe/log evidence; target count 2 | Clearly dated fan status | Safe read-only now | Historical evidence only | Matching device and capture provenance | Keep raw evidence in Diagnostic |
-| Fan RPM | No validated HP RPM source | Genuine per-fan RPM or unavailable | Needs proof | No numeric RPM inferred | Read-only tachometer source, units, fan mapping | Show unavailable until source proven |
+| Fan RPM | No validated HP RPM source; shell explicitly shows unavailable | Genuine per-fan RPM or unavailable | Needs proof | No numeric RPM inferred | Read-only tachometer source, units, fan mapping | Keep unavailable until source proven |
 | FanMaxGet / FanGetLevel | Inconclusive latch / raw bytes | Honest diagnostic interpretation | Safe read-only now | No state/control inference | Future independent correlation | Preserve inconclusive/raw labels |
-| GPU temperature/status | GPU provider setup bypassed in HP | Per-adapter temperature and observed activity | Read-only possible with implementation | Query-only candidate | Adapter identity, initialization side effects, sleeping-GPU behavior | Review narrow getter-only source |
+| GPU temperature/status | GPU provider setup bypassed in HP; shell shows temperature unavailable | Per-adapter temperature and observed activity | Read-only possible with implementation | Query-only candidate | Adapter identity, initialization side effects, sleeping-GPU behavior | Review a narrow getter-only source |
 | Performance mode | Disabled inherited mode tiles | Known current HP policy, if detectable | Needs proof | Writes blocked | Exact-device policy identity and read-only source | Separate detection from control design |
 | GPU mode | Disabled Eco/Standard/Ultimate/Optimized | Real topology/status, not assumed mode | Unknown | No equivalent HP mode proven | MUX/hybrid support and state semantics | Read-only capability research |
 | Display refresh detection | Disabled preset buttons | Current and supported OS display modes | Read-only possible with implementation | Detection before switching | Correct monitor/mode enumeration | Isolate enumeration from inherited setters |
 | Display refresh switching | HP path blocked | Explicit reversible OS-only change later | Needs proof | Design only | Supported modes, rollback, multi-display tests, no vendor calls | Defer until detection is proven |
 | Keyboard lighting | Disabled unpopulated/unselected inherited dropdown | Known backlight capability and status | Unknown | RGB and writes unproven | Exact keyboard identity/protocol/status evidence | Show unknown; research detection only |
-| Battery status | HP sensor refresh skipped; OS helpers exist | Charge, charging/discharging, AC, age | Safe read-only now | First useful telemetry candidate | Unknown/error semantics; no limit-setting callbacks | Use reviewed OS status-only path |
+| Battery status | Live Windows `GetSystemPowerStatus` percentage/presence/AC/charging display | Charge, charging/discharging, AC, age | Safe read-only now | Implemented read-only | Broader runtime cases and battery-age source remain separate | Preserve unknown/no-battery semantics; no limit callbacks |
 | Battery charge limit | Disabled inherited slider/default 100% | Genuine conservation capability/status | Needs proof | HP charge-limit writes blocked | Exact HP firmware support, units, range, restore | Label unavailable; research read-only capability |
 | Footer | Accepted rendering; Thank You/Updates disabled; Diagnostic/Quit work | Clear supported actions | Safe read-only now | Keep accepted footer | Localized unavailable reasons; future URL/update provenance | Clarify status without enabling updater |
 | Diagnostic | Cached reports, history, proof gaps, copy/export | Detailed provenance and troubleshooting | Safe read-only now | Preserve read-only side panel | Missing/corrupt/stale evidence tests | Keep research details off main shell |
@@ -157,7 +159,7 @@ Use a narrow, source-reviewed snapshot/presentation path, not the write-capable 
 
 Each field should carry value or null, units, source/sensor identity, capture time, and availability reason. Keep live readings separate from cached research evidence. Never substitute zero, a designer value, a stale experiment record, or a configured target for a measured value.
 
-Start with OS battery/AC status and CPU load where the existing source is strongest. Add CPU/GPU temperature and fan RPM only when a non-writing source is identified and verified for those meanings. The first useful release of this work may truthfully show unavailable temperature/RPM fields; it must not expand probing privileges to satisfy a numeric display requirement. No exact-target temperature or RPM provider was validated by this audit.
+OS battery/AC status and CPU load are now wired through a narrow source that contains only the two Windows status APIs. CPU/GPU temperature and fan RPM remain unavailable until a non-writing source is identified and verified for those meanings. This implementation does not expand probing privileges to satisfy a numeric display requirement. No exact-target temperature or RPM provider has been validated.
 
 Future polling should be bounded, non-overlapping, cancellable, and independent of automatic control. Pause or reduce work when hidden, reset stale/delta state after resume, marshal updates to the UI thread, and dispose on Quit. Choose sampling intervals compatible with the actual provider; do not silently reuse the CPU helper's long-pause reset with an incompatible poll interval. Avoid GPU wakeups, new privileged services/drivers, EC/MSR access, HP WMI write methods, and explicit HP read/write probes.
 
@@ -167,7 +169,7 @@ Future acceptance evidence: pure missing/error/stale/unit/source tests, no-write
 
 | Category | Scope |
 | --- | --- |
-| Safe to implement now as read-only, when requested | Local evidence presentation, explicit availability/freshness, source-reviewed OS CPU load and battery/AC status; temperature/fan status may remain unavailable. No behavior changes in this audit. |
+| Safe to implement now as read-only, when requested | Local evidence presentation and explicit availability/freshness. OS CPU load and battery/AC status are now implemented; temperature/fan status remains unavailable. |
 | Safe to design, not implement yet | OS-only reversible refresh switching; query-only keyboard/conservation detection; clearly attributed credits and a read-only VictusX update-status panel. |
 | Requires proof | Temperature sensor identity, GPU provider initialization/sleep effects, RPM units/mapping, current HP performance/GPU mode, lighting/charge-limit support, and every prospective non-fan write/restore path. |
 | Blocked / NO-GO | Normal fan UI, sliders/toggles/curves, pulse/run buttons, generic fan-control APIs, automatic/background writes, performance/power writes, SetFanMode, SetFanLevel, 0x37, EC writes, and unsupported inherited routes. |
@@ -208,15 +210,15 @@ Phases are a dependency order, not approval to execute them. Package preparation
 
 ## 18. Concrete Next Safe Implementation Task
 
-Implement live read-only HP telemetry/status display for CPU temperature, GPU temperature, fan RPM/status, and battery status using safe existing/local/OS telemetry sources only, with no HP WMI write/probe invocation.
+Design a read-only source-validation task for CPU/GPU temperature and fan RPM without invoking HP BIOS methods, EC access, drivers, or experiments. The design must identify sensor identity, units, initialization side effects, sleep behavior, freshness, and independent comparison evidence before any additional live value is implemented.
 
-This is one implementation task: preserve the accepted shell/Diagnostic layout, include clear unavailable/freshness states, and integrate only source-reviewed reads. Return unknown/unavailable for any requested sensor lacking a safe, identified source. Do not install drivers, invoke BIOS methods, enable inherited controls, or interpret raw fan bytes to fill missing readings. CPU load may provide an additional verified OS status within the same task.
+Until that proof exists, keep the current truthful `Unavailable` values. Do not install drivers, invoke BIOS methods, enable inherited controls, or interpret raw fan bytes to fill missing readings. OS CPU load and battery/AC status are already implemented through their narrow read-only provider.
 
 ## Verification And Limits
 
-`dotnet build VictusX.sln` passed on 2026-09-04 with 0 errors and 4 recurring NU1900 audit-source warnings. `dotnet test VictusX.sln` passed 203/203 tests with none skipped. These results are also recorded in `SESSION_STATE.md`; the vulnerability-audit warning disposition remains open.
+`dotnet build VictusX.sln` passed on 2026-09-04 with 0 errors and 4 recurring NU1900 audit-source warnings. `dotnet test VictusX.sln` passed 220/220 tests with none skipped. New pure tests cover missing/invalid/stale CPU and power samples, source independence, formatter fail-closed behavior, cached identity labeling, and the no-temperature/no-RPM boundary.
 
-No product tests were added for this documentation-only change. Existing safety/UI tests provide regression evidence, not live source accuracy, new visual confirmation, package readiness, or permission to write. The accepted UI appearance remains based on the recorded user confirmation. No artifacts were published, no release artifacts created, and nothing committed.
+The normal `--hp-victus` process launched and remained responsive. Runtime logs confirmed that explicit HP BIOS-method probes were skipped because the required developer flag was absent. The desktop automation helper could not enumerate the untitled borderless VictusX window, so this run did not produce independent screenshot verification; the accepted shell appearance remains based on the prior recorded manual confirmation. No artifact was published or created, and nothing was committed.
 
 ## Final Decisions
 
@@ -224,4 +226,4 @@ No product tests were added for this documentation-only change. Existing safety/
 - Preview package publish: NO-GO
 - Developer-only 4-byte Max Fan Pulse: operational under explicit CLI gates only
 - Normal/user-facing fan control: NO-GO
-- Next safe implementation: live read-only telemetry/status
+- Next safe implementation: read-only CPU/GPU temperature and fan-RPM source validation design
