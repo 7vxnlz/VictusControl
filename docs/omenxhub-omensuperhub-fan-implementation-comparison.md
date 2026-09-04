@@ -130,7 +130,7 @@ Only behavior-level ideas may be reconsidered after a separate implementation de
 - surface transport return codes instead of hiding failures
 - keep disable/restore metadata paired with enable metadata
 
-VictusX already implements these ideas more safely for the developer-only four-byte pulse. There is no current need to port reference fan-control code.
+VictusX already implements these ideas more safely for its developer-only four-byte pulse and bounded [Max Fan Hold command](set-fan-max-developer-hold-command.md). The hold reuses the same fixed metadata, exact-device gates, one-attempt behavior, `finally` restore, and append-only evidence model for `10` to `180` seconds. It does not port reference code or persistent reference control behavior.
 
 ## What Must Not Be Ported Yet
 
@@ -145,11 +145,11 @@ VictusX already implements these ideas more safely for the developer-only four-b
 
 ## Recommended Next Implementation Step
 
-Do not port a fan-control implementation. If further source work is authorized, add a pure no-hardware reference-conformance test/design that locks the existing `FourByteMaxFanPulse` metadata, exact WMI identity, one-attempt behavior, and `finally` restore while explicitly rejecting one-byte defaulting, SetFanLevel, SetFanMode, `0x37`, EC, retry, and fallback behavior. Any runtime or UI expansion requires a separate proof decision.
+Do not port a fan-control implementation. The bounded developer hold is the only approved source-level extension: it locks the existing `FourByteMaxFanPulse` metadata, exact WMI identity, one-attempt behavior, and `finally` restore while rejecting one-byte defaulting, SetFanLevel, SetFanMode, `0x37`, EC, retry, and fallback behavior. Any execution, runtime expansion, or UI exposure requires a separate proof decision.
 
 ## Final Decision
 
-- Developer-only four-byte Max Fan Pulse: operational under explicit CLI gates only.
+- Developer-only four-byte Max Fan Pulse/Hold: allowed under separate explicit CLI gates only; the hold has not been executed as part of its implementation.
 - Normal/user-facing fan control: **NO-GO**.
 - No fan UI until separate evidence exists.
 - `DeviceValidatedInputLength` remains unset.

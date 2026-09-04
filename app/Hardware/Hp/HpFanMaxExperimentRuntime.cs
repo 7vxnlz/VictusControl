@@ -152,5 +152,13 @@ public sealed class HpFanMaxExperimentAcPowerProvider
 
 public sealed class HpFanMaxExperimentDelay : IHpFanMaxExperimentDelay
 {
-    public void WaitAfterEnable() => Thread.Sleep(TimeSpan.FromSeconds(3));
+    public void WaitAfterEnable(TimeSpan duration)
+    {
+        if (duration <= TimeSpan.Zero || duration > TimeSpan.FromSeconds(HpFanMaxHoldCommand.MaximumHoldSeconds))
+        {
+            throw new ArgumentOutOfRangeException(nameof(duration), "SetFanMax wait duration must be positive and bounded.");
+        }
+
+        Thread.Sleep(duration);
+    }
 }

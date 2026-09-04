@@ -29,6 +29,7 @@
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentLogRecord.cs" Link="Hardware\Hp\HpFanMaxExperimentLogRecord.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentManualObservation.cs" Link="Hardware\Hp\HpFanMaxExperimentManualObservation.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxPulseCommand.cs" Link="Hardware\Hp\HpFanMaxPulseCommand.cs" />
+    <Compile Include="..\..\app\Hardware\Hp\HpFanMaxHoldCommand.cs" Link="Hardware\Hp\HpFanMaxHoldCommand.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxPulseHistoryLoader.cs" Link="Hardware\Hp\HpFanMaxPulseHistoryLoader.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanProofGapAnalyzer.cs" Link="Hardware\Hp\HpFanProofGapAnalyzer.cs" />
     <Compile Include="..\..\app\Hardware\Hp\HpFanMaxExperimentOutcomeClassifier.cs" Link="Hardware\Hp\HpFanMaxExperimentOutcomeClassifier.cs" />

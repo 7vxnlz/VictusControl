@@ -42,6 +42,8 @@ public sealed record HpFanMaxExperimentLogRecord
     public int? ThermalPolicyVersion { get; init; }
     public HpFanMaxExperimentPayloadLengthCandidate? PayloadLengthCandidate { get; init; }
     public string? PayloadBytesHypothesis { get; init; }
+    public string? DeveloperOnlyOperation { get; init; }
+    public int? RequestedHoldSeconds { get; init; }
     public string Command { get; init; } = "0x20008";
     public string CommandType { get; init; } = "0x27";
     public string WmiClass { get; init; } = "hpqBIntM";

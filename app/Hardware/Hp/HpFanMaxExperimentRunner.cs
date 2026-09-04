@@ -55,7 +55,7 @@ public interface IHpFanMaxExperimentWriteTransport
 
 public interface IHpFanMaxExperimentDelay
 {
-    void WaitAfterEnable();
+    void WaitAfterEnable(TimeSpan duration);
 }
 
 public sealed class HpFanMaxExperimentRunner(
@@ -66,6 +66,7 @@ public sealed class HpFanMaxExperimentRunner(
     private const string TargetSku = "7Z5Z2EA#AB8";
     private const string TargetBios = "F.31";
     private const int TargetThermalPolicyVersion = 1;
+    private static readonly TimeSpan DefaultExperimentDelay = TimeSpan.FromSeconds(3);
 
     public HpFanMaxExperimentRunResult Run(
         HpFanMaxPulseCommandResult command,
@@ -86,12 +87,42 @@ public sealed class HpFanMaxExperimentRunner(
             return Blocked(null, null, false, ["Max Fan Pulse is not an allowed developer-only research operation."]);
         }
 
-        return Run(command.CreateRunnerCommand(), gates);
+        return Run(command.CreateRunnerCommand(), gates, DefaultExperimentDelay);
+    }
+
+    public HpFanMaxExperimentRunResult Run(
+        HpFanMaxHoldCommandResult command,
+        HpFanMaxExperimentRuntimeGates gates)
+    {
+        ArgumentNullException.ThrowIfNull(command);
+        ArgumentNullException.ThrowIfNull(gates);
+
+        if (!command.IsValidRequest ||
+            command.HoldSeconds is not int holdSeconds ||
+            !HpFanMaxHoldCommand.IsDurationAllowed(holdSeconds))
+        {
+            return Blocked(command.Payload, null, false, command.ValidationReasons);
+        }
+
+        IHpFanMaxPulseResearchOperation operation = command.Operation;
+        if (operation.Descriptor.Kind != HpFanResearchOperationKind.FourByteMaxFanPulse ||
+            operation.Descriptor.Status != HpFanResearchOperationStatus.DeveloperOnlyResearch)
+        {
+            return Blocked(command.Payload, null, false, ["Max Fan Hold is not an allowed developer-only research operation."]);
+        }
+
+        return Run(command.CreateRunnerCommand(), gates, TimeSpan.FromSeconds(holdSeconds));
     }
 
     public HpFanMaxExperimentRunResult Run(
         HpFanMaxExperimentRunnerCommandResult command,
-        HpFanMaxExperimentRuntimeGates gates)
+        HpFanMaxExperimentRuntimeGates gates) =>
+        Run(command, gates, DefaultExperimentDelay);
+
+    private HpFanMaxExperimentRunResult Run(
+        HpFanMaxExperimentRunnerCommandResult command,
+        HpFanMaxExperimentRuntimeGates gates,
+        TimeSpan waitAfterEnable)
     {
         ArgumentNullException.ThrowIfNull(command);
         ArgumentNullException.ThrowIfNull(gates);
@@ -186,7 +217,7 @@ public sealed class HpFanMaxExperimentRunner(
             }
             else
             {
-                delay.WaitAfterEnable();
+                delay.WaitAfterEnable(waitAfterEnable);
                 postEnable = readOnlyProvider.ReadFanStatus();
                 if (!enable.Succeeded || !postEnable.Succeeded || postEnable.FanMaxGetEnabled != true)
                 {

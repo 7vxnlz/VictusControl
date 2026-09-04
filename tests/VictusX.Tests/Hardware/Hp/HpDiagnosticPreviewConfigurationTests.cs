@@ -50,7 +50,35 @@ public sealed class HpDiagnosticPreviewConfigurationTests
         Assert.DoesNotContain("--hp-fan-write-experiment", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("HpFanMaxPulseCommand", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("--hp-fan-max-pulse", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("HpFanMaxHoldCommand", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("--hp-fan-max-hold", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("HpWmiInvocationClient", settings, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DeveloperHoldRoute_HasNoLowLevelOrGenericFanFallbackSurface()
+    {
+        string source = string.Join(
+            Environment.NewLine,
+            ReadRepositoryFile("app", "Hardware", "Hp", "HpFanMaxHoldCommand.cs"),
+            ReadRepositoryFile("app", "Hardware", "Hp", "HpFanMaxExperimentRunner.cs"),
+            ReadRepositoryFile("app", "Hardware", "Hp", "HpFanMaxExperimentRuntime.cs"));
+        string[] forbiddenTerms =
+        [
+            "PawnIO",
+            "PwnIO",
+            "WinRing0",
+            "LibreHardwareMonitor",
+            "EmbeddedController",
+            "SetFanMode",
+            "SetFanLevel",
+            "0x37"
+        ];
+
+        foreach (string forbiddenTerm in forbiddenTerms)
+        {
+            Assert.DoesNotContain(forbiddenTerm, source, StringComparison.OrdinalIgnoreCase);
+        }
     }
 
     [Fact]

@@ -6,14 +6,14 @@ Define a narrow internal boundary for future HP fan-control research without tre
 
 ## Current Supported Operation
 
-The only operational research action is the developer-only four-byte SetFanMax Max Fan Pulse:
+The only supported research metadata remains the developer-only four-byte SetFanMax Max Fan Pulse:
 
 - enable payload: `01-00-00-00`
 - matching restore payload: `00-00-00-00`
 - command: `0x20008`, command type: `0x27`
 - WMI class/method: `hpqBIntM` / `hpqBIOSInt0`
 
-It is command-line-only, separately approval-gated, exact-device-gated, elevation-gated, AC-gated, baseline-gated, single-attempt, matching-restore, and append-only logged. It is not exposed through Settings, the tray, or the Diagnostic dashboard.
+It is command-line-only, separately approval-gated, exact-device-gated, elevation-gated, AC-gated, baseline-gated, single-attempt, matching-restore, and append-only logged. The bounded [Max Fan Hold command](set-fan-max-developer-hold-command.md) reuses this exact operation metadata with an independently required approval and a `10`-to-`180`-second foreground wait. Duration is execution policy, not a new generic fan-control operation. Neither route is exposed through Settings, the tray, or the Diagnostic dashboard.
 
 ## Explicitly Unsupported Operations
 
@@ -36,9 +36,9 @@ The pure `HpFanResearchContracts` layer records these narrow roles. Its fixed fo
 - `IHpFanResearchLogSink`: appends an immutable research record under `%APPDATA%\VictusX\Logs\FanExperiments\`.
 - `IHpFanResearchOutcomeClassifier`: separates command return, manually observed physical response, observed restore, and readback reliability without declaring product readiness.
 
-`HpFanResearchOperationKind` has only `FourByteMaxFanPulse`. The associated operation descriptor keeps `DeviceValidatedInputLength` null. `IHpFanResearchOperation` and `IHpFanMaxPulseResearchOperation` describe fixed pulse metadata only; neither exposes execution or generic fan-control methods. The pulse parser now carries that operation and the existing runner accepts it through a behavior-preserving pulse-specific overload.
+`HpFanResearchOperationKind` still has only `FourByteMaxFanPulse`. The associated operation descriptor keeps `DeviceValidatedInputLength` null. `IHpFanResearchOperation` and `IHpFanMaxPulseResearchOperation` describe fixed metadata only; neither exposes execution or generic fan-control methods. The pulse and hold parsers carry that same operation, while the existing runner accepts each through narrow overloads. The hold cannot select payload length and contributes only a validated bounded duration plus log metadata.
 
-Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. The pulse-specific contract wiring changes no flags, gates, bytes, retries, fallback behavior, restore path, log location, UI, or tray route. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
+Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline provider, log writer, and outcome classifier already map to these responsibilities. Pulse and hold share the fixed bytes, no-retry/no-fallback behavior, restore path, and log location; the hold adds only its own CLI approval and bounded delay. Keep any future refactor internal and behavior-preserving; do not create a broad `IFanControlService`.
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records the same four-byte enable/restore behavior with observed response and restore. It is developer-only evidence, not normal-control validation.
 
@@ -78,4 +78,4 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 ## Recommended Next Implementation Step
 
-If further source work is authorized, add pure no-hardware conformance coverage for the existing fixed four-byte metadata, exact WMI identity, single attempt, and `finally` restore. Do not copy a reference implementation or expose these contracts to UI, configuration, tray, APIs, timers, fallback transports, or background services.
+Complete pure no-hardware conformance review for the bounded hold and leave it unexecuted until a separate operator decision. Do not copy a reference implementation or expose pulse/hold contracts to UI, configuration, tray, APIs, recurring timers, fallback transports, or background services.

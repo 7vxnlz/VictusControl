@@ -396,5 +396,5 @@ public sealed class HpFanMaxExperimentRunnerTests
         }
     }
 
-    private sealed class NoDelay : IHpFanMaxExperimentDelay { public void WaitAfterEnable() { } }
+    private sealed class NoDelay : IHpFanMaxExperimentDelay { public void WaitAfterEnable(TimeSpan duration) { } }
 }

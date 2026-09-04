@@ -132,6 +132,6 @@ public sealed class HpFanMaxPulseCommandTests
 
     private sealed class NoDelay : IHpFanMaxExperimentDelay
     {
-        public void WaitAfterEnable() { }
+        public void WaitAfterEnable(TimeSpan duration) { }
     }
 }

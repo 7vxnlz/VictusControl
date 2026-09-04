@@ -41,6 +41,8 @@ The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) confirms that this
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) confirms that replacing inline pulse bytes with fixed four-byte contract metadata preserved this developer-only behavior. It does not change payload-selection or normal-control evidence.
 
+The bounded [developer Max Fan Hold command](set-fan-max-developer-hold-command.md) reuses that same fixed four-byte metadata for a foreground `10`-to-`180`-second interval, with its own approval flag and the existing exact-device, baseline, single-attempt, `finally` restore, and append-only log safeguards. The hold accepts no payload-length option, adds no fallback, and does not strengthen normal-control validation.
+
 The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) keeps payload strategy separate from product readiness: four byte is operational for gated developer pulse research, while no payload is selected for normal fan control.
 
 The [pulse history/status view design](set-fan-max-pulse-history-status-view-design.md) proposes a local-file-only dashboard summary for reviewing this evidence without adding a control path.
@@ -55,6 +57,6 @@ The [pulse history/status view design](set-fan-max-pulse-history-status-view-des
 
 ## Recommended Next Safe Step
 
-The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) defines a narrow internal boundary around the developer-only pulse path. Any future extraction must preserve explicit gates, single-attempt restore, append-only evidence, and the normal-control **NO-GO** state.
+The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) defines a narrow internal boundary around the developer-only pulse/hold path. Any future extraction must preserve separate explicit gates, bounded execution, single-attempt restore, append-only evidence, and the normal-control **NO-GO** state.
 
 Do not import either reference control flow. A future pure, no-hardware conformance test may record the common WMI identity while rejecting one-byte defaulting, normal UI, retries, alternate payload fallback, SetFanLevel, SetFanMode, `0x37`, EC access, and recurring writes.
