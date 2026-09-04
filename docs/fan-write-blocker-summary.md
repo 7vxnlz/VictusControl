@@ -37,6 +37,8 @@ The research contracts represent only `FourByteMaxFanPulse`, fail-closed gates, 
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records a successful bounded developer pulse after that wiring. FanMaxGet remained inconclusive and `DeviceValidatedInputLength` remained unset, so the result does not alter normal-control **NO-GO**.
 
+The [OmenXHub/OmenSuperHub implementation comparison](omenxhub-omensuperhub-fan-implementation-comparison.md) finds an exact reference match for the SetFanMax WMI class, method, command, and command type, but both repositories use one-byte payloads and omit VictusX's bounded gates and `finally` restore evidence. OmenSuperHub is the narrower SetFanMax source to study; OmenXHub's PawnIO EC fallback, recurring SetFanLevel writes, SetFanMode, `0x37`, curves, and APIs must not enter VictusX. This reference evidence does not select a payload or change **NO-GO**.
+
 The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) is the current source-of-truth for what remains missing before user-facing fan control can even be reconsidered.
 
 The [normal fan control proof priority plan](normal-fan-control-proof-priority-plan.md) ranks the blockers. `DeviceValidatedInputLength`, readback reliability, restore proof, thermal/power safety, and recovery behavior must be proven before normal fan control can move out of **NO-GO**.

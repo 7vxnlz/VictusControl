@@ -42,6 +42,8 @@ Existing `HpFanMaxExperimentRunner`, `HpFanMaxExperimentWmiTransport`, baseline 
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) records the same four-byte enable/restore behavior with observed response and restore. It is developer-only evidence, not normal-control validation.
 
+The [OmenXHub/OmenSuperHub implementation comparison](omenxhub-omensuperhub-fan-implementation-comparison.md) confirms a common BIOS-only SetFanMax identity but also shows why this boundary must stay narrow. OmenSuperHub is the closer source to study for explicit Max Fan on/off semantics; OmenXHub offers useful transport-serialization evidence but also contains PawnIO direct-EC fallback, timer-driven SetFanLevel, SetFanMode, `0x37`, and broader control APIs. None of those broader paths belong in this abstraction.
+
 The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) defines the broader evidence threshold that must be met before any user-facing fan-control design can move out of NO-GO.
 
 ## Required Safety Gates
@@ -76,4 +78,4 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 ## Recommended Next Implementation Step
 
-If a behavior-preserving refactor is later authorized, adapt the existing developer-pulse gate, baseline, transport, logging, and classification code to these contracts with pure tests. Do not expose them to UI, configuration, tray, or background services.
+If further source work is authorized, add pure no-hardware conformance coverage for the existing fixed four-byte metadata, exact WMI identity, single attempt, and `finally` restore. Do not copy a reference implementation or expose these contracts to UI, configuration, tray, APIs, timers, fallback transports, or background services.

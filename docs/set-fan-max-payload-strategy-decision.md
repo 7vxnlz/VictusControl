@@ -8,7 +8,7 @@ On HP Victus `16-s0035nt`, SKU `7Z5Z2EA#AB8`, BIOS `F.31`, ThermalPolicyVersion 
 - One byte (`01` / `00`) has one exact-device physical-response record. Enable and restore returned success; FanMaxGet stayed `false`.
 - Raw FanGetLevel changes are raw-only and inconclusive. FanMaxGet is not a reliable sole success criterion.
 
-The references remain split: OmenXHub/OmenSuperHub use one byte, while omencore/ghelper-omen use four bytes. Four byte has the closer Victus/V1 reference context and more exact-device confirmation records.
+The references remain split: OmenXHub/OmenSuperHub use one byte, while omencore/ghelper-omen use four bytes. The [OmenXHub/OmenSuperHub implementation comparison](omenxhub-omensuperhub-fan-implementation-comparison.md) confirms that both one-byte references otherwise match the VictusX WMI class, method, command, and command type. OmenSuperHub is the narrower behavior source to study, but neither reference supplies bounded restore/readback proof. Four byte retains the closer Victus/V1 reference context and more exact-device confirmation records.
 
 ## Interpretation
 
@@ -56,3 +56,5 @@ The [pulse history/status view design](set-fan-max-pulse-history-status-view-des
 ## Recommended Next Safe Step
 
 The [HP fan control research abstraction design](hp-fan-control-research-abstraction-design.md) defines a narrow internal boundary around the developer-only pulse path. Any future extraction must preserve explicit gates, single-attempt restore, append-only evidence, and the normal-control **NO-GO** state.
+
+Do not import either reference control flow. A future pure, no-hardware conformance test may record the common WMI identity while rejecting one-byte defaulting, normal UI, retries, alternate payload fallback, SetFanLevel, SetFanMode, `0x37`, EC access, and recurring writes.
