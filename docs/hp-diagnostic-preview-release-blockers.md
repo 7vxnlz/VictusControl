@@ -16,8 +16,9 @@ See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-
 
 ## Completed Prerequisites
 
-- HP diagnostic mode launches with `--hp-victus` and uses a Diagnostic/Quit-only shell.
+- HP diagnostic mode launches with `--hp-victus` and preserves the inherited compact G-Helper-style shell with unsupported HP controls disabled/read-only.
 - HP read-only diagnostic dashboard is report-backed and local-file-only.
+- HP inherited-shell UI visual confirmation is recorded: footer labels/icons are readable, disabled captions are aligned, and Diagnostic opens as an owned read-only side panel.
 - User-facing safety notes exist for the future preview entry path.
 - Final source-only readiness audit exists for the current preview package state.
 - HP capability report schema metadata persists.
@@ -31,6 +32,7 @@ See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-
 
 Treat [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) as the concise source-of-truth table for current release blockers.
 
+- Preserve the resolved inherited-shell UI state during future release-prep changes.
 - Complete package-license and notice review from authoritative package metadata.
 - Replace inherited G-Helper visual identity with approved VictusX icon/app assets.
 - Define and verify signing and checksum output for the final package.
@@ -102,4 +104,4 @@ These are intentional safety conditions, not release tasks to unblock.
 
 ## Recommended Next Safe Task
 
-Use [HP Diagnostic Preview Final Blocker Tracker](hp-diagnostic-preview-final-blocker-tracker.md) and [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) to drive the next release-candidate evidence record template without publishing artifacts.
+Proceed to icon/app identity asset implementation only after an original or properly licensed VictusX icon asset exists. If no approved asset is available yet, continue license/notice review evidence without publishing artifacts.

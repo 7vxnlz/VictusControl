@@ -6,8 +6,11 @@ This tracker consolidates the current HP Diagnostic preview release blockers and
 
 ## Blocker Tracker
 
+The [HP UI/usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md) separates the resolved shell visual blocker from the remaining usefulness gap: live telemetry and truthful capability/status display are not yet implemented in HP mode. Its next implementation priority is read-only telemetry/status; unsupported controls remain disabled. This does not close any package evidence gate below.
+
 | Blocker | Current status | Required evidence | Owner/action | Related docs | Release decision |
 | --- | --- | --- | --- | --- | --- |
+| HP inherited-shell UI visual state | Resolved | Manual confirmation that HP mode preserves the compact inherited shell, readable footer labels/icons, aligned disabled captions, and owned Diagnostic side-panel behavior | Recorded; preserve this state during future release-prep edits | [Inherited shell UI checkpoint](hp-inherited-shell-ui-final-checkpoint.md), [Source-only readiness checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) | GO for source-only preview prep; not a package-publish approval |
 | Icon/app identity | Blocked | Original or properly licensed VictusX icon asset, provenance, attribution decision, executable/window/tray/Explorer verification, rollback evidence | Maintainer to approve asset and verify integration later | [Icon requirements](victusx-icon-asset-requirements.md), [Icon identity plan](victusx-icon-app-identity-plan.md), [Icon implementation plan](victusx-icon-app-identity-implementation-plan.md) | NO-GO until approved asset and verification exist |
 | Package license/notices | Blocked | Reviewed project license packaging, G-Helper modified-project attribution, source revision, HP/OMEN wording review, final package notice contents | Maintainer to complete notice review from authoritative evidence | [Notices audit](third-party-notices-audit.md), [Notices completion plan](package-license-third-party-notices-completion-plan.md), [Package license workflow](package-license-review-workflow.md) | NO-GO until reviewed notice set is complete |
 | Runtime dependency license review | Blocked | Authoritative identity, version, license source, notice requirement, bundling requirement, attribution requirement, artifact presence, reviewer/date for every runtime candidate | Maintainer to review direct and transitive runtime packages | [Dependency inventory](dependency-notice-inventory.md), [Runtime dependency checklist](runtime-dependency-license-review-evidence-checklist.md) | NO-GO until every runtime dependency is reviewed or excluded by artifact evidence |
@@ -24,6 +27,8 @@ This tracker consolidates the current HP Diagnostic preview release blockers and
 - Preview package publish: NO-GO.
 - Normal/user-facing fan control: NO-GO.
 - Developer-only 4-byte Max Fan Pulse: operational under explicit command-line gates only.
+- HP inherited-shell UI visual blocker: resolved by manual confirmation.
+- Diagnostic side-panel behavior: resolved and accepted.
 
 HP mode preserves the designer-owned inherited shell while disabling unsupported performance, GPU, display, keyboard, battery, and fan interactions. Diagnostic is the only HP-specific footer addition and opens a vertically scrollable owned side panel using the inherited Updates-style secondary-window pattern without adding a control surface.
 
@@ -33,4 +38,4 @@ See [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-
 
 ## Recommended Next Safe Task
 
-Create a release-candidate evidence record template that ties this tracker and [HP Diagnostic Source-Only Readiness Final Checkpoint](hp-diagnostic-source-only-readiness-final-checkpoint.md) to final package contents, reviewed notices, `NU1900` disposition, signing/checksum evidence, and clean-machine validation without creating or publishing artifacts.
+Implement live read-only HP telemetry/status using safe existing/local/OS sources as scoped by the [usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md), with unknown values where sources are unproven and no HP WMI write/probe invocation. Icon implementation still requires an original/licensed asset; license/notice and all other package evidence gates remain open. Preview package publish and normal fan control remain NO-GO.

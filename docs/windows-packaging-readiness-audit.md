@@ -47,9 +47,11 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 
 - HP mode is diagnostic-only and report-backed.
 - HP mode preserves the designer-owned inherited shell with unsupported controls disabled; its only HP-specific footer addition is Diagnostic, which opens the vertically scrollable read-only pulse-history and proof-gap sections as an owned side panel, analogous to the inherited Updates panel.
-- Fan and performance control are not implemented.
-- Fan writes are not implemented.
-- SetFanMax remains NO-GO/design-only.
+- The HP inherited-shell UI visual blocker is resolved by manual confirmation; the compact shell, readable footer labels/icons, aligned disabled captions, and Diagnostic side-panel behavior are recorded in [HP Inherited Shell UI Final Checkpoint](hp-inherited-shell-ui-final-checkpoint.md).
+- The [HP UI/usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md) keeps the accepted visual restoration separate from the remaining live telemetry/capability gap. Read-only telemetry/status is the next implementation priority; preview package publish remains NO-GO.
+- Normal HP fan and performance control remain unavailable; no active user-facing write route is exposed.
+- Developer-only four-byte SetFanMax Max Fan Pulse is operational under explicit CLI gates only; it is not a Diagnostic action or normal-control validation.
+- Normal fan control remains NO-GO, `DeviceValidatedInputLength` stays unset, FanMaxGet stays inconclusive, and FanGetLevel stays raw-only.
 
 ## Pre-release Checklist
 
@@ -78,7 +80,7 @@ The IDE launch profile is not embedded into a published executable. Any preview 
 
 ## Change Now
 
-Keep the explicit VictusX metadata aligned with the future artifact version, then replace the inherited icon and complete the packaged smoke-test checklist before any release work.
+Keep the explicit VictusX metadata aligned with the future artifact version. Proceed to icon/app identity asset implementation only after an original or properly licensed VictusX icon asset exists; otherwise continue license/notice review evidence before any release work.
 
 See [Third-Party Notices Audit](third-party-notices-audit.md) for the source-attribution and package-notice distribution gate.
 See [Package License And Third-Party Notices Completion Plan](package-license-third-party-notices-completion-plan.md) before drafting or reviewing package notices for a preview candidate.
@@ -103,6 +105,6 @@ Defer automatic updates, startup registration, a production installer/store pack
 
 ## Recommended Next Safe Task
 
-Design the dedicated HP diagnostic publish profile and preview artifact contract as documentation and MSBuild metadata only; do not publish binaries yet.
+The next product implementation priority is live read-only HP telemetry/status, scoped by the [usefulness gap audit](hp-victus-ui-usefulness-gap-audit.md), with no HP WMI write/probe invocation. Packaging remains source-only: icon integration still needs an original/licensed asset, notices require evidence, and all remaining release gates stay open. Do not publish binaries or enable normal fan control.
 
 See [HP Diagnostic Publish Profile Design](hp-diagnostic-publish-profile-design.md) for the proposed artifact name, dedicated launcher contract, deployment choice, and fail-closed pre-release checklist.
