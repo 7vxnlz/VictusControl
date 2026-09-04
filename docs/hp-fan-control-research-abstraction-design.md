@@ -13,7 +13,7 @@ The only supported research metadata remains the developer-only four-byte SetFan
 - command: `0x20008`, command type: `0x27`
 - WMI class/method: `hpqBIntM` / `hpqBIOSInt0`
 
-It is command-line-only, separately approval-gated, exact-device-gated, elevation-gated, AC-gated, baseline-gated, single-attempt, matching-restore, and append-only logged. The bounded [Max Fan Hold command](set-fan-max-developer-hold-command.md) reuses this exact operation metadata with an independently required approval and a `10`-to-`180`-second foreground wait. Duration is execution policy, not a new generic fan-control operation. Neither route is exposed through Settings, the tray, or the Diagnostic dashboard.
+It is command-line-only, separately approval-gated, exact-device-gated, elevation-gated, AC-gated, baseline-gated, single-attempt, matching-restore, and append-only logged. The bounded [Max Fan Hold command](set-fan-max-developer-hold-command.md) reuses this exact operation metadata with an independently required approval and a `10`-to-`180`-second foreground pre-restore wait. The [first result](set-fan-max-developer-hold-first-result.md) shows that physical response can outlast that wait, so duration is runner execution policy, not a physical fan-duration control or new generic fan-control operation. Neither route is exposed through Settings, the tray, or the Diagnostic dashboard.
 
 ## Explicitly Unsupported Operations
 
@@ -78,4 +78,4 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 ## Recommended Next Implementation Step
 
-Complete pure no-hardware conformance review for the bounded hold and leave it unexecuted until a separate operator decision. Do not copy a reference implementation or expose pulse/hold contracts to UI, configuration, tray, APIs, recurring timers, fallback transports, or background services.
+Design a documentation-only observation protocol for a future separately approved hold run. It must distinguish requested pre-restore wait from physical response duration and must not expose pulse/hold contracts to UI, configuration, tray, APIs, recurring timers, fallback transports, or background services.

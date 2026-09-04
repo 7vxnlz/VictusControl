@@ -41,7 +41,7 @@ The [pulse result](set-fan-max-4byte-max-fan-pulse-result.md) confirms that this
 
 The [contract-refactor runtime verification](set-fan-max-pulse-contract-refactor-verification.md) confirms that replacing inline pulse bytes with fixed four-byte contract metadata preserved this developer-only behavior. It does not change payload-selection or normal-control evidence.
 
-The bounded [developer Max Fan Hold command](set-fan-max-developer-hold-command.md) reuses that same fixed four-byte metadata for a foreground `10`-to-`180`-second interval, with its own approval flag and the existing exact-device, baseline, single-attempt, `finally` restore, and append-only log safeguards. The hold accepts no payload-length option, adds no fallback, and does not strengthen normal-control validation.
+The bounded [developer Max Fan Hold command](set-fan-max-developer-hold-command.md) reuses that same fixed four-byte metadata for a foreground `10`-to-`180`-second pre-restore wait, with its own approval flag and the existing exact-device, baseline, single-attempt, `finally` restore, and append-only log safeguards. Its [first result](set-fan-max-developer-hold-first-result.md) shows that a ten-second wait can be followed by an approximately two-minute physical response. The wait is not a validated physical-duration control, accepts no payload-length option, adds no fallback, and does not strengthen normal-control validation.
 
 The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) keeps payload strategy separate from product readiness: four byte is operational for gated developer pulse research, while no payload is selected for normal fan control.
 

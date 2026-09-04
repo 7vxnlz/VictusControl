@@ -2,11 +2,11 @@
 
 ## Status
 
-VictusX includes a developer-only, BIOS-only Max Fan Hold command for bounded exact-device research. It reuses the existing `FourByteMaxFanPulse` contract and SetFanMax runner; it is not normal fan control and has no Settings, tray, or Diagnostic UI route.
+VictusX includes a developer-only, BIOS-only Max Fan Hold command for bounded exact-device research. It reuses the existing `FourByteMaxFanPulse` contract and SetFanMax runner; it is not normal fan control and has no Settings, tray, or Diagnostic UI route. The [first hold result](set-fan-max-developer-hold-first-result.md) confirms command success but also clarifies that its duration is a pre-restore wait, not proven physical fan-duration control.
 
 Normal/user-facing fan control remains **NO-GO**. `DeviceValidatedInputLength` remains unset, FanMaxGet remains inconclusive, and the one-byte payload remains comparison-only.
 
-## Future Command
+## Command Shape
 
 ```powershell
 dotnet run --project app\VictusX.csproj -- --hp-victus --hp-wmi-readonly-test --hp-fan-max-hold --i-understand-this-can-affect-fans --i-approve-4-byte-max-fan-hold --max-fan-hold-seconds=30
@@ -24,7 +24,7 @@ Those arguments affect evidence logging and classification only. They cannot sat
 
 ## Gates And Bounds
 
-The parser requires all five explicit flags shown above plus exactly one whole-number duration. The duration is inclusive from `10` through `180` seconds. Missing, duplicate, malformed, zero, negative, shorter, or longer values fail closed before baseline capture or write transport construction.
+The parser requires all five explicit flags shown above plus exactly one whole-number duration. The duration is inclusive from `10` through `180` seconds. It bounds how long the foreground runner waits before sending restore; it does not promise a matching physical fan duration. Missing, duplicate, malformed, zero, negative, shorter, or longer values fail closed before baseline capture or write transport construction.
 
 The reused runtime gates additionally require:
 
@@ -45,7 +45,7 @@ The hold accepts no payload-selection argument and uses only:
 - enable: `01-00-00-00`
 - restore: `00-00-00-00`
 
-The runner captures the baseline, makes one enable attempt, waits the requested bounded duration, reads FanMaxGet and raw FanGetLevel, and attempts the matching restore plus readback in `finally` whenever enable was attempted. There is no retry, one-byte fallback, EC/PawnIO transport, recurring timer, background hold, or persisted hold state.
+The runner captures the baseline, makes one enable attempt, waits the requested bounded pre-restore duration, reads FanMaxGet and raw FanGetLevel, and attempts the matching restore plus readback in `finally` whenever enable was attempted. The first `10`-second hold produced an approximately two-minute observed fan response, so the physical response may outlast the wait. There is no retry, one-byte fallback, EC/PawnIO transport, recurring timer, background hold, or persisted hold state.
 
 The `finally` path covers ordinary completion and exceptions while the process remains alive. It cannot guarantee restore after forced process termination, operating-system failure, power loss, or machine reset; that limitation is one reason this command remains developer-only.
 
@@ -71,4 +71,4 @@ If command success, physical response, and restore are recorded while FanMaxGet 
 - VictusX four-byte research path: preferred, but not validated for normal control.
 - Normal/user-facing fan control: **NO-GO**.
 
-The next safe step is source review and pure-test verification of the hold command. Runtime execution requires a separate, explicit operator decision and is outside this implementation task.
+The next safe step is a documentation-only observation protocol for any future separately authorized hold run. It must record actual observed timing without treating requested wait time as physical-duration control.

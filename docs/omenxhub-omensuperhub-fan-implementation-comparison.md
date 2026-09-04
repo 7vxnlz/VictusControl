@@ -130,7 +130,7 @@ Only behavior-level ideas may be reconsidered after a separate implementation de
 - surface transport return codes instead of hiding failures
 - keep disable/restore metadata paired with enable metadata
 
-VictusX already implements these ideas more safely for its developer-only four-byte pulse and bounded [Max Fan Hold command](set-fan-max-developer-hold-command.md). The hold reuses the same fixed metadata, exact-device gates, one-attempt behavior, `finally` restore, and append-only evidence model for `10` to `180` seconds. It does not port reference code or persistent reference control behavior.
+VictusX already implements these ideas more safely for its developer-only four-byte pulse and bounded [Max Fan Hold command](set-fan-max-developer-hold-command.md). The hold reuses the same fixed metadata, exact-device gates, one-attempt behavior, `finally` restore, and append-only evidence model for a `10`-to-`180`-second pre-restore wait. Its [first result](set-fan-max-developer-hold-first-result.md) observed a response of about two minutes after a ten-second wait, so the wait must not be treated as direct physical-duration control. It does not port reference code or persistent reference control behavior.
 
 ## What Must Not Be Ported Yet
 
@@ -149,7 +149,8 @@ Do not port a fan-control implementation. The bounded developer hold is the only
 
 ## Final Decision
 
-- Developer-only four-byte Max Fan Pulse/Hold: allowed under separate explicit CLI gates only; the hold has not been executed as part of its implementation.
+- Developer-only four-byte Max Fan Pulse/Hold: operational only under separate explicit CLI gates; the first ten-second hold completed with successful enable/restore but inconclusive FanMaxGet.
+- Hold duration as physical fan-duration control: not validated.
 - Normal/user-facing fan control: **NO-GO**.
 - No fan UI until separate evidence exists.
 - `DeviceValidatedInputLength` remains unset.
