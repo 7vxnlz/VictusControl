@@ -102,16 +102,22 @@ namespace GHelper
                 return false;
             }
 
+            Console.WriteLine(command.FormatCliSummary());
             HpFanMaxExperimentRunResult result;
             if (!command.IsValidRequest)
             {
+                foreach (string reason in command.ValidationReasons)
+                {
+                    Console.Error.WriteLine(reason);
+                }
+
                 result = new HpFanMaxExperimentRunResult(
                     command.Payload,
                     null,
                     false,
-                    HpFanMaxExperimentWriteResult.NotAttempted("Blocked by required Max Fan Hold command-line flags or duration."),
+                    HpFanMaxExperimentWriteResult.NotAttempted("Blocked by required Max Fan Hold command-line flags or pre-restore wait."),
                     null,
-                    HpFanMaxExperimentWriteResult.NotAttempted("Blocked by required Max Fan Hold command-line flags or duration."),
+                    HpFanMaxExperimentWriteResult.NotAttempted("Blocked by required Max Fan Hold command-line flags or pre-restore wait."),
                     null,
                     HpFanMaxExperimentOutcome.Unknown,
                     command.ValidationReasons);

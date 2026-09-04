@@ -10,6 +10,11 @@ public sealed record HpFanMaxHoldCommandResult(
     string[] ValidationReasons)
 {
     public bool ShouldExit => IsRequested;
+    public string FormatCliSummary() =>
+        "SetFanMax developer-only Max Fan Hold. Requested pre-restore wait seconds: " +
+        (HoldSeconds?.ToString(CultureInfo.InvariantCulture) ?? "unspecified or malformed") + ". " +
+        HpFanMaxHoldCommand.DurationSemantics;
+
     public IHpFanMaxPulseResearchOperation Operation { get; } = new FourByteMaxFanPulseResearchOperation();
 
     public HpFanMaxExperimentPayload Payload => new(
@@ -56,6 +61,11 @@ public static class HpFanMaxHoldCommand
     public const string ApprovalFlag = "--i-approve-4-byte-max-fan-hold";
     public const string HoldSecondsPrefix = "--max-fan-hold-seconds=";
     public const string DeveloperOnlyOperationName = "DeveloperOnlyFourByteMaxFanHold";
+    public const string DurationSemantics =
+        "--max-fan-hold-seconds specifies a bounded pre-restore wait (10-180 seconds). " +
+        "Readback follows the wait before the matching restore attempt; this is not an exact restore deadline. " +
+        "Physical fan duration is BIOS-dependent and not validated; the fan may remain high after restore or wait expiry. " +
+        "FanMaxGet remains inconclusive. Normal/user-facing fan control remains NO-GO.";
     public const int MinimumHoldSeconds = 10;
     public const int MaximumHoldSeconds = 180;
 
@@ -118,26 +128,26 @@ public static class HpFanMaxHoldCommand
 
         if (matches.Length == 0)
         {
-            reasons.Add("Max Fan Hold request rejected: exactly one " + HoldSecondsPrefix + "<seconds> argument is required.");
+            reasons.Add("Max Fan Hold request rejected: exactly one " + HoldSecondsPrefix + "<seconds> argument is required for the pre-restore wait.");
             return null;
         }
 
         if (matches.Length > 1)
         {
-            reasons.Add("Max Fan Hold request rejected: the hold duration must be supplied exactly once.");
+            reasons.Add("Max Fan Hold request rejected: the pre-restore wait must be supplied exactly once.");
             return null;
         }
 
         string value = matches[0][HoldSecondsPrefix.Length..];
         if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out int seconds))
         {
-            reasons.Add("Max Fan Hold request rejected: hold duration must be a whole number of seconds.");
+            reasons.Add("Max Fan Hold request rejected: pre-restore wait must be a whole number of seconds.");
             return null;
         }
 
         if (!IsDurationAllowed(seconds))
         {
-            reasons.Add($"Max Fan Hold request rejected: hold duration must be between {MinimumHoldSeconds} and {MaximumHoldSeconds} seconds inclusive.");
+            reasons.Add($"Max Fan Hold request rejected: pre-restore wait must be between {MinimumHoldSeconds} and {MaximumHoldSeconds} seconds inclusive.");
         }
 
         return seconds;

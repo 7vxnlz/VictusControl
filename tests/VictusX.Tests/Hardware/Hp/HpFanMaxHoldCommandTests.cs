@@ -1,4 +1,5 @@
 using GHelper.Hardware.Hp;
+using System.Text.Json;
 using Xunit;
 
 namespace VictusX.Tests.Hardware.Hp;
@@ -36,7 +37,7 @@ public sealed class HpFanMaxHoldCommandTests
         HpFanMaxHoldCommandResult result = HpFanMaxHoldCommand.Parse(arguments);
 
         Assert.False(result.IsValidRequest);
-        Assert.NotEmpty(result.ValidationReasons);
+        Assert.Contains(result.ValidationReasons, reason => reason.Contains("pre-restore wait", StringComparison.Ordinal));
     }
 
     [Theory]
@@ -109,12 +110,94 @@ public sealed class HpFanMaxHoldCommandTests
         Assert.True(record.WriteExecuted);
         Assert.Equal(HpFanMaxHoldCommand.DeveloperOnlyOperationName, record.DeveloperOnlyOperation);
         Assert.Equal(30, record.RequestedHoldSeconds);
+        using JsonDocument json = JsonDocument.Parse(HpFanMaxExperimentLogFormatter.Format(record));
+        Assert.Equal(30, json.RootElement.GetProperty("RequestedHoldSeconds").GetInt32());
+        Assert.Equal(30, json.RootElement.GetProperty("RequestedPreRestoreWaitSeconds").GetInt32());
+        Assert.Contains("not validated", json.RootElement.GetProperty("HoldDurationSemantics").GetString()!);
         Assert.Equal(HpFanMaxExperimentReadbackReliability.Inconclusive, record.ReadbackReliability);
         Assert.Equal(
             HpFanMaxExperimentalOutcomeClassification.CommandSucceededPhysicalResponseObservedReadbackInconclusive,
             record.ExperimentalOutcomeClassification);
         Assert.Equal(HpFanMaxExperimentOutcome.Unknown, record.Outcome);
         Assert.Empty(record.BlockedReasons);
+        Assert.Null(record.DeviceValidatedInputLength);
+    }
+
+    [Fact]
+    public void CliSummary_ExplainsWaitAndUnvalidatedPhysicalDuration()
+    {
+        string summary = HpFanMaxHoldCommand.Parse(ValidArguments(10)).FormatCliSummary();
+
+        Assert.Contains("Requested pre-restore wait seconds: 10", summary);
+        Assert.Contains("--max-fan-hold-seconds", summary);
+        Assert.Contains("not an exact restore deadline", summary);
+        Assert.Contains("Physical fan duration is BIOS-dependent and not validated", summary);
+        Assert.Contains("may remain high after restore or wait expiry", summary);
+        Assert.Contains("Normal/user-facing fan control remains NO-GO", summary);
+    }
+
+    [Fact]
+    public void OldHoldLog_PreservesRequestedWaitWithoutInferringPhysicalEvidence()
+    {
+        HpFanMaxExperimentLogRecord record = JsonSerializer.Deserialize<HpFanMaxExperimentLogRecord>(
+            "{\"DeveloperOnlyOperation\":\"DeveloperOnlyFourByteMaxFanHold\",\"RequestedHoldSeconds\":10}")!;
+
+        Assert.Equal(10, record.RequestedPreRestoreWaitSeconds);
+        Assert.Contains("bounded pre-restore wait", record.HoldDurationSemantics!);
+        Assert.Null(record.PhysicalFanResponseObserved);
+        Assert.Null(record.RestoreObserved);
+        Assert.Null(record.DeviceValidatedInputLength);
+        Assert.False(record.FirstWriteGateSatisfied);
+        HpFanMaxExperimentLogRecord missing = JsonSerializer.Deserialize<HpFanMaxExperimentLogRecord>("{}")!;
+        Assert.Null(missing.RequestedPreRestoreWaitSeconds);
+        Assert.Null(missing.HoldDurationSemantics);
+    }
+
+    [Fact]
+    public void Observations_ChangeLogClassificationButNotPayloadsOrWait()
+    {
+        HpFanMaxHoldCommandResult plain = HpFanMaxHoldCommand.Parse(ValidArguments());
+        HpFanMaxHoldCommandResult observed = HpFanMaxHoldCommand.Parse(
+            [.. ValidArguments(), "--physical-fan-response-observed=true", "--restore-observed=true",
+             "--manual-observation-notes=Operator report"]);
+        var provider = new FixedReadOnlyProvider();
+        var transport = new RecordingTransport(provider);
+        var delay = new RecordingDelay();
+        var runner = new HpFanMaxExperimentRunner(provider, transport, delay);
+
+        HpFanMaxExperimentLogRecord plainLog = plain.CreateLogRecord(runner.Run(plain, ApprovedGates()));
+        TimeSpan? plainWait = delay.Duration;
+        HpFanMaxExperimentLogRecord observedLog = observed.CreateLogRecord(runner.Run(observed, ApprovedGates()));
+
+        Assert.Equal(plainWait, delay.Duration);
+        Assert.Equal(["01-00-00-00", "00-00-00-00", "01-00-00-00", "00-00-00-00"], transport.Payloads);
+        Assert.Null(plainLog.PhysicalFanResponseObserved);
+        Assert.Null(plainLog.RestoreObserved);
+        Assert.Equal(HpFanMaxExperimentalOutcomeClassification.CommandSucceededNoPhysicalConfirmation, plainLog.ExperimentalOutcomeClassification);
+        Assert.Equal(HpFanMaxExperimentOutcome.Fail, plainLog.Outcome);
+        Assert.Equal(HpFanMaxExperimentalOutcomeClassification.CommandSucceededPhysicalResponseObservedReadbackInconclusive, observedLog.ExperimentalOutcomeClassification);
+        Assert.Equal("Operator report", observedLog.ManualObservationNotes);
+        Assert.Null(observedLog.DeviceValidatedInputLength);
+    }
+
+    [Fact]
+    public void Observations_DoNotBypassHoldApprovalOrCauseWrites()
+    {
+        HpFanMaxHoldCommandResult command = HpFanMaxHoldCommand.Parse(
+            [.. ValidArgumentsWithout(HpFanMaxHoldCommand.ApprovalFlag),
+             "--physical-fan-response-observed=true", "--restore-observed=true"]);
+        var provider = new FixedReadOnlyProvider();
+        var transport = new RecordingTransport(provider);
+        var delay = new RecordingDelay();
+        var runner = new HpFanMaxExperimentRunner(provider, transport, delay);
+
+        HpFanMaxExperimentLogRecord record = command.CreateLogRecord(runner.Run(command, ApprovedGates()));
+
+        Assert.False(command.IsValidRequest);
+        Assert.Empty(transport.Payloads);
+        Assert.Null(delay.Duration);
+        Assert.False(record.WriteExecuted);
+        Assert.Equal(HpFanMaxExperimentalOutcomeClassification.BlockedBeforeWrite, record.ExperimentalOutcomeClassification);
         Assert.Null(record.DeviceValidatedInputLength);
     }
 

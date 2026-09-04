@@ -4,7 +4,7 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 
 ## Current State
 
-- Date: 2026-09-04
+- Date: 2026-09-05
 - Latest safety note: HP Diagnostic report loading hardened for missing/corrupt reports.
 - Latest path note: HP Diagnostic paths and status messages standardized.
 - Latest reference note: Reference fan write flow comparison added; no write implementation.
@@ -99,9 +99,9 @@ Hard rule: keep this file short. It is a handoff note, not a diary.
 - Latest developer hold result note: the first manually run ten-second hold had successful enable/restore, inconclusive FanMaxGet, and an approximately two-minute observed response with no reported adverse behavior. The requested value is a bounded pre-restore wait, not validated physical fan-duration control.
 - Branch: `main` tracking `origin/main`
 - Current objective: retain separately gated four-byte developer pulse/hold research, treating hold duration as a bounded pre-restore wait while normal fan control, payload validation, and all broader reference write paths remain NO-GO.
-- Last completed work: recorded the first developer hold result and clarified its duration semantics; no product code, UI, or runtime behavior changed.
-- Files touched recently: the hold first-result record, existing hold/research decision docs, fan-write blocker summary, and this state file; documentation only.
-- Known build/test status: 2026-09-04 `dotnet build VictusX.sln` passed with 0 errors and 4 recurring NU1900 warnings; `dotnet test VictusX.sln` passed 240/240, none skipped. No HP command or WMI method was invoked.
+- Last completed work: clarified hold CLI/error output and added `RequestedPreRestoreWaitSeconds` plus `HoldDurationSemantics` to logs while preserving `RequestedHoldSeconds` compatibility. The value is a requested pre-restore wait, not an exact restore deadline or validated physical fan duration. Existing manual-observation flags affect logging/classification only; gates, payload, wait/restore behavior, UI, and normal-control NO-GO remain unchanged.
+- Files touched recently: hold command messages, log model, Program CLI output, focused hold tests, hold/result/research/blocker docs, and this state file.
+- Known build/test status: 2026-09-05 `dotnet build VictusX.sln` passed with 0 errors and 4 recurring NU1900 warnings; `dotnet test VictusX.sln` passed 244/244, none skipped. No HP command or WMI method was invoked.
 - Open questions: one-byte versus four-byte ABI equivalence, reliable FanMaxGet/FanGetLevel interpretation, durable restore behavior, and the relationship between pre-restore wait and physical fan-response duration remain unproven. Reference implementations do not close these gaps.
 - Next likely task: design a documentation-only observation protocol for any future separately authorized hold run; do not expose pulse/hold through UI and do not expand to one-byte, retries, SetFanLevel, SetFanMode, `0x37`, EC, or fallback paths.
 - Reference commits reviewed: OmenXHub `ca84cb011d1d3e5850445d19e45fbea06e83a8fd`; OmenSuperHub `a6ab6988c446ee5421466097fdf60c0d521e5c81`; omencore `b39b44978902606aa708cc0d78bcfd87e95fd88b`; ghelper-omen `1694844d2725e79a2b2065a0a1494fa1d143e3f4`; G-Helper `5c26f5ac970dab9e26347d80976ebf1eece91b1e`; ECC `5eddf1a3ffd311423be2d4ba7d26f7209c91b033`

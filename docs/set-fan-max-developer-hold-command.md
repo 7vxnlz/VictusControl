@@ -22,6 +22,8 @@ Optional, bounded manual-observation arguments already supported by the experime
 
 Those arguments affect evidence logging and classification only. They cannot satisfy or weaken a gate.
 
+For a recognized hold request, CLI output describes the requested seconds as a bounded pre-restore wait before any runtime preflight. It explains that physical fan duration is BIOS-dependent and unvalidated, the fan may remain high after restore or wait expiry, and normal/user-facing fan control remains NO-GO. Invalid requests also print their validation reasons. Command and flag names are unchanged.
+
 ## Gates And Bounds
 
 The parser requires all five explicit flags shown above plus exactly one whole-number duration. The duration is inclusive from `10` through `180` seconds. It bounds how long the foreground runner waits before sending restore; it does not promise a matching physical fan duration. Missing, duplicate, malformed, zero, negative, shorter, or longer values fail closed before baseline capture or write transport construction.
@@ -47,11 +49,15 @@ The hold accepts no payload-selection argument and uses only:
 
 The runner captures the baseline, makes one enable attempt, waits the requested bounded pre-restore duration, reads FanMaxGet and raw FanGetLevel, and attempts the matching restore plus readback in `finally` whenever enable was attempted. The first `10`-second hold produced an approximately two-minute observed fan response, so the physical response may outlast the wait. There is no retry, one-byte fallback, EC/PawnIO transport, recurring timer, background hold, or persisted hold state.
 
+The bound applies to the requested wait, not an exact wall-clock deadline for restore: scheduling and the post-wait readback can add time before restore is attempted. Wait expiry does not prove that the fan stops or that firmware applies a particular timeout.
+
 The `finally` path covers ordinary completion and exceptions while the process remains alive. It cannot guarantee restore after forced process termination, operating-system failure, power loss, or machine reset; that limitation is one reason this command remains developer-only.
 
 ## Evidence And Classification
 
 The append-only JSON record under `%APPDATA%\VictusX\Logs\FanExperiments\` includes the developer-only operation label, requested duration, fixed payload metadata, baseline, enable/restore results, readbacks, optional manual observations, and the existing outcome classification.
+
+`RequestedPreRestoreWaitSeconds` is the descriptive log field for the requested wait. The original `RequestedHoldSeconds` remains stored and serialized for compatibility; the new field reads that same value, including when loading old logs. Missing seconds remain null. Hold records expose `HoldDurationSemantics` with the same explanation as the CLI; neither field is measured physical-duration evidence or authorization. Existing log files are not rewritten.
 
 If command success, physical response, and restore are recorded while FanMaxGet stays false, the result remains `CommandSucceededPhysicalResponseObservedReadbackInconclusive`. This can describe a bounded developer result; it does not validate a normal-control ABI. `DeviceValidatedInputLength` remains null and `FirstWriteGateSatisfied` remains false.
 

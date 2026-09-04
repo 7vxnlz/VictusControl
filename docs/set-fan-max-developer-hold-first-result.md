@@ -27,9 +27,11 @@ This manual observation is evidence outside the original JSON record. It must no
 
 ## Hold Duration Semantics
 
-The first result establishes that `--max-fan-hold-seconds=10` is a bounded pre-restore wait: VictusX waits up to ten seconds after its single enable attempt before sending the matching restore payload. It is not proven physical fan-duration control.
+`--max-fan-hold-seconds=10` requests a ten-second pre-restore wait after the single enable attempt. The runner then performs readback before attempting the matching restore, so scheduling and readback time can extend the elapsed time before restore. This is neither an exact restore deadline nor proven physical fan-duration control.
 
 The approximately two-minute physical response can outlast the requested wait, which is consistent with BIOS-latched or firmware-timed behavior. The result does not prove the latch model, the exact reason for the duration, or that restore directly determines when the physical fan stops.
+
+Subsequent source changes clarify CLI/error output and add `RequestedPreRestoreWaitSeconds` plus `HoldDurationSemantics` to serialized hold records, retaining `RequestedHoldSeconds` for compatibility. Those changes do not alter this historical JSON result, add missing observations, or change fan behavior or readiness.
 
 ## Safety Interpretation
 

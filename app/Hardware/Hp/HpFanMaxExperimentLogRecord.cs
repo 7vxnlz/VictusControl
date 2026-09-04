@@ -44,6 +44,11 @@ public sealed record HpFanMaxExperimentLogRecord
     public string? PayloadBytesHypothesis { get; init; }
     public string? DeveloperOnlyOperation { get; init; }
     public int? RequestedHoldSeconds { get; init; }
+    // Keep the original stored field so older logs and readers retain the same value.
+    public int? RequestedPreRestoreWaitSeconds => RequestedHoldSeconds;
+    public string? HoldDurationSemantics => DeveloperOnlyOperation == HpFanMaxHoldCommand.DeveloperOnlyOperationName
+        ? HpFanMaxHoldCommand.DurationSemantics
+        : null;
     public string Command { get; init; } = "0x20008";
     public string CommandType { get; init; } = "0x27";
     public string WmiClass { get; init; } = "hpqBIntM";
