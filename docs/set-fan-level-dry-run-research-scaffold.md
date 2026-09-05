@@ -51,6 +51,8 @@ Persistence verification: solution build passed with 0 errors and 4 recurring NU
 
 ## Next Safe Research Step
 
+The [first-write preflight design](set-fan-level-first-write-preflight-design.md) defines required evidence, exact-device/safety gates, and recovery prerequisites. The executable candidate set remains empty; `128` / `80-80` proves serialization only. This design does not authorize or add execution to the dry-run.
+
 Review the candidate ABI evidence and design a separate documentation-only protocol for input units, fan mapping, restore/abort behavior, thermal safety, and exact-device validation. Do not connect this record to a transport. Any executable SetFanLevel proposal needs a separate explicit decision and proof design; SetFanMax physical response and bounded pre-restore wait evidence do not authorize it.
 
 - Developer-only four-byte SetFanMax Pulse/Hold: operational under existing explicit CLI gates only.

@@ -82,4 +82,6 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 ## Recommended Next Implementation Step
 
+The [SetFanLevel first-write preflight design](set-fan-level-first-write-preflight-design.md) is documentation-only and leaves the candidate set empty until ABI and recovery evidence exists. Do not connect the dry-run record to the research transport or treat SetFanMax approval as SetFanLevel authorization.
+
 Review SetFanLevel candidate units, input ABI, fan mapping, and restore/abort requirements in a documentation-only proof design. Keep the dry-run record disconnected from transport. Future hold observation protocols must still distinguish pre-restore wait from physical duration; neither research path may add UI, background control, or fallback behavior.

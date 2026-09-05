@@ -65,6 +65,8 @@ SetFanMode (`0x1A`) changes thermal-policy state rather than a simple fan flag. 
 
 ## 4. Why SetFanLevel Is Blocked
 
+The [first-write preflight design](set-fan-level-first-write-preflight-design.md) records the required exact-device, power, baseline, candidate, observation, logging, and recovery gates. All real-write admission remains NO-GO: the dry-run `128` / `80-80` result is serialization evidence only, no safe executable range is selected, and zero-level or SetFanMax-off restore must not be assumed.
+
 SetFanLevel (`0x2E`) has the widest uncertainty: reviewed references use two-, three-, four-, and 128-byte inputs. Fan ordering, capability bits, and value scale differ across platforms. V1 references document problematic handoffs, including maximum, zero-speed, or non-responsive behavior after `SetFanLevel(0,0)`. The working `FanGetLevel` read is raw-only and cannot validate write semantics or prove a return to BIOS automatic control.
 
 ## 5. Why 0x37 Is Blocked

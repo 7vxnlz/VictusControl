@@ -149,6 +149,8 @@ The [SetFanLevel dry-run scaffold](set-fan-level-dry-run-research-scaffold.md) n
 
 ## Final Decision
 
+The [SetFanLevel preflight design](set-fan-level-first-write-preflight-design.md) now makes ABI, units, fan ordering, and independently justified restore/recovery hard prerequisites. Reference behavior and successful dry-run persistence do not satisfy those gates; no first-write candidate is selected and execution remains NO-GO.
+
 - Developer-only four-byte Max Fan Pulse/Hold: operational only under separate explicit CLI gates; the first ten-second hold completed with successful enable/restore but inconclusive FanMaxGet.
 - Hold duration as physical fan-duration control: not validated.
 - Normal/user-facing fan control: **NO-GO**.
