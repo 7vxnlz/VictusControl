@@ -31,7 +31,7 @@ This manual observation is evidence outside the original JSON record. It must no
 
 The approximately two-minute physical response can outlast the requested wait, which is consistent with BIOS-latched or firmware-timed behavior. The result does not prove the latch model, the exact reason for the duration, or that restore directly determines when the physical fan stops.
 
-Subsequent source changes clarify CLI/error output and add `RequestedPreRestoreWaitSeconds` plus `HoldDurationSemantics` to serialized hold records, retaining `RequestedHoldSeconds` for compatibility. Those changes do not alter this historical JSON result, add missing observations, or change fan behavior or readiness.
+Subsequent source changes clarify CLI/error output and add `RequestedPreRestoreWaitSeconds` plus `HoldDurationSemantics` to serialized hold records, retaining `RequestedHoldSeconds` for compatibility. The final clarified state is checkpointed in [set-fan-max-hold-semantics-checkpoint.md](set-fan-max-hold-semantics-checkpoint.md). Those changes do not alter this historical JSON result, add missing observations, or change fan behavior or readiness.
 
 ## Safety Interpretation
 

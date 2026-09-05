@@ -41,7 +41,7 @@ The [OmenXHub/OmenSuperHub implementation comparison](omenxhub-omensuperhub-fan-
 
 The [developer Max Fan Hold command](set-fan-max-developer-hold-command.md) is a separate, CLI-only four-byte research route with an explicit approval and an inclusive `10`-to-`180`-second pre-restore wait. Its [first result](set-fan-max-developer-hold-first-result.md) had successful enable/restore and no reported adverse behavior, but FanMaxGet stayed false and the approximately two-minute observed response outlasted the ten-second wait. The wait is not validated physical fan-duration control; `DeviceValidatedInputLength` remains unset and normal-control **NO-GO** is unchanged.
 
-The hold CLI and logs now state those limits explicitly, including that fans may remain high after restore or wait expiry. `RequestedPreRestoreWaitSeconds` and `HoldDurationSemantics` clarify the evidence while preserving the legacy `RequestedHoldSeconds` field. No gate, payload, runtime fan behavior, or readiness decision changed.
+The hold CLI and logs now state those limits explicitly, including that fans may remain high after restore or wait expiry. `RequestedPreRestoreWaitSeconds` and `HoldDurationSemantics` clarify the evidence while preserving the legacy `RequestedHoldSeconds` field. The [hold semantics checkpoint](set-fan-max-hold-semantics-checkpoint.md) records this as the current developer-only hold state. No gate, payload, runtime fan behavior, or readiness decision changed.
 
 The [normal fan control go/no-go evidence matrix](normal-fan-control-go-no-go-evidence-matrix.md) is the current source-of-truth for what remains missing before user-facing fan control can even be reconsidered.
 

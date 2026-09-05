@@ -62,7 +62,7 @@ Every future research operation must remain opt-in and fail closed:
 
 Research logs must record the gate decision, exact payload bytes, baseline, enable/restore attempts, readbacks, manual observations, classifier result, blocked reasons, and whether a write was actually attempted. Logs are evidence, not authorization.
 
-Hold CLI output and logs now explicitly describe a bounded pre-restore wait. `RequestedPreRestoreWaitSeconds` exposes the existing `RequestedHoldSeconds` value without breaking older records; `HoldDurationSemantics` states BIOS-dependent, unvalidated physical duration and continued normal-control NO-GO. The wait is not an exact restore deadline because readback follows it. Manual observation arguments already exist and affect logging/classification only; runner timing, gates, payloads, and restore behavior are unchanged.
+Hold CLI output and logs now explicitly describe a bounded pre-restore wait. `RequestedPreRestoreWaitSeconds` exposes the existing `RequestedHoldSeconds` value without breaking older records; `HoldDurationSemantics` states BIOS-dependent, unvalidated physical duration and continued normal-control NO-GO. The [hold semantics checkpoint](set-fan-max-hold-semantics-checkpoint.md) records this final clarified state. The wait is not an exact restore deadline because readback follows it. Manual observation arguments already exist and affect logging/classification only; runner timing, gates, payloads, and restore behavior are unchanged.
 
 The HP Diagnostic dashboard may read the latest valid local log for status/history only. It must remain local-file-only, never invoke WMI, never refresh hardware, and expose no pulse/run button, fan toggle, slider, tray route, or other control route.
 

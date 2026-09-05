@@ -2,7 +2,7 @@
 
 ## Status
 
-VictusX includes a developer-only, BIOS-only Max Fan Hold command for bounded exact-device research. It reuses the existing `FourByteMaxFanPulse` contract and SetFanMax runner; it is not normal fan control and has no Settings, tray, or Diagnostic UI route. The [first hold result](set-fan-max-developer-hold-first-result.md) confirms command success but also clarifies that its duration is a pre-restore wait, not proven physical fan-duration control.
+VictusX includes a developer-only, BIOS-only Max Fan Hold command for bounded exact-device research. It reuses the existing `FourByteMaxFanPulse` contract and SetFanMax runner; it is not normal fan control and has no Settings, tray, or Diagnostic UI route. The [hold semantics checkpoint](set-fan-max-hold-semantics-checkpoint.md) records the final clarified state: the [first hold result](set-fan-max-developer-hold-first-result.md) confirms command success but also clarifies that its duration is a pre-restore wait, not proven physical fan-duration control.
 
 Normal/user-facing fan control remains **NO-GO**. `DeviceValidatedInputLength` remains unset, FanMaxGet remains inconclusive, and the one-byte payload remains comparison-only.
 
