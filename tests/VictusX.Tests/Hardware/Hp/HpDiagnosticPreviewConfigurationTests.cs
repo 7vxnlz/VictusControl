@@ -158,6 +158,11 @@ public sealed class HpDiagnosticPreviewConfigurationTests
         Assert.Contains("ConfigureHpReadOnlySection(section);", settings, StringComparison.Ordinal);
         Assert.Contains("control.ForeColor = foreMain;", settings, StringComparison.Ordinal);
         Assert.Contains("control is RButton or ComboBox or Slider or CheckBox or PictureBox", settings, StringComparison.Ordinal);
+        Assert.Contains("control.AccessibleDescription = \"Not supported yet in HP read-only mode.\";", settings, StringComparison.Ordinal);
+        Assert.Contains("toolTip.SetToolTip(control, \"Not supported yet in HP read-only mode.\");", settings, StringComparison.Ordinal);
+        Assert.Contains("labelGPU.Text = \"GPU Mode: Not supported yet\";", settings, StringComparison.Ordinal);
+        Assert.Contains("labelBacklight.Text = \"Keyboard lighting: Not supported yet\";", settings, StringComparison.Ordinal);
+        Assert.Contains("labelCharge.Text = \"Battery charge limit: Read-only\";", settings, StringComparison.Ordinal);
         Assert.Contains("buttonDonate.Text = AppConfig.IsHpVictusHardwareMode() ? \"Thank You\"", settings, StringComparison.Ordinal);
         Assert.Contains("buttonUpdates.Enabled = false;", settings, StringComparison.Ordinal);
         Assert.Contains("tableButtons.ColumnCount = 4;", settings, StringComparison.Ordinal);

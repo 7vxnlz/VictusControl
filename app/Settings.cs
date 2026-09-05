@@ -399,6 +399,10 @@ namespace GHelper
             checkStartup.Visible = false;
             checkStartup.TabStop = false;
 
+            labelGPU.Text = "GPU Mode: Not supported yet";
+            labelBacklight.Text = "Keyboard lighting: Not supported yet";
+            labelCharge.Text = "Battery charge limit: Read-only";
+
             hpMainShellPanel = panelPerformance;
             AddHpDiagnosticFooterAction();
         }
@@ -495,6 +499,8 @@ namespace GHelper
                 {
                     control.Enabled = false;
                     control.TabStop = false;
+                    control.AccessibleDescription = "Not supported yet in HP read-only mode.";
+                    toolTip.SetToolTip(control, "Not supported yet in HP read-only mode.");
                 }
 
                 ConfigureHpReadOnlySection(control);
