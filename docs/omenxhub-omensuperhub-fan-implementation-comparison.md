@@ -10,6 +10,8 @@ This is a source-only comparison. No reference code was copied, no hardware path
 
 ## Executive Summary
 
+The follow-up [SetFanLevel ABI/units audit](set-fan-level-abi-units-evidence-audit.md) expands the comparison to all six local references. It distinguishes the Omen wrappers' two/three-byte and +128 cleaning encodings from omencore's four-byte and ghelper-omen's conflicting 128-/four-byte requests. CPU/GPU naming and mixed percent/RPM scaling are not exact-device proof; `80-80` remains uncertain and SetFanLevel first-write **NO-GO**. OmenSuperHub remains the narrower SetFanMax behavior reference, not a validated SetFanLevel source.
+
 At the SetFanMax wire level, OmenXHub and OmenSuperHub are effectively tied. Both send command `0x20008`, command type `0x27`, through `root\wmi` class `hpqBIntM`, method `hpqBIOSInt0`, with one-byte `01` enable and `00` disable payloads.
 
 OmenSuperHub is the closer reference for the narrow behavior to study because its user-facing Max Fan transition directly calls the BIOS-only SetFanMax on/off pair and no application-level direct-EC fan fallback was found. OmenXHub still contains the same pair, but its current main `max` configuration uses SetFanMax off followed by SetFanLevel at 100 percent, and its broader fan-level path can fall back to PawnIO direct EC writes.

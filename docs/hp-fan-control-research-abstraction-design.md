@@ -17,6 +17,8 @@ It is command-line-only, separately approval-gated, exact-device-gated, elevatio
 
 ## Explicitly Unsupported Operations
 
+The [SetFanLevel ABI/units audit](set-fan-level-abi-units-evidence-audit.md) found incompatible reference input lengths, ambiguous scaling/high-bit semantics, and close-device zero-handoff hazards. It selects no executable value or restore packet. Keep these as evidence only, outside the executable operation contracts; `DeviceValidatedInputLength` remains null and normal control remains **NO-GO**.
+
 The [SetFanLevel dry-run scaffold](set-fan-level-dry-run-research-scaffold.md) is a separate pure parser/JSON record, not an `IHpFanResearchOperation` or transport command. It serializes an unvalidated two-byte hypothesis only and exits before hardware startup. The operation enum, catalog permissions, pulse/hold gates, and `DeviceValidatedInputLength` are unchanged. All execution restrictions below still apply.
 
 This abstraction must not grow into normal fan control. The following remain unsupported and blocked:
@@ -84,4 +86,4 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 The [SetFanLevel first-write preflight design](set-fan-level-first-write-preflight-design.md) is documentation-only and leaves the candidate set empty until ABI and recovery evidence exists. Do not connect the dry-run record to the research transport or treat SetFanMax approval as SetFanLevel authorization.
 
-Review SetFanLevel candidate units, input ABI, fan mapping, and restore/abort requirements in a documentation-only proof design. Keep the dry-run record disconnected from transport. Future hold observation protocols must still distinguish pre-restore wait from physical duration; neither research path may add UI, background control, or fallback behavior.
+Prepare the audit's documentation-only request for existing exact-device ABI and recovery evidence; do not select a first-write value or request new experiments. Keep the dry-run record disconnected from transport. Future hold observation protocols must still distinguish pre-restore wait from physical duration; neither research path may add UI, background control, or fallback behavior.

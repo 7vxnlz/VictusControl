@@ -6,6 +6,8 @@ Documentation-only design. SetFanLevel is unvalidated, real writes remain unimpl
 
 ## Current Evidence
 
+The [ABI and units evidence audit](set-fan-level-abi-units-evidence-audit.md) now records the six local reference revisions: two/three-, four-, and 128-byte input shapes conflict; caller RPM/100, percent scaling, and +128 cleaning conventions do not establish F.31 units. Closest Victus 16-s0xxx/F.30 evidence warns about zero-level recovery. `80-80` has uncertain firmware meaning and is not a selected target. ABI, range, mapping, and restore gates remain unsatisfied; first-write **NO-GO** is unchanged.
+
 The [dry-run scaffold](set-fan-level-dry-run-research-scaffold.md) persisted candidate `128` as `80-80` under `%APPDATA%\VictusX\Logs\FanExperiments`. The saved record reported `NoHardwareInvocation=true`, `NoWmiInvocation=true`, `WriteExecuted=false`, `IsExecutable=false`, and `DeviceValidatedInputLength=null`. This verifies parsing, encoding, file persistence, and safe exit only. It proves no fan response, safe value, fan mapping, supported ABI, or restore behavior.
 
 | Candidate metadata | Current hypothesis |
@@ -89,6 +91,6 @@ FanMaxGet false cannot be the sole success or failure criterion. Inconclusive re
 
 ## Next Safe Task And Decisions
 
-Create a documentation-only evidence worksheet for SetFanLevel input ABI, units, fan ordering, and restore/recovery provenance; keep unresolved cells explicitly blocked. A pure fixture-only preflight evaluator may be considered separately, with no transport or hardware connection.
+Following the [completed static audit](set-fan-level-abi-units-evidence-audit.md), prepare a documentation-only request for existing exact-device protocol/recovery evidence, including the conflicting buffer lengths and high-bit semantics. Do not request new writes or select a candidate. A pure fixture-only preflight evaluator may be considered separately, with no transport or hardware connection.
 
 Developer-only four-byte SetFanMax Pulse/Hold remains operational under its existing explicit CLI gates. SetFanLevel dry-run proves serialization only; SetFanLevel first-write readiness remains **NO-GO**. `DeviceValidatedInputLength` remains null/unset, `FanMaxGet` inconclusive, and `FanGetLevel` raw-only. Normal/user-facing fan control remains **NO-GO** because ABI, reliable state feedback, durable recovery, repeatability, and thermal/power/failure evidence are incomplete.

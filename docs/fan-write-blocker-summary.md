@@ -1,5 +1,7 @@
 # Fan Write Blocker Summary
 
+Current SetFanLevel decision: the [ABI/units evidence audit](set-fan-level-abi-units-evidence-audit.md) establishes common `0x20008/0x2E` identity but conflicting two/three-, four-, and 128-byte reference requests, mixed units, +128 cleaning ambiguity, and nearby Victus/F.30 zero-level recovery failures. `80-80` remains serialization-only with uncertain firmware meaning. No first-write value or restore packet is selected; request existing exact-device evidence next, not a new experiment. SetFanLevel first-write and normal fan control remain **NO-GO**; `DeviceValidatedInputLength` stays null. Developer-only SetFanMax pulse/hold permissions are unchanged.
+
 The [SetFanLevel dry-run research scaffold](set-fan-level-dry-run-research-scaffold.md) adds CLI-only parsing and persisted JSON output for an unvalidated two-byte raw-value hypothesis. Timestamped `set-fan-level-research-dry-run-*.json` files under `Logs/FanExperiments` remain available when WinExe console output is invisible, with explicit no-hardware/no-WMI markers. It has no WMI/transport/UI route, rejects mixed probe/write flags before startup, and leaves SetFanLevel execution forbidden. The `0..255` bound is byte representation only. `DeviceValidatedInputLength` remains null and normal fan control remains **NO-GO**.
 
 ## 1. Current Read-Only Successes

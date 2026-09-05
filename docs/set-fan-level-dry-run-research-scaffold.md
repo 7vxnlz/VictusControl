@@ -25,6 +25,8 @@ dotnet run --no-launch-profile --project app\VictusX.csproj -- --hp-victus --hp-
 
 ## Candidate And Output
 
+The [ABI and units evidence audit](set-fan-level-abi-units-evidence-audit.md) finds conflicting two/three-, four-, and 128-byte reference requests, mixed caller scaling, and a capability-gated +128 cleaning convention. Thus `128 -> 80-80` proves only two serialized bytes, not a safe level, percent, RPM, or supported ABI. Its firmware meaning remains uncertain; the parser's `0..255` range must not become an executable range. No record, parser, catalog, or validation field was changed by that audit.
+
 `HpFanLevelResearchDryRunRecord` is descriptive data, deliberately separate from `HpFanResearchOperationKind`, the shared command catalog, and the SetFanMax runner. `FourByteMaxFanPulse` remains the only operation in the executable research path.
 
 The single hypothesis repeats the supplied raw byte in two positions (`42` serializes as `2A-2A`). It does not claim validated fan mapping, device fan count, supported input length, or restore semantics. Three-byte references and the existing catalog's forbidden four-byte `FanLevelWrite` entry remain unresolved evidence; none are tried or selected as fallback. The catalog remains forbidden and unchanged.
@@ -53,7 +55,7 @@ Persistence verification: solution build passed with 0 errors and 4 recurring NU
 
 The [first-write preflight design](set-fan-level-first-write-preflight-design.md) defines required evidence, exact-device/safety gates, and recovery prerequisites. The executable candidate set remains empty; `128` / `80-80` proves serialization only. This design does not authorize or add execution to the dry-run.
 
-Review the candidate ABI evidence and design a separate documentation-only protocol for input units, fan mapping, restore/abort behavior, thermal safety, and exact-device validation. Do not connect this record to a transport. Any executable SetFanLevel proposal needs a separate explicit decision and proof design; SetFanMax physical response and bounded pre-restore wait evidence do not authorize it.
+Request existing exact-device ABI/units and recovery evidence to resolve the [static audit's conflicts](set-fan-level-abi-units-evidence-audit.md); no new probe, write, or candidate selection is proposed. Do not connect this record to a transport. Any executable SetFanLevel proposal needs a separate explicit decision and proof design; SetFanMax physical response and bounded pre-restore wait evidence do not authorize it.
 
 - Developer-only four-byte SetFanMax Pulse/Hold: operational under existing explicit CLI gates only.
 - SetFanLevel: serialization-only scaffold; execution blocked.
