@@ -1,5 +1,7 @@
 # Fan Write Blocker Summary
 
+The [SetFanLevel dry-run research scaffold](set-fan-level-dry-run-research-scaffold.md) adds CLI-only parsing and persisted JSON output for an unvalidated two-byte raw-value hypothesis. Timestamped `set-fan-level-research-dry-run-*.json` files under `Logs/FanExperiments` remain available when WinExe console output is invisible, with explicit no-hardware/no-WMI markers. It has no WMI/transport/UI route, rejects mixed probe/write flags before startup, and leaves SetFanLevel execution forbidden. The `0..255` bound is byte representation only. `DeviceValidatedInputLength` remains null and normal fan control remains **NO-GO**.
+
 ## 1. Current Read-Only Successes
 
 The HP Victus read-only path is stable and report-backed:

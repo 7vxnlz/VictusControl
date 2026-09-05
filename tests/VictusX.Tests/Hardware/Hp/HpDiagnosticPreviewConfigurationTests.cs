@@ -53,6 +53,37 @@ public sealed class HpDiagnosticPreviewConfigurationTests
         Assert.DoesNotContain("HpFanMaxHoldCommand", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("--hp-fan-max-hold", settings, StringComparison.Ordinal);
         Assert.DoesNotContain("HpWmiInvocationClient", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("HpFanLevelResearch", settings, StringComparison.Ordinal);
+        Assert.DoesNotContain("--hp-fan-level-research-dry-run", settings, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void FanLevelDryRun_ExitsBeforeAllHardwareStartupAndHasNoUiOrTransportDependency()
+    {
+        string program = ReadRepositoryFile("app", "Program.cs").Replace("\r\n", "\n");
+        Assert.Contains("public static void Main(string[] args)\n        {\n            if (TryRunHpFanLevelResearchDryRun(args))\n            {\n                return;\n            }", program, StringComparison.Ordinal);
+        int start = program.IndexOf("private static bool TryRunHpFanLevelResearchDryRun", StringComparison.Ordinal);
+        int end = program.IndexOf("private static bool TryRunHpFanMaxHold", start, StringComparison.Ordinal);
+        string route = program[start..end];
+        Assert.Contains("Console.WriteLine(result.Record!.ToJson());", route, StringComparison.Ordinal);
+        Assert.Contains("Environment.ExitCode = result.IsValidRequest ? 0 : 2;", route, StringComparison.Ordinal);
+        Assert.True(route.IndexOf("HpFanLevelResearchDryRunLogWriter.Write", StringComparison.Ordinal) < route.IndexOf("Console.WriteLine", StringComparison.Ordinal));
+        Assert.Contains("Environment.ExitCode = 1;", route, StringComparison.Ordinal);
+        Assert.DoesNotContain("TryRunHpFanLevelResearchDryRun", program[end..], StringComparison.Ordinal);
+
+        string source = ReadRepositoryFile("app", "Hardware", "Hp", "HpFanLevelResearchDryRunCommand.cs");
+        source += ReadRepositoryFile("app", "Hardware", "Hp", "HpFanLevelResearchDryRunLogWriter.cs");
+        string[] forbidden =
+        [
+            "System.Management", "Microsoft.Management", "DllImport", "LibraryImport", "Process.Start",
+            "HpWmiInvocationClient", "HpFanMaxExperiment", "IHpFanResearchOperation", "HpBiosWmiCommandCatalog",
+            "PawnIO", "PwnIO", "WinRing0", "EmbeddedController", "LibreHardwareMonitor", "0x37",
+            "SetFanMode", "System.Windows.Forms", "Slider", "Toggle", "Button", "Task.Run", "Timer"
+        ];
+        foreach (string term in forbidden)
+        {
+            Assert.DoesNotContain(term, source + route, StringComparison.OrdinalIgnoreCase);
+        }
     }
 
     [Fact]

@@ -58,6 +58,11 @@ namespace GHelper
         // The main entry point for the application
         public static void Main(string[] args)
         {
+            if (TryRunHpFanLevelResearchDryRun(args))
+            {
+                return;
+            }
+
             if (TryRunHpFanMaxHold(args))
             {
                 return;
@@ -92,6 +97,38 @@ namespace GHelper
                 WriteStartupCrashLog(args, ex);
                 throw;
             }
+        }
+
+        private static bool TryRunHpFanLevelResearchDryRun(string[] args)
+        {
+            HpFanLevelResearchDryRunCommandResult result = HpFanLevelResearchDryRunCommand.Parse(args);
+            if (!result.ShouldExit)
+            {
+                return false;
+            }
+
+            Environment.ExitCode = result.IsValidRequest ? 0 : 2;
+            string path;
+            try
+            {
+                path = HpFanLevelResearchDryRunLogWriter.Write(result.Record!);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                Environment.ExitCode = 1;
+                try { Console.Error.WriteLine("SetFanLevel dry-run result could not be saved: " + ex.Message); }
+                catch (IOException) { }
+                return true;
+            }
+
+            // Persistence must succeed independently of WinExe console availability.
+            try
+            {
+                Console.WriteLine("SetFanLevel dry-run result saved: " + path);
+                Console.WriteLine(result.Record!.ToJson());
+            }
+            catch (IOException) { }
+            return true;
         }
 
         private static bool TryRunHpFanMaxHold(string[] args)

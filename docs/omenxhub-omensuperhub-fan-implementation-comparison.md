@@ -145,7 +145,7 @@ VictusX already implements these ideas more safely for its developer-only four-b
 
 ## Recommended Next Implementation Step
 
-Do not port a fan-control implementation. The bounded developer hold is the only approved source-level extension: it locks the existing `FourByteMaxFanPulse` metadata, exact WMI identity, one-attempt behavior, and `finally` restore while rejecting one-byte defaulting, SetFanLevel, SetFanMode, `0x37`, EC, retry, and fallback behavior. Any execution, runtime expansion, or UI exposure requires a separate proof decision.
+The [SetFanLevel dry-run scaffold](set-fan-level-dry-run-research-scaffold.md) now permits pure candidate serialization only: one two-byte raw-value hypothesis, explicitly not executable or validated. It does not port reference code, use a transport, select a supported ABI, or alter the catalog's forbidden SetFanLevel status. Review units, fan mapping, and restore/abort proof in documentation before considering any separate execution proposal. The bounded developer hold remains on the existing `FourByteMaxFanPulse` metadata and unchanged gates; any hardware expansion or UI exposure requires a separate proof decision.
 
 ## Final Decision
 

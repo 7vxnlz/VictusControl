@@ -17,6 +17,8 @@ It is command-line-only, separately approval-gated, exact-device-gated, elevatio
 
 ## Explicitly Unsupported Operations
 
+The [SetFanLevel dry-run scaffold](set-fan-level-dry-run-research-scaffold.md) is a separate pure parser/JSON record, not an `IHpFanResearchOperation` or transport command. It serializes an unvalidated two-byte hypothesis only and exits before hardware startup. The operation enum, catalog permissions, pulse/hold gates, and `DeviceValidatedInputLength` are unchanged. All execution restrictions below still apply.
+
 This abstraction must not grow into normal fan control. The following remain unsupported and blocked:
 
 - normal or user-facing fan control, fan curves, sliders, and toggles
@@ -80,4 +82,4 @@ Before any normal fan-control UI can be considered, the project needs a separate
 
 ## Recommended Next Implementation Step
 
-Design a documentation-only observation protocol for a future separately approved hold run. It must distinguish requested pre-restore wait from physical response duration and must not expose pulse/hold contracts to UI, configuration, tray, APIs, recurring timers, fallback transports, or background services.
+Review SetFanLevel candidate units, input ABI, fan mapping, and restore/abort requirements in a documentation-only proof design. Keep the dry-run record disconnected from transport. Future hold observation protocols must still distinguish pre-restore wait from physical duration; neither research path may add UI, background control, or fallback behavior.
