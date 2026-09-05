@@ -300,7 +300,7 @@ namespace GHelper
 
             Text = AppConfig.IsHpVictusHardwareMode()
                 ? "VictusX"
-                : "G-Helper " + (ProcessHelper.IsUserAdministrator() ? "—" : "-") + " " + AppConfig.GetModelShort();
+                : "VictusX " + (ProcessHelper.IsUserAdministrator() ? "—" : "-") + " " + AppConfig.GetModelShort();
             TopMost = AppConfig.Is("topmost");
 
             //This will auto position the window again when it resizes. Might mess with position if people drag the window somewhere else.
