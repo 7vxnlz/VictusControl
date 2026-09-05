@@ -2,6 +2,8 @@
 
 ## Scope
 
+Current preferred input is the [percentage-mapping dry-run](set-fan-level-percentage-mapping-dry-run.md): `--fan-percent-candidate=0..100` models default V1 integer scaling and a four-byte candidate, with explicit F.30-only evidence and endpoint warnings. The raw CLI/JSON contract below is retained as **deprecated legacy research compatibility**, not the preferred path; historical `128 -> 80-80` records remain unchanged. Neither path validates F.31 or authorizes a write.
+
 The developer-only scaffold parses a raw candidate and persists an indented JSON research record before attempting console output. It has no transport, hardware provider, executable operation contract, device probe, or UI route. This is permission to inspect a serialization hypothesis only; SetFanLevel execution and normal/user-facing fan control remain **NO-GO**.
 
 The [Omen comparison](omenxhub-omensuperhub-fan-implementation-comparison.md) documents command `0x20008`, command type `0x2E`, `root\wmi` / `hpqBIntM` / `hpqBIOSInt0`, and two/three-byte reference payloads. These are reference identities, not exact-device validation. No reference code was copied.
@@ -24,6 +26,8 @@ dotnet run --no-launch-profile --project app\VictusX.csproj -- --hp-victus --hp-
 - WinExe console output may be invisible. Persistence happens first and does not depend on a console. When available, console output includes the absolute saved path and JSON. No normal window, dialog, or file viewer is opened. Open the documented directory to inspect the saved result.
 
 ## Candidate And Output
+
+The [closest-Victus deep trace](omencore-victus-16s-setfanlevel-deep-trace.md) distinguishes this raw-byte serializer from omencore's clamped percentage API: passing128 to that API would not produce80-80. ghelper-omen's128-byte input is allocated by its setter, not required by shared infrastructure. Modern +128 cleaning and separate legacy flags still do not establish target firmware meaning. Keep the dry-run inert, its historical records unchanged, and all first-write candidates unselected.
 
 The [ABI and units evidence audit](set-fan-level-abi-units-evidence-audit.md) finds conflicting two/three-, four-, and 128-byte reference requests, mixed caller scaling, and a capability-gated +128 cleaning convention. Thus `128 -> 80-80` proves only two serialized bytes, not a safe level, percent, RPM, or supported ABI. Its firmware meaning remains uncertain; the parser's `0..255` range must not become an executable range. No record, parser, catalog, or validation field was changed by that audit.
 

@@ -17,6 +17,8 @@ It is command-line-only, separately approval-gated, exact-device-gated, elevatio
 
 ## Explicitly Unsupported Operations
 
+The [closest-Victus SetFanLevel deep trace](omencore-victus-16s-setfanlevel-deep-trace.md) shows why neither the reference controller nor its factory belongs in the narrow contracts: scaled-zero requests, readback replay, equal-pair maintenance, retries, multi-command recovery and backend fallback extend far beyond one bounded operation. Caller-local buffer sizes and separate cleaning protocols do not validate a target ABI. No operation or permission is added; SetFanLevel first-write remains NO-GO.
+
 The [SetFanLevel ABI/units audit](set-fan-level-abi-units-evidence-audit.md) found incompatible reference input lengths, ambiguous scaling/high-bit semantics, and close-device zero-handoff hazards. It selects no executable value or restore packet. Keep these as evidence only, outside the executable operation contracts; `DeviceValidatedInputLength` remains null and normal control remains **NO-GO**.
 
 The [SetFanLevel dry-run scaffold](set-fan-level-dry-run-research-scaffold.md) is a separate pure parser/JSON record, not an `IHpFanResearchOperation` or transport command. It serializes an unvalidated two-byte hypothesis only and exits before hardware startup. The operation enum, catalog permissions, pulse/hold gates, and `DeviceValidatedInputLength` are unchanged. All execution restrictions below still apply.

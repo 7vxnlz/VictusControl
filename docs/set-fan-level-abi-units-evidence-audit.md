@@ -2,6 +2,8 @@
 
 ## 1. Executive Conclusion
 
+Follow-up: the [closest-Victus deep trace](omencore-victus-16s-setfanlevel-deep-trace.md) reconstructs model selection through transport. It confirms caller-local128-byte allocation (not shared WMI expansion), separates modern +128 cleaning from legacy command2/type44 byte3 flags, and finds no high-bit insertion in omencore's ordinary V1 mapper. It also qualifies lifecycle evidence: FanService attempts shutdown restore/reset even though controller Dispose does not, and dual targets can become equal on maintenance. Low positive percentages can still round to raw zero. These are source facts, not F.31 validation; first-write NO-GO and an empty candidate set remain unchanged.
+
 Static local-source review, 2026-09-05. **The reference implementations establish a common command identity and per-index byte convention, but do not prove the target device's accepted input length, units, safe range, physical fan mapping, or recovery contract. SetFanLevel first-write readiness remains NO-GO; no executable value is selected.**
 
 The material conflicts are substantive:

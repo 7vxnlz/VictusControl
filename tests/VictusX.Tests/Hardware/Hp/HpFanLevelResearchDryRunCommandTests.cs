@@ -6,6 +6,103 @@ namespace VictusX.Tests.Hardware.Hp;
 
 public sealed class HpFanLevelResearchDryRunCommandTests
 {
+    [Theory]
+    [InlineData(0, 0, "00-00-00-00")]
+    [InlineData(1, 0, "00-00-00-00")]
+    [InlineData(2, 1, "01-01-00-00")]
+    [InlineData(25, 13, "0D-0D-00-00")]
+    [InlineData(50, 27, "1B-1B-00-00")]
+    [InlineData(75, 41, "29-29-00-00")]
+    [InlineData(99, 54, "36-36-00-00")]
+    [InlineData(100, 100, "64-64-00-00")]
+    public void PercentageMapping_RecordsCloseDeviceArithmeticOnly(int percent, byte raw, string payload)
+    {
+        var result = HpFanLevelResearchDryRunCommand.Parse(PercentArguments(percent.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+        Assert.True(result.ShouldExit);
+        Assert.True(result.IsValidRequest);
+        var record = result.Record!;
+        Assert.Equal(percent, record.RequestedPercentCandidate);
+        Assert.Equal(raw, record.MappedRawLevelCandidate);
+        Assert.Null(record.RawLevelCandidate);
+        Assert.Equal(payload, record.PayloadHexCandidate);
+        Assert.Equal(4, record.CandidateInputLength);
+        Assert.Equal(2, record.SchemaVersion);
+        Assert.Equal("Close-device evidence", record.EvidenceConfidence);
+        Assert.Contains("integer division", record.MappingFormula);
+        Assert.Contains("b39b449", record.MappingSource);
+        Assert.Contains("truncate to raw zero", record.BoundaryCaution);
+        Assert.False(record.TargetBiosValidated);
+        Assert.Equal("F.31", record.TargetBios);
+        Assert.Null(record.DeviceValidatedInputLength);
+        Assert.False(record.FirstWriteReady);
+        Assert.False(record.NormalFanControlReady);
+        Assert.False(record.IsExecutable);
+        Assert.False(record.WriteExecuted);
+        Assert.True(record.NoHardwareInvocation);
+        Assert.True(record.NoWmiInvocation);
+    }
+
+    [Fact]
+    public void AllPercentages_AreUnflaggedAndPersistWithoutChangingLegacyRawFormat()
+    {
+        for (int percent = 0; percent <= 100; percent++)
+        {
+            var record = HpFanLevelResearchDryRunCommand.Parse(PercentArguments(percent.ToString())).Record!;
+            Assert.Equal(0, record.MappedRawLevelCandidate!.Value & 0x80);
+        }
+        var legacy = HpFanLevelResearchDryRunCommand.Parse(Arguments("128")).Record!;
+        Assert.Equal("80-80", legacy.PayloadHexCandidate);
+        Assert.Contains("Deprecated", legacy.CandidateModel);
+        Assert.Null(legacy.RequestedPercentCandidate);
+        Assert.Equal(1, legacy.SchemaVersion);
+        DirectoryInfo temporary = Directory.CreateTempSubdirectory("victusx-percent-dry-run-");
+        try
+        {
+            var record = HpFanLevelResearchDryRunCommand.Parse(PercentArguments("50")).Record!;
+            string path = HpFanLevelResearchDryRunLogWriter.Write(record, temporary.FullName);
+            using var json = JsonDocument.Parse(File.ReadAllText(path));
+            Assert.Equal(50, json.RootElement.GetProperty("RequestedPercentCandidate").GetInt32());
+            Assert.Equal(27, json.RootElement.GetProperty("MappedRawLevelCandidate").GetInt32());
+            Assert.Equal("1B-1B-00-00", json.RootElement.GetProperty("PayloadHexCandidate").GetString());
+            Assert.True(json.RootElement.GetProperty("NoHardwareInvocation").GetBoolean());
+            Assert.True(json.RootElement.GetProperty("NoWmiInvocation").GetBoolean());
+            Assert.False(json.RootElement.GetProperty("FirstWriteReady").GetBoolean());
+            Assert.False(json.RootElement.GetProperty("NormalFanControlReady").GetBoolean());
+            Assert.Equal(JsonValueKind.Null, json.RootElement.GetProperty("DeviceValidatedInputLength").ValueKind);
+        }
+        finally { temporary.Delete(recursive: true); }
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("-1")]
+    [InlineData("101")]
+    [InlineData("128")]
+    [InlineData("1.5")]
+    [InlineData("+1")]
+    [InlineData("NaN")]
+    [InlineData("99999999999999")]
+    public void InvalidPercentages_FailClosed(string value) => AssertRejected(PercentArguments(value));
+
+    [Fact]
+    public void PercentageArguments_CannotBypassOrMixStartupGates()
+    {
+        string[] valid = PercentArguments("50");
+        foreach (string required in valid)
+        {
+            AssertRejected(valid.Where(arg => arg != required).ToArray());
+            AssertRejected([.. valid, required]);
+        }
+        foreach (string extra in new[] { "--fan-level-candidate=128", "--hp-wmi-readonly-test", "--hp-fan-max-hold", "--hp-fan-max-pulse", "--hp-fan-write-experiment" })
+            AssertRejected([.. valid, extra]);
+        AssertRejected(["--hp-victus", "--fan-percent-candidate"]);
+        AssertRejected(["--hp-victus", "--hp-fan-max-hold", "--fan-percent-candidate=50"]);
+    }
+
+    private static string[] PercentArguments(string value) =>
+        [HpFanLevelResearchDryRunCommand.HpVictusFlag, HpFanLevelResearchDryRunCommand.DryRunFlag,
+         HpFanLevelResearchDryRunCommand.PercentPrefix + value];
+
     [Fact]
     public void UnrelatedArguments_DoNotCreateRecordOrRequestExit()
     {

@@ -2,9 +2,13 @@
 
 ## Decision And Scope
 
+The [percentage-mapping dry-run](set-fan-level-percentage-mapping-dry-run.md) adds close-device arithmetic evidence only. Its four-byte mapped examples, including zero and100 endpoints, are not executable candidates or approved restore values. Default55 is not a validated target ceiling; all first-write gates below remain unsatisfied.
+
 Documentation-only design. SetFanLevel is unvalidated, real writes remain unimplemented and unexecuted, and the first-write decision is **NO-GO**. This document adds no approval flag, transport, probe, or execution permission. The existing dry-run must remain permanently serialization-only; a future write proposal requires separate review and explicit authorization for implementation and execution.
 
 ## Current Evidence
+
+The [omencore Victus deep trace](omencore-victus-16s-setfanlevel-deep-trace.md) narrows the ordinary V1 path to conditional percent-to-level scaling and a four-byte request, with no normal high-bit insertion. It does not prove accepted F.31 units/length. Recovery admission must also account for low-positive rounding to zero, raw readback replay, equal-pair maintenance and multi-command service shutdown reset. None is an approved restore or write candidate.
 
 The [ABI and units evidence audit](set-fan-level-abi-units-evidence-audit.md) now records the six local reference revisions: two/three-, four-, and 128-byte input shapes conflict; caller RPM/100, percent scaling, and +128 cleaning conventions do not establish F.31 units. Closest Victus 16-s0xxx/F.30 evidence warns about zero-level recovery. `80-80` has uncertain firmware meaning and is not a selected target. ABI, range, mapping, and restore gates remain unsatisfied; first-write **NO-GO** is unchanged.
 
